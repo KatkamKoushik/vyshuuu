@@ -7,21 +7,21 @@ import { UnfurlingScene } from './scenes/UnfurlingScene';
 export const ExperienceRoot: React.FC = () => {
   return (
     <>
-      {/* Broad Lateral Raking Key Light (Directional Chiaroscuro 3200K Temple Gold) */}
+      {/* Controlled Lateral Raking Key Light (Acute Chiaroscuro Grazing Beam) */}
       <directionalLight
-        position={[-3.5, 4.5, 3.8]}
-        intensity={3.2}
-        color="#FFF1D0"
+        position={[-4.2, 2.5, 2.2]}
+        intensity={1.7}
+        color="#F9E8C8"
       />
 
-      {/* Cool Obsidian Shadow Fill (Subtle non-destructive floor) */}
-      <ambientLight intensity={0.45} color="#18181A" />
+      {/* Deep Obsidian Shadow Floor (Preserves near-black silk body at rest) */}
+      <ambientLight intensity={0.18} color="#0F0E10" />
 
-      {/* Raking Grazing Rim (Catches metallic zari wire and selvedge edge highlights) */}
+      {/* Selective Antique Zari Rim Graze (Catches thread crowns and selvedge edge) */}
       <directionalLight
-        position={[3.5, 1.2, -2.5]}
-        intensity={1.4}
-        color="#C5A869"
+        position={[3.8, 1.0, -2.8]}
+        intensity={0.65}
+        color="#8B7443"
       />
 
       {/* Threshold Scene (Intro single golden filament) */}

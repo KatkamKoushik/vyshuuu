@@ -37,8 +37,8 @@ export const GlobalCanvas: React.FC = () => {
         }}
         dpr={[1, 1.5]}
         camera={{
-          position: [0, 0, 5],
-          fov: 42,
+          position: [0, 0, 5.8],
+          fov: 38,
           near: 0.1,
           far: 50,
         }}

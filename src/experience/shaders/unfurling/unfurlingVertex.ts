@@ -16,81 +16,99 @@ export const unfurlingVertexShader = /* glsl */ `
   uniform float uSettlingEnergy;
   uniform vec2 uPointer;
 
-  // Analytical displacement function for the 6-Yard Continuous Textile
+  // Analytical 3D deformation function for the 6-Yard Unfurling Cloth
   vec3 evaluateClothPosition(vec2 uvCoord, float p) {
-    // Canvas dimensions: width 7.2m, height 2.84m (matching canonical 2.538:1)
-    float baseWidth = 7.2;
-    float baseHeight = 2.84;
+    float baseWidth = 6.8;
+    float baseHeight = 2.4;
 
-    // Centered baseline coordinates [-width/2..width/2, -height/2..height/2]
+    // Unfurling leading front along the length of the 6-yard saree (U axis)
+    float unfurlFront = smoothstep(0.06, 0.96, p * 1.08);
+
+    // Initial filament phase (0% -> 15%):
+    // Cloth starts compressed tightly to a slender vertical column at X=0, Y spans [-height/2..height/2]
+    float widthOpening = smoothstep(0.08, 0.32, p);
+    float spreadX = mix(0.08, 1.0, widthOpening);
+
+    // Cloth coordinate along length: unrolls from anchor (U=0) forward to pallu (U=1)
     vec3 pos = vec3(
-      (uvCoord.x - 0.5) * baseWidth,
+      (uvCoord.x - 0.5) * baseWidth * spreadX,
       (uvCoord.y - 0.5) * baseHeight,
       0.0
     );
 
     // -------------------------------------------------------------------------
-    // Phase 1: 0% -> 15% (Filament to Loom Width Expansion)
-    // At p=0, fabric is compressed to a slender vertical column at X=0
+    // 1. Physical Unrolling Trailing Bundle (Leading Edge vs Rolled Fabric)
     // -------------------------------------------------------------------------
-    float widthOpening = smoothstep(0.08, 0.35, p);
-    // Unfurl reveals cloth along U axis from left to right as p increases
-    float revealU = smoothstep(0.05, 0.95, p * 1.05);
+    // For fabric beyond the current unfurl front, wrap it tightly back into the
+    // gathered trailing bundle in deep negative Z space
+    float rollDistance = uvCoord.x - unfurlFront;
+    if (rollDistance > 0.0) {
+      float rollFactor = clamp(rollDistance / 0.16, 0.0, 1.0);
+      float curlAngle = rollFactor * 3.14159265 * 2.2;
+      // Cylindrical curl back into darkness
+      pos.z -= sin(curlAngle) * 0.45 + rollFactor * 1.2;
+      pos.x -= (1.0 - cos(curlAngle)) * 0.25 * spreadX;
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. Sculptural 3D Catenary S-Curve & Depth (Real Fabric Form)
+    // -------------------------------------------------------------------------
+    float activeDrape = smoothstep(0.12, 0.50, p);
+    // Deep S-curve ribbon contour spanning Z from -0.85m to +0.55m
+    float sCurveZ = -sin(uvCoord.x * 3.14159265 * 1.4 - 0.25) * 0.85 * activeDrape;
+    // Viscous catenary sag under heavy self-weight
+    float catenarySag = -sin(uvCoord.x * 3.14159265) * sin(uvCoord.y * 3.14159265) * 0.55 * activeDrape;
+
+    // -------------------------------------------------------------------------
+    // 3. Irregular Pleat Architecture (Mass, Compression & Gravitational Sag)
+    // -------------------------------------------------------------------------
+    // Pleats are localized in the central pleat zone (U in [0.24, 0.65])
+    float pleatZoneU = (uvCoord.x - 0.24) / 0.41;
+    float pleatEnvelope = smoothstep(0.20, 0.30, uvCoord.x) * (1.0 - smoothstep(0.60, 0.68, uvCoord.x));
+    float pleatPhase = smoothstep(0.35, 0.82, p);
+
+    // Dynamic amplitude boosted by instantaneous scroll velocity
+    float velocityBoost = clamp(abs(uScrollVelocity) * 1.4, 0.0, 1.6);
+    float dynamicAmplitude = 0.52 * (1.0 + velocityBoost * 0.40);
+
+    // Non-uniform accordion pleats (asymmetrical fold crests and compressed shadow valleys)
+    float pleatHarmonic = pleatZoneU * 16.5 + sin(pleatZoneU * 6.28) * 1.8 - cos(pleatZoneU * 3.14) * 0.5;
+    float pleatWave = (sin(pleatHarmonic) * 0.58 
+                    + sin(pleatHarmonic * 0.5 + 0.45) * 0.32 
+                    - pow(abs(cos(pleatHarmonic * 0.5)), 2.4) * 0.28);
+
+    // Gravity compression: pleats sag deeper and bunch closer toward lower hem
+    float gravitySag = mix(0.75, 1.35, 1.0 - uvCoord.y);
+    float pleatDisplacement = pleatWave * dynamicAmplitude * pleatEnvelope * pleatPhase * gravitySag;
+
+    // -------------------------------------------------------------------------
+    // 4. The Pallu Sweep (Major Reveal between 65% and 90%)
+    // -------------------------------------------------------------------------
+    // The Pallu (U > 0.66) is initially held in deep negative space in shadow;
+    // as p reaches 0.65 -> 0.88, it sweeps forward in a majestic diagonal turn
+    float isPallu = smoothstep(0.66, 0.96, uvCoord.x);
+    float palluSweep = smoothstep(0.62, 0.88, p);
     
-    // Smooth compression for unopened portion
-    float compressionFactor = mix(0.12, 1.0, widthOpening);
-    pos.x *= compressionFactor;
+    // Sweeps from back (-0.9m) to front (+0.45m)
+    float palluForwardZ = mix(-0.85, 0.45, palluSweep) * isPallu;
+    float palluDiagonalTurn = isPallu * palluSweep * -0.25;
+
+    // Natural selvedge outer edge tension curl
+    float borderCurl = (pow(1.0 - uvCoord.y, 5.0) - pow(uvCoord.y, 5.0)) * 0.05 * activeDrape;
 
     // -------------------------------------------------------------------------
-    // Phase 2: 15% -> 45% (Continuous Fabric Unfurling & Catenary Drape)
+    // 5. Settled Equilibrium & Micro-Breathing (90% -> 100%)
     // -------------------------------------------------------------------------
-    float unfurlArc = smoothstep(0.15, 0.65, p);
-    // Continuous S-curve spatial arc through the 3D scene
-    float sCurveZ = -sin(uvCoord.x * 3.14159265 * 1.5 - 0.3) * 0.85 * unfurlArc;
-    float catenarySag = -sin(uvCoord.x * 3.14159265) * sin(uvCoord.y * 3.14159265) * uContinuumSag;
+    float settledFactor = smoothstep(0.88, 1.0, p);
+    float settlingBreath = sin(uTime * 0.75 + uvCoord.x * 2.2) * (0.008 * (1.0 - settledFactor * 0.65) + 0.002);
 
-    // -------------------------------------------------------------------------
-    // Phase 3: 45% -> 70% (Traveling Pleats & Heavy Silk Drape Memory)
-    // Pleat waves travel through cloth length; amplitude energized by scroll velocity
-    // -------------------------------------------------------------------------
-    float pleatPhase = smoothstep(0.35, 0.85, p);
-    float velocityBoost = clamp(abs(uScrollVelocity) * 1.2, 0.0, 1.8);
-    float dynamicAmplitude = uFoldAmplitude * (1.0 + velocityBoost * 0.45);
+    // Combine all spatial displacements
+    pos.z += sCurveZ + catenarySag + pleatDisplacement + palluForwardZ + borderCurl + settlingBreath;
+    pos.y += palluDiagonalTurn - pleatDisplacement * 0.18;
 
-    // Rhythmic cascade of asymmetrical pleats (resembling traditional hand-folded pleats)
-    float pleatWave1 = sin(uvCoord.x * 3.14159265 * uPleatDensity + p * 3.14159265);
-    float pleatWave2 = sin(uvCoord.x * 3.14159265 * (uPleatDensity * 1.8) + 0.8) * 0.4;
-    float pleatDisplacement = (pleatWave1 + pleatWave2) * dynamicAmplitude * pleatPhase;
-
-    // Pleats are deeper near the center and drape down gracefully with gravity
-    float verticalTension = cos((uvCoord.y - 0.5) * 2.2);
-    pleatDisplacement *= max(0.2, verticalTension);
-
-    // -------------------------------------------------------------------------
-    // Phase 4: 70% -> 90% (Pallu Sweep & Raking Forward Tilt)
-    // The Pallu (U > 0.66) swoops toward the camera to catch lateral raking light
-    // -------------------------------------------------------------------------
-    float palluWeight = smoothstep(0.66, 0.95, uvCoord.x);
-    float palluForwardArc = smoothstep(0.60, 0.90, p) * palluWeight;
-    float palluTiltZ = palluForwardArc * 0.75;
-    float palluDropY = -palluForwardArc * 0.28;
-
-    // Selvedge outer border curling (natural unstitched edge tension)
-    float borderCurl = (pow(1.0 - uvCoord.y, 5.0) - pow(uvCoord.y, 5.0)) * 0.045 * unfurlArc;
-
-    // -------------------------------------------------------------------------
-    // Phase 5: 90% -> 100% (Settling Inertia & Harmonic Breathing)
-    // -------------------------------------------------------------------------
-    float settledFactor = smoothstep(0.85, 1.0, p);
-    float settlingBreath = sin(uTime * 0.75 + uvCoord.x * 2.0) * (0.012 * (1.0 - settledFactor * 0.65) + 0.003);
-
-    // Combine all Z deformations
-    pos.z += sCurveZ + catenarySag + pleatDisplacement + palluTiltZ + borderCurl + settlingBreath;
-    pos.y += palluDropY - pleatDisplacement * 0.15;
-
-    // Subtle pointer disturbance (tactile inspection push)
+    // Subtle pointer tactile disturbance
     float distToPointer = length(uvCoord - (uPointer * 0.5 + 0.5));
-    float pointerDisplacement = exp(-distToPointer * 6.0) * 0.08 * (1.0 - settledFactor * 0.5);
+    float pointerDisplacement = exp(-distToPointer * 6.5) * 0.06 * (1.0 - settledFactor * 0.6);
     pos.z += pointerDisplacement;
 
     return pos;
@@ -101,8 +119,8 @@ export const unfurlingVertexShader = /* glsl */ `
 
     vec3 currentPos = evaluateClothPosition(uv, uProgress);
 
-    // Calculate analytical normal using central finite differences on the cloth manifold
-    float eps = 0.008;
+    // Compute geometric tangent and normal via central differences on the deformed manifold
+    float eps = 0.006;
     vec3 posDx = evaluateClothPosition(uv + vec2(eps, 0.0), uProgress);
     vec3 posDy = evaluateClothPosition(uv + vec2(0.0, eps), uProgress);
 

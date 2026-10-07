@@ -102,6 +102,7 @@ export const UnfurlingScene: React.FC = () => {
 
     // Viscous exponential smoothing of scroll progression (mass and inertia)
     u.uProgress.value = THREE.MathUtils.lerp(u.uProgress.value, targetProgress, delta * 3.2);
+    const p = u.uProgress.value;
 
     // Viscous damping of scroll velocity
     velocityDamped.current = THREE.MathUtils.lerp(
@@ -126,48 +127,46 @@ export const UnfurlingScene: React.FC = () => {
     if (!isReducedMotion) {
       pointerDamped.current.lerp(pointerTarget.current, delta * 2.5);
 
-      // Lateral raking key light position:
-      // Grazes across the fabric from left-above at an acute angle
-      const targetLightX = -1.8 + pointerDamped.current.x * 1.5;
-      const targetLightY = 2.2 + pointerDamped.current.y * 1.0;
-      const idleSwayX = Math.sin(state.clock.getElapsedTime() * 0.3) * 0.15;
-      const idleSwayY = Math.cos(state.clock.getElapsedTime() * 0.25) * 0.10;
+      // Lateral raking key light sweep:
+      // Grazes across the fabric from left to right as the narrative unfurls
+      const targetLightX = -3.8 + p * 2.4 + pointerDamped.current.x * 1.2;
+      const targetLightY = 2.4 + pointerDamped.current.y * 0.8;
+      const idleSwayX = Math.sin(state.clock.getElapsedTime() * 0.3) * 0.10;
+      const idleSwayY = Math.cos(state.clock.getElapsedTime() * 0.25) * 0.08;
 
       lightPosDamped.current.set(
         targetLightX + idleSwayX,
         targetLightY + idleSwayY,
-        3.2 + Math.sin(state.clock.getElapsedTime() * 0.2) * 0.12
+        2.6 + Math.sin(p * Math.PI) * 0.4
       );
 
       u.uPointer.value.copy(pointerDamped.current);
       u.uLightPos.value.copy(lightPosDamped.current);
     } else {
-      // Reduced motion: static broad lateral raking angle
-      u.uLightPos.value.set(-1.8, 2.2, 3.2);
+      // Reduced motion: static restrained lateral raking angle
+      u.uLightPos.value.set(-3.2, 2.2, 2.8);
     }
 
     // Dynamic spatial choreography of the 6-Yard Continuous Mesh:
-    // Follows the unfurling narrative progression (0.00 -> 1.00)
-    const p = u.uProgress.value;
-
+    // The camera mostly observes while the cloth physically unrolls and settles
     if (!isReducedMotion) {
-      // Slight perspective tilt that deepens as pleats unfurl and settles at the end
-      const rotY = 0.08 + Math.sin(p * Math.PI) * 0.12 + pointerDamped.current.x * 0.025;
-      const rotX = -0.04 - Math.sin(p * Math.PI * 0.8) * 0.08 - pointerDamped.current.y * 0.02;
-      const rotZ = Math.sin(p * Math.PI * 0.6) * -0.03;
+      // Restrained global rotation; physical drape and pleats provide the motion
+      const rotY = 0.04 + Math.sin(p * Math.PI * 0.85) * 0.07 + pointerDamped.current.x * 0.018;
+      const rotX = -0.03 - Math.sin(p * Math.PI * 0.7) * 0.04 - pointerDamped.current.y * 0.015;
+      const rotZ = Math.sin(p * Math.PI * 0.5) * -0.018;
 
       meshRef.current.rotation.set(rotX, rotY, rotZ);
 
-      // Subtle lateral drift anticipating the full composition
-      const posX = -0.15 + (p - 0.5) * 0.35 + pointerDamped.current.x * 0.03;
-      const posY = 0.02 - Math.sin(p * Math.PI * 0.7) * 0.12 + pointerDamped.current.y * 0.03;
-      const posZ = 0.25 + Math.sin(p * Math.PI) * 0.20;
+      // Anchored spatial position with slight pullback for generous architectural breathing room
+      const posX = -0.10 + (p - 0.5) * 0.22 + pointerDamped.current.x * 0.02;
+      const posY = 0.0 - Math.sin(p * Math.PI * 0.7) * 0.08 + pointerDamped.current.y * 0.02;
+      const posZ = -0.32 + Math.sin(p * Math.PI) * 0.12;
 
       meshRef.current.position.set(posX, posY, posZ);
     } else {
       // Reduced motion: balanced resting architectural orientation
-      meshRef.current.rotation.set(-0.04, 0.08, 0.0);
-      meshRef.current.position.set(-0.15, 0.0, 0.3);
+      meshRef.current.rotation.set(-0.03, 0.05, 0.0);
+      meshRef.current.position.set(-0.10, 0.0, -0.32);
     }
   });
 
