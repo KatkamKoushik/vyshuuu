@@ -1,0 +1,93 @@
+/* ==========================================================================
+   VYSHUUU TYPOGRAPHY INFRASTRUCTURE
+   Canela Serif & PP Neue Montreal Editorial Fallback Stacks
+   ========================================================================== */
+
+:root {
+  --font-display: "Canela Grand", "Cormorant Garamond", "Didot", "Bodoni MT", "Cinzel", Georgia, serif;
+  --font-editorial: "PP Neue Montreal", "Inter Tight", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "GT America Mono", "Space Mono", "Courier New", monospace;
+}
+
+/* --------------------------------------------------------------------------
+   Semantic Typography Classes
+   -------------------------------------------------------------------------- */
+
+.display-xl {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 8vw, 7.5rem);
+  line-height: 0.95;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.display-lg {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1.05;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.display-md {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.75rem);
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  font-weight: 400;
+}
+
+.heading-xl {
+  font-family: var(--font-editorial);
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.heading-sm {
+  font-family: var(--font-editorial);
+  font-size: 0.875rem;
+  line-height: 1.25;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.body-editorial {
+  font-family: var(--font-editorial);
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  font-weight: 300;
+  max-width: var(--editorial-width);
+}
+
+.body-small {
+  font-family: var(--font-editorial);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  font-weight: 300;
+}
+
+.mono-spec {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.caption-tracked {
+  font-family: var(--font-editorial);
+  font-size: 0.6875rem;
+  line-height: 1;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}

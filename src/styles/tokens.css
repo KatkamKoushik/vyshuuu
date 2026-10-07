@@ -1,0 +1,70 @@
+/* ==========================================================================
+   VYSHUUU DESIGN TOKENS
+   "The Sacred Code" — Obsidian, Kora Silk, and Antique Zari
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------------
+     1. Master Color Chromatography
+     ------------------------------------------------------------------------ */
+  --vy-color-obsidian: #0b0a09;
+  --vy-color-charcoal: #171513;
+  --vy-color-kora-silk: #f5f2eb;
+  --vy-color-warm-ivory: #e8e2d5;
+  --vy-color-antique-zari: #c5a869;
+  --vy-color-raw-madder: #581818;
+  --vy-color-alizarin: #8a1c1c;
+
+  /* ------------------------------------------------------------------------
+     2. Semantic Token Mappings
+     ------------------------------------------------------------------------ */
+  --color-bg: var(--vy-color-obsidian);
+  --color-surface: var(--vy-color-charcoal);
+  --color-text: var(--vy-color-kora-silk);
+  --color-text-muted: #9e9689;
+  --color-border: rgba(197, 168, 105, 0.18);
+  --color-border-subtle: rgba(245, 242, 235, 0.08);
+  --color-accent-zari: var(--vy-color-antique-zari);
+  --color-accent-madder: var(--vy-color-raw-madder);
+  --color-accent-alizarin: var(--vy-color-alizarin);
+
+  /* ------------------------------------------------------------------------
+     3. Spatial Rhythm & Scale
+     ------------------------------------------------------------------------ */
+  --space-unit: 8px;
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 32px;
+  --space-lg: 64px;
+  --space-xl: 120px;
+  --space-2xl: 200px;
+
+  /* ------------------------------------------------------------------------
+     4. Layout Boundaries & Grids
+     ------------------------------------------------------------------------ */
+  --max-content-width: 1760px;
+  --editorial-width: 62ch;
+  --gutter: 32px;
+  --masthead-height: 72px;
+
+  /* ------------------------------------------------------------------------
+     5. Z-Index Layering
+     ------------------------------------------------------------------------ */
+  --z-canvas: 1;
+  --z-content: 10;
+  --z-overlay: 20;
+  --z-masthead: 50;
+  --z-drawer: 60;
+  --z-a11y: 100;
+
+  /* ------------------------------------------------------------------------
+     6. Motion & Viscous Curves
+     ------------------------------------------------------------------------ */
+  --ease-silk: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-weft: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-settle: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-whisper: 350ms;
+  --duration-standard: 800ms;
+  --duration-cinematic: 1600ms;
+}

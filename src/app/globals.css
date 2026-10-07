@@ -1,0 +1,73 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+@import "../styles/typography.css";
+
+/* --------------------------------------------------------------------------
+   Baseline Reset & Global Canvas Styles
+   -------------------------------------------------------------------------- */
+
+html {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-editorial);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: auto; /* Managed authoritatively by Lenis */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* --------------------------------------------------------------------------
+   Text Selection in Antique Zari
+   -------------------------------------------------------------------------- */
+::selection {
+  background-color: var(--color-accent-zari);
+  color: var(--color-bg);
+}
+
+::-moz-selection {
+  background-color: var(--color-accent-zari);
+  color: var(--color-bg);
+}
+
+/* --------------------------------------------------------------------------
+   Accessibility Focus Ring
+   -------------------------------------------------------------------------- */
+:focus-visible {
+  outline: 1px solid var(--color-accent-zari);
+  outline-offset: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Utility Hairlines & Textures
+   -------------------------------------------------------------------------- */
+.hairline-border {
+  border-color: var(--color-border);
+}
+
+.hairline-border-subtle {
+  border-color: var(--color-border-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   Reduced Motion Overrides
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
