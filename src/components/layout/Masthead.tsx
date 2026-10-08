@@ -1,14 +1,45 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Monogram } from '../brand/Monogram';
 import { useExperienceStore } from '@/stores/experienceStore';
 
 export const Masthead: React.FC = () => {
-  const isAudioMuted = useExperienceStore((s) => s.isAudioMuted);
-  const toggleAudio = useExperienceStore((s) => s.toggleAudio);
   const isIntroSettled = useExperienceStore((s) => s.isIntroSettled);
+  const [isLightZone, setIsLightZone] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    let rafId: number;
+    const updateTheme = () => {
+      const lightEl = document.querySelector('[data-theme="light"]');
+      if (!lightEl) {
+        setIsLightZone(false);
+        return;
+      }
+      const rect = lightEl.getBoundingClientRect();
+      // Masthead height is 72px; check if light corridor covers masthead line (y = 40)
+      const inLight = rect.top <= 40 && rect.bottom >= 40;
+      setIsLightZone((prev) => (prev !== inLight ? inLight : prev));
+    };
+
+    const onScroll = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(updateTheme);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    updateTheme();
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   return (
     <header
@@ -22,50 +53,67 @@ export const Masthead: React.FC = () => {
         className="flex items-center gap-3 group focus-visible:outline-none"
         aria-label="VYSHUUU Home"
       >
-        <Monogram className="transition-transform duration-500 group-hover:scale-105" size={26} />
-        <span className="caption-tracked text-[10px] text-[var(--color-text-muted)] group-hover:text-[var(--color-text)] transition-colors">
+        <Monogram
+          variant={isLightZone ? 'light' : 'dark'}
+          className="transition-transform duration-500 group-hover:scale-105"
+          size={26}
+        />
+        <span
+          className={`caption-tracked text-[10px] transition-colors duration-500 hidden sm:inline ${
+            isLightZone
+              ? 'text-[#6d6457] group-hover:text-[#1e1b18]'
+              : 'text-[var(--color-text-muted)] group-hover:text-[var(--color-text)]'
+          }`}
+        >
           Atelier
         </span>
       </Link>
 
       {/* Center Anchor: Subtle Masthead Wordmark */}
-      <div className="hidden sm:block">
+      <div className="hidden md:block">
         <span
-          className="text-xs uppercase tracking-[0.26em] text-[var(--color-text-muted)] font-serif"
+          className={`text-xs uppercase tracking-[0.26em] font-serif transition-colors duration-500 ${
+            isLightZone ? 'text-[#6d6457]' : 'text-[var(--color-text-muted)]'
+          }`}
           style={{ fontFamily: 'var(--font-display)' }}
         >
           VYSHUUU
         </span>
       </div>
 
-      {/* Right Anchor: Controls & Direct Navigation */}
-      <nav aria-label="Primary" className="flex items-center gap-6 md:gap-8">
-        <button
-          type="button"
-          onClick={toggleAudio}
-          className="caption-tracked text-[10px] text-[var(--color-text-muted)] hover:text-[var(--color-accent-zari)] transition-colors flex items-center gap-2 cursor-pointer focus-visible:outline-none"
-          aria-label={isAudioMuted ? 'Unmute soundscape' : 'Mute soundscape'}
-        >
-          <span
-            className={`inline-block w-1.5 h-1.5 rounded-full transition-colors ${
-              isAudioMuted ? 'bg-[var(--color-text-muted)] opacity-40' : 'bg-[var(--color-accent-zari)] animate-pulse'
-            }`}
-          />
-          <span className="hidden md:inline">{isAudioMuted ? 'Sound Off' : 'Sound On'}</span>
-        </button>
-
+      {/* Right Anchor: Direct Navigation */}
+      <nav aria-label="Primary" className="flex items-center gap-4 sm:gap-6 md:gap-8">
         <Link
-          href="#anthology"
-          className="caption-tracked text-[10px] text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors"
+          href="#collection"
+          className={`caption-tracked text-[10px] transition-colors duration-500 ${
+            isLightZone
+              ? 'text-[#6d6457] hover:text-[#1e1b18]'
+              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)]'
+          }`}
         >
-          Anthology
+          Collection
         </Link>
 
         <Link
-          href="#salon"
-          className="caption-tracked text-[10px] text-[var(--color-accent-zari)] hover:text-[var(--color-text)] transition-colors"
+          href="#atelier"
+          className={`caption-tracked text-[10px] transition-colors duration-500 ${
+            isLightZone
+              ? 'text-[#6d6457] hover:text-[#1e1b18]'
+              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)]'
+          }`}
         >
-          Private Salon
+          Atelier
+        </Link>
+
+        <Link
+          href="#collection-wall"
+          className={`caption-tracked text-[10px] transition-colors duration-500 ${
+            isLightZone
+              ? 'text-[#8c7443] hover:text-[#1e1b18] font-medium'
+              : 'text-[var(--color-accent-zari)] hover:text-[var(--color-text)]'
+          }`}
+        >
+          Archive
         </Link>
       </nav>
     </header>

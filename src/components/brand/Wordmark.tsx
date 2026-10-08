@@ -20,11 +20,14 @@ export const Wordmark: React.FC<WordmarkProps> = ({
   return (
     <div
       aria-label="VYSHUUU"
-      className={`select-none font-serif uppercase leading-none font-normal ${sizeClasses[size]} ${className}`}
-      style={{ fontFamily: 'var(--font-display)' }}
+      className={`select-none font-serif uppercase leading-none font-normal whitespace-nowrap inline-block ${sizeClasses[size]} ${className}`}
+      style={{ fontFamily: 'var(--font-display)', whiteSpace: 'nowrap' }}
     >
-      <span className="inline-block transition-transform duration-700 ease-out">
-        V&thinsp;Y&thinsp;S&thinsp;H&ensp;U&thinsp;U&thinsp;U
+      <span
+        className="inline-block whitespace-nowrap transition-transform duration-700 ease-out"
+        style={{ whiteSpace: 'nowrap' }}
+      >
+        VYSHUUU
       </span>
     </div>
   );

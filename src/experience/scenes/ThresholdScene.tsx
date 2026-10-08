@@ -59,20 +59,20 @@ export const ThresholdScene: React.FC = () => {
       return;
     }
 
-    // Viscous vertical descent over ~2.8 seconds
+    // Viscous vertical descent over ~1.4 seconds
     if (progressRef.current < 1.0) {
-      // Damped viscous progression
-      progressRef.current = Math.min(1.0, progressRef.current + delta * 0.45);
+      // Damped viscous progression: responsive timing
+      progressRef.current = Math.min(1.0, progressRef.current + delta * 0.85);
       
-      // Easing: ease-out quintic feel
+      // Easing: ease-out cubic feel
       const t = progressRef.current;
-      const ease = 1 - Math.pow(1 - t, 4);
+      const ease = 1 - Math.pow(1 - t, 3);
 
       // Descends from above viewport (+2.8) down into resting center (0.0)
       meshRef.current.position.y = (1 - ease) * 2.8;
 
-      // Notify parent when filament has established presence (around 70%)
-      if (ease >= 0.7 && !settledNotified.current) {
+      // Notify parent when filament has established presence (around 45%)
+      if (ease >= 0.45 && !settledNotified.current) {
         settledNotified.current = true;
         setIntroSettled(true);
       }

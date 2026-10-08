@@ -10,6 +10,8 @@ export interface ExperienceState {
   isReducedMotion: boolean;
   webglSupported: boolean;
   isIntroSettled: boolean;
+  activeAtmosphereId: string;
+  selectedAtmosphereId: string | null;
 
   // Actions
   setActiveScene: (scene: SceneId) => void;
@@ -19,6 +21,9 @@ export interface ExperienceState {
   setReducedMotion: (reduced: boolean) => void;
   setWebGLSupported: (supported: boolean) => void;
   setIntroSettled: (settled: boolean) => void;
+  setActiveAtmosphereId: (id: string) => void;
+  setSelectedAtmosphereId: (id: string | null) => void;
+  resetAtmosphere: () => void;
 }
 
 export const useExperienceStore = create<ExperienceState>((set) => ({
@@ -28,6 +33,8 @@ export const useExperienceStore = create<ExperienceState>((set) => ({
   isReducedMotion: false,
   webglSupported: true,
   isIntroSettled: false,
+  activeAtmosphereId: 'vysh-arc-01',
+  selectedAtmosphereId: null,
 
   setActiveScene: (scene) => set({ activeScene: scene }),
   setQualityTier: (tier) => set({ qualityTier: tier }),
@@ -36,4 +43,11 @@ export const useExperienceStore = create<ExperienceState>((set) => ({
   setReducedMotion: (reduced) => set({ isReducedMotion: reduced }),
   setWebGLSupported: (supported) => set({ webglSupported: supported }),
   setIntroSettled: (settled) => set({ isIntroSettled: settled }),
+  setActiveAtmosphereId: (id) => set({ activeAtmosphereId: id }),
+  setSelectedAtmosphereId: (id) =>
+    set({
+      selectedAtmosphereId: id,
+      activeAtmosphereId: id ?? 'vysh-arc-01',
+    }),
+  resetAtmosphere: () => set({ selectedAtmosphereId: null }),
 }));
