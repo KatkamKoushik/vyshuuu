@@ -59,7 +59,7 @@ const ASSET_MAP: Record<string, Record<string, string>> = {
   'vysh-jmd-01': {
     hero: 'VYSH-JMD-01 Vapor Inlay/hero/Graphite Sari Cascading Through Light.png',
     flat: 'VYSH-JMD-01 Vapor Inlay/flat/Charcoal Handwoven Saree with Ivory Motifs.png',
-    fold: 'VYSH-JMD-01 Vapor Inlay/fold/Cinematic Botanical Textile.png',
+    fold: 'VYSH-JMD-01 Vapor Inlay/fold/Cinematic Folded Botanical Textile.png',
     pleat: 'VYSH-JMD-01 Vapor Inlay/pleat/Charcoal Handloom Textile in Warm Light.png',
     border: 'VYSH-JMD-01 Vapor Inlay/BORDER/Charcoal Cloth with Ivory Woven Embroidery.png',
     pallu: 'VYSH-JMD-01 Vapor Inlay/pallu/Draped Midnight Botanical Textile.png',
