@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { initLenis, destroyLenis } from '@/lib/lenis';
 import { Masthead } from './Masthead';
+import { MaterialGrain } from '../ambient/MaterialGrain';
+import { ChiaroscuroCursorLight } from '../ambient/ChiaroscuroCursorLight';
 import { SkipLink } from './SkipLink';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import { useExperienceStore } from '@/stores/experienceStore';
@@ -39,6 +41,8 @@ export const SiteShell: React.FC<SiteShellProps> = ({ children }) => {
   return (
     <div className="relative min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] selection:bg-[var(--color-accent-zari)] selection:text-[var(--color-bg)]">
       <SkipLink />
+      <MaterialGrain />
+      <ChiaroscuroCursorLight />
       <Masthead />
 
       {/* Main Content Area */}

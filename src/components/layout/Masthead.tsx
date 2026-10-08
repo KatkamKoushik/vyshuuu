@@ -8,12 +8,17 @@ import { useExperienceStore } from '@/stores/experienceStore';
 export const Masthead: React.FC = () => {
   const isIntroSettled = useExperienceStore((s) => s.isIntroSettled);
   const [isLightZone, setIsLightZone] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     let rafId: number;
-    const updateTheme = () => {
+    const updateThemeAndScroll = () => {
+      // Check scroll distance past threshold top
+      const scrolled = window.scrollY > 48;
+      setIsScrolled((prev) => (prev !== scrolled ? scrolled : prev));
+
       const lightEl = document.querySelector('[data-theme="light"]');
       if (!lightEl) {
         setIsLightZone(false);
@@ -27,12 +32,12 @@ export const Masthead: React.FC = () => {
 
     const onScroll = () => {
       cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(updateTheme);
+      rafId = requestAnimationFrame(updateThemeAndScroll);
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
-    updateTheme();
+    updateThemeAndScroll();
 
     return () => {
       window.removeEventListener('scroll', onScroll);
@@ -43,8 +48,14 @@ export const Masthead: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-[50] h-[72px] px-6 md:px-12 flex items-center justify-between transition-opacity duration-1000 ${
+      className={`fixed top-0 left-0 w-full z-[50] h-[72px] px-6 md:px-12 flex items-center justify-between transition-all duration-700 ${
         isIntroSettled ? 'opacity-100' : 'opacity-0'
+      } ${
+        isScrolled
+          ? isLightZone
+            ? 'bg-[#f5f2eb]/80 backdrop-blur-md border-b border-[rgba(78,65,48,0.08)] shadow-[0_10px_30px_rgba(78,65,48,0.04)]'
+            : 'bg-[#0b0a09]/75 backdrop-blur-md border-b border-[rgba(197,168,105,0.06)] shadow-[0_10px_30px_rgba(0,0,0,0.5)]'
+          : 'bg-transparent border-b border-transparent shadow-none'
       }`}
     >
       {/* Left Anchor: Monogram */}

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 
 export interface EditorialPlateProps {
   src: string;
@@ -28,6 +29,11 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
   speed = 'standard',
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [tilt, setTilt] = useState({ rotX: 0, rotY: 0, nx: 0, ny: 0 });
+
+  const isReducedMotion = usePrefersReducedMotion();
+  const frameRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
   // Sync cache state & guarantee visibility even if browser cache bypassed onLoad
@@ -55,6 +61,35 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
     };
   }, [src]);
 
+  // Restrained pointer-responsive depth & conservation glass specular sheen (max ±1.6°)
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (isReducedMotion || e.pointerType === 'touch' || !frameRef.current) return;
+
+      const rect = frameRef.current.getBoundingClientRect();
+      const nx = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+      const ny = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
+
+      // Clamp strictly within ±1.6 degrees (restrained exhibition mount)
+      const clampedX = Math.max(-1, Math.min(1, nx));
+      const clampedY = Math.max(-1, Math.min(1, ny));
+
+      setTilt({
+        rotX: -clampedY * 1.6,
+        rotY: clampedX * 1.6,
+        nx: clampedX,
+        ny: clampedY,
+      });
+      setIsHovered(true);
+    },
+    [isReducedMotion]
+  );
+
+  const handlePointerLeave = useCallback(() => {
+    setTilt({ rotX: 0, rotY: 0, nx: 0, ny: 0 });
+    setIsHovered(false);
+  }, []);
+
   // Aspect ratio class mapping
   const aspectClass =
     aspectRatio === '4/5'
@@ -69,14 +104,28 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
   const durationClass = speed === 'slow' ? 'duration-[2000ms]' : 'duration-[1400ms]';
 
   return (
-    <div className={`group relative flex flex-col select-none ${className}`}>
-      {/* Outer frame: Refined luxury border & architectural drop-shadow for separation */}
+    <div
+      className={`group relative flex flex-col select-none ${className}`}
+      style={{ perspective: '1200px' }}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+    >
+      {/* Outer frame: Refined luxury border & architectural drop-shadow with subtle exhibition mount depth */}
       <div
-        className={`relative w-full overflow-hidden ${aspectClass} transition-shadow duration-1000 ${
+        ref={frameRef}
+        className={`relative w-full overflow-hidden ${aspectClass} transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isLight
             ? 'bg-[#ede7dc] border border-[#dfd6c5]/70 shadow-[0_16px_48px_-16px_rgba(78,65,48,0.12)]'
             : 'bg-[#121110] border border-[var(--color-border-subtle)] shadow-[0_20px_50px_-20px_rgba(0,0,0,0.5)]'
         }`}
+        style={{
+          transform:
+            !isReducedMotion && isHovered
+              ? `rotateX(${tilt.rotX.toFixed(2)}deg) rotateY(${tilt.rotY.toFixed(2)}deg)`
+              : 'rotateX(0deg) rotateY(0deg)',
+          transformStyle: 'preserve-3d',
+          willChange: isHovered ? 'transform' : 'auto',
+        }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -89,7 +138,7 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
           onError={() => setIsLoaded(true)}
           className={`relative z-0 w-full h-full object-cover transition-all ${durationClass} ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.03]'
-          } group-hover:scale-[1.015] ${imageClassName}`}
+          } group-hover:scale-[1.012] ${imageClassName}`}
         />
 
         {/* Soft edge vignette & subtle raking gradient */}
@@ -100,6 +149,21 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
               : 'bg-gradient-to-t from-black/40 via-transparent to-transparent'
           }`}
         />
+
+        {/* Restrained conservation-glass moving specular sheen */}
+        {!isReducedMotion && (
+          <div
+            aria-hidden="true"
+            className={`absolute inset-0 z-20 pointer-events-none transition-opacity duration-700 ease-out ${
+              isHovered ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{
+              background: `radial-gradient(circle 85% at ${(tilt.nx + 1) * 50}% ${(tilt.ny + 1) * 50}%, rgba(255, 255, 255, ${
+                isLight ? 0.065 : 0.038
+              }) 0%, rgba(255, 255, 255, 0.01) 35%, transparent 65%)`,
+            }}
+          />
+        )}
       </div>
 
       {/* Minimal editorial annotation / caption */}
