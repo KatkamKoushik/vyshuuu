@@ -7,9 +7,9 @@ export const ContinuumSequence: React.FC = () => {
   return (
     <section
       aria-label="Continuum Archetype Editorial Sequence"
-      className="relative w-full px-6 md:px-16 lg:px-24 py-32 md:py-48 select-none bg-[var(--color-bg)]"
+      className="relative w-full px-6 md:px-16 lg:px-24 py-16 sm:py-24 md:py-48 select-none bg-[var(--color-bg)]"
     >
-      <div className="w-full max-w-[var(--max-content-width)] mx-auto space-y-48 md:space-y-64">
+      <div className="w-full max-w-[var(--max-content-width)] mx-auto space-y-16 sm:space-y-24 md:space-y-64">
         
         {/* Sequence Movement 01: Quiet Flat Topological Reference */}
         <div className="w-full max-w-5xl mx-auto">

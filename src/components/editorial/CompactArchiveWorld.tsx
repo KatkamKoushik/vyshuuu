@@ -519,13 +519,13 @@ export const CompactArchiveWorld: React.FC<CompactArchiveWorldProps> = ({
                   </div>
 
                   {/* Restrained Caption Placard Below Each Plate */}
-                  <div className="mt-3 space-y-0.5 px-0.5 pointer-events-none">
-                    <div className="flex items-baseline justify-between text-[9.5px] mono-spec text-white/80">
+                  <div className="mt-3 space-y-1 px-0.5 pointer-events-none">
+                    <div className="flex items-baseline justify-between text-[10px] sm:text-[9.5px] mono-spec text-white/90">
                       <span className="truncate pr-2 font-light">
                         {item.asset.caption}
                       </span>
                     </div>
-                    <p className="caption-tracked text-[8.5px] text-white/35 tracking-[0.14em] line-clamp-1">
+                    <p className="caption-tracked text-[9px] sm:text-[8.5px] text-white/60 tracking-[0.14em] line-clamp-1">
                       {item.asset.metadata}
                     </p>
                   </div>

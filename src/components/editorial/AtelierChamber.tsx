@@ -43,7 +43,7 @@ export const AtelierChamber: React.FC = () => {
         {/* ====================================================================
             THE FIVE CINEMATIC MOVEMENTS
             ==================================================================== */}
-        <div className="space-y-36 md:space-y-52">
+        <div className="space-y-16 sm:space-y-24 md:space-y-52">
           {ATELIER_PLATES.map((plate) => (
             <AtelierPlateItem
               key={plate.id}
@@ -115,7 +115,7 @@ const AtelierPlateItem: React.FC<AtelierPlateItemProps> = ({
 
         {/* Curatorial Inscription Footnote */}
         <div className="w-full max-w-xl mt-6 flex flex-col sm:flex-row justify-between items-baseline gap-2 pt-3 border-t border-[#c5a869]/15 text-[10px] mono-spec">
-          <p className="body-editorial text-xs text-[#8a7f6e] italic max-w-md">
+          <p className="body-editorial text-xs text-[#b8ac99] italic max-w-md">
             &ldquo;{plate.shortCuratorialLine}&rdquo;
           </p>
           <span className="text-[#c5a869] tracking-[0.2em] whitespace-nowrap uppercase">
@@ -148,7 +148,7 @@ const AtelierPlateItem: React.FC<AtelierPlateItemProps> = ({
 
           <div className="w-8 h-[1px] bg-[#c5a869]/40" />
 
-          <p className="body-editorial text-xs md:text-sm text-[#8a7f6e] italic leading-relaxed">
+          <p className="body-editorial text-xs md:text-sm text-[#b8ac99] italic leading-relaxed">
             &ldquo;{plate.shortCuratorialLine}&rdquo;
           </p>
 
@@ -206,7 +206,7 @@ const AtelierPlateItem: React.FC<AtelierPlateItemProps> = ({
 
         {/* Curatorial Inscription Footnote */}
         <div className="w-full max-w-xl mt-6 flex flex-col sm:flex-row justify-between items-baseline gap-2 pt-3 border-t border-[#c5a869]/15 text-[10px] mono-spec">
-          <p className="body-editorial text-xs text-[#8a7f6e] italic max-w-md">
+          <p className="body-editorial text-xs text-[#b8ac99] italic max-w-md">
             &ldquo;{plate.shortCuratorialLine}&rdquo;
           </p>
           <span className="text-[#c5a869] tracking-[0.2em] whitespace-nowrap uppercase">
@@ -254,7 +254,7 @@ const AtelierPlateItem: React.FC<AtelierPlateItemProps> = ({
 
           <div className="w-8 h-[1px] bg-[#c5a869]/40" />
 
-          <p className="body-editorial text-xs md:text-sm text-[#8a7f6e] italic leading-relaxed">
+          <p className="body-editorial text-xs md:text-sm text-[#b8ac99] italic leading-relaxed">
             &ldquo;{plate.shortCuratorialLine}&rdquo;
           </p>
 
@@ -297,7 +297,7 @@ const AtelierPlateItem: React.FC<AtelierPlateItemProps> = ({
 
       {/* Curatorial Inscription Footnote */}
       <div className="w-full max-w-2xl mt-6 flex flex-col sm:flex-row justify-between items-baseline gap-2 pt-3 border-t border-[#c5a869]/15 text-[10px] mono-spec">
-        <p className="body-editorial text-xs text-[#8a7f6e] italic max-w-lg">
+        <p className="body-editorial text-xs text-[#b8ac99] italic max-w-lg">
           &ldquo;{plate.shortCuratorialLine}&rdquo;
         </p>
         <span className="text-[#c5a869] tracking-[0.2em] whitespace-nowrap uppercase">

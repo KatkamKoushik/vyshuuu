@@ -7,9 +7,9 @@ export const GossamerSequence: React.FC = () => {
   return (
     <section
       aria-label="Gossamer Kora Editorial Sequence"
-      className="relative w-full px-6 md:px-16 lg:px-24 py-32 md:py-48 select-none bg-[#f5f1e8] text-[#1e1b18]"
+      className="relative w-full px-6 md:px-16 lg:px-24 py-16 sm:py-24 md:py-48 select-none bg-[#f5f1e8] text-[#1e1b18]"
     >
-      <div className="w-full max-w-[var(--max-content-width)] mx-auto space-y-48 md:space-y-64">
+      <div className="w-full max-w-[var(--max-content-width)] mx-auto space-y-16 sm:space-y-24 md:space-y-64">
         
         {/* Sequence Movement 01: Quiet Translucent Flat Reference */}
         <div className="w-full max-w-5xl mx-auto">

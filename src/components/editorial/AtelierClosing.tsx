@@ -240,12 +240,12 @@ export const AtelierClosing: React.FC = () => {
                   isReducedMotion ? '' : 'transition-colors duration-500'
                 } ${
                   s.encountered
-                    ? 'border-[#c5a869]/50 bg-[#c5a869]/10 text-[#faf7f0]'
-                    : 'border-white/5 bg-transparent text-[#61594c]'
+                    ? 'border-[#c5a869]/70 bg-[#c5a869]/15 text-[#faf7f0] font-medium'
+                    : 'border-white/10 bg-white/[0.02] text-[#8a7f6e]'
                 }`}
                 title={`${s.number} // ${s.name} ${s.encountered ? '(Encountered)' : ''}`}
               >
-                <span className="mono-spec text-[8px] sm:text-[8.5px] block">
+                <span className="mono-spec text-[9px] sm:text-[8.5px] block">
                   {s.number}
                 </span>
               </div>
@@ -319,31 +319,31 @@ export const AtelierClosing: React.FC = () => {
           VYSHUUU DIGITAL ATELIER &middot; AN UNSTITCHED ARTWORK
         </span>
 
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 tracking-[0.16em]">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-6 tracking-[0.16em]">
           <a
             href="#threshold"
-            className="hover:text-[#c5a869] transition-colors cursor-pointer"
+            className="py-2 px-2 -my-2 inline-flex items-center text-[#a89f91] sm:text-[#8a7f6e] hover:text-[#c5a869] transition-colors cursor-pointer"
             title="Return to The Threshold"
           >
             [&uarr; THE THRESHOLD]
           </a>
           <a
             href="#unfurling"
-            className="hover:text-[#c5a869] transition-colors cursor-pointer"
+            className="py-2 px-2 -my-2 inline-flex items-center text-[#a89f91] sm:text-[#8a7f6e] hover:text-[#c5a869] transition-colors cursor-pointer"
             title="Return to 6-Yard Unfurling"
           >
             [&uarr; 6-YARD CONTINUUM]
           </a>
           <a
             href="#collection-wall"
-            className="hover:text-[#c5a869] transition-colors cursor-pointer"
+            className="py-2 px-2 -my-2 inline-flex items-center text-[#a89f91] sm:text-[#8a7f6e] hover:text-[#c5a869] transition-colors cursor-pointer"
             title="Return to Archive Worlds"
           >
             [&uarr; ARCHIVE WORLDS]
           </a>
           <a
             href="#atelier"
-            className="hover:text-[#c5a869] transition-colors cursor-pointer"
+            className="py-2 px-2 -my-2 inline-flex items-center text-[#a89f91] sm:text-[#8a7f6e] hover:text-[#c5a869] transition-colors cursor-pointer"
             title="Return to The Atelier"
           >
             [&uarr; THE ATELIER]

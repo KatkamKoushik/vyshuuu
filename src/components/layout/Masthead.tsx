@@ -98,13 +98,13 @@ export const Masthead: React.FC = () => {
       </div>
 
       {/* Right Anchor: Direct Navigation */}
-      <nav aria-label="Primary" className="flex items-center gap-4 sm:gap-6 md:gap-8">
+      <nav aria-label="Primary" className="flex items-center gap-2 sm:gap-6 md:gap-8">
         <Link
           href="#collection"
-          className={`caption-tracked text-[10px] transition-colors duration-500 ${
+          className={`caption-tracked text-[10.5px] sm:text-[10px] py-2 px-2 -my-2 inline-flex items-center transition-colors duration-500 ${
             isLightZone
               ? 'text-[#6d6457] hover:text-[#1e1b18]'
-              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)]'
+              : 'text-[#a89f91] sm:text-[var(--color-text-muted)] hover:text-[var(--color-text)]'
           }`}
         >
           Collection
@@ -112,10 +112,10 @@ export const Masthead: React.FC = () => {
 
         <Link
           href="#atelier"
-          className={`caption-tracked text-[10px] transition-colors duration-500 ${
+          className={`caption-tracked text-[10.5px] sm:text-[10px] py-2 px-2 -my-2 inline-flex items-center transition-colors duration-500 ${
             isLightZone
               ? 'text-[#6d6457] hover:text-[#1e1b18]'
-              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)]'
+              : 'text-[#a89f91] sm:text-[var(--color-text-muted)] hover:text-[var(--color-text)]'
           }`}
         >
           Atelier
@@ -123,7 +123,7 @@ export const Masthead: React.FC = () => {
 
         <Link
           href="#collection-wall"
-          className={`caption-tracked text-[10px] transition-colors duration-500 ${
+          className={`caption-tracked text-[10.5px] sm:text-[10px] py-2 px-2 -my-2 inline-flex items-center transition-colors duration-500 ${
             isLightZone
               ? 'text-[#8c7443] hover:text-[#1e1b18] font-medium'
               : 'text-[var(--color-accent-zari)] hover:text-[var(--color-text)]'

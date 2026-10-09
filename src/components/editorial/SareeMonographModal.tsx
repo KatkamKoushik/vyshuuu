@@ -126,7 +126,7 @@ export const SareeMonographModal: React.FC<SareeMonographModalProps> = ({ saree,
               type="button"
               onClick={onClose}
               aria-label="Close Examination Chamber"
-              className="mono-spec text-[9.5px] text-[#8a7f6e] hover:text-[#1b1916] tracking-[0.22em] uppercase transition-colors cursor-pointer"
+              className="mono-spec text-[9.5px] text-[#8a7f6e] hover:text-[#1b1916] tracking-[0.22em] uppercase transition-colors py-2 px-2 -my-1 cursor-pointer"
             >
               [ CLOSE &times; ]
             </button>
@@ -207,7 +207,7 @@ export const SareeMonographModal: React.FC<SareeMonographModalProps> = ({ saree,
             <button
               type="button"
               onClick={() => setIsLoupeOpen(true)}
-              className="self-start flex items-center gap-2 mono-spec text-[8.5px] text-[#786c59] hover:text-[#1b1916] tracking-[0.22em] uppercase transition-colors py-0.5 cursor-pointer"
+              className="self-start flex items-center gap-2 mono-spec text-[8.5px] text-[#786c59] hover:text-[#1b1916] tracking-[0.22em] uppercase transition-colors py-2 px-1 cursor-pointer"
             >
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: atmosphere.palette.accent }} />
               <span>INSPECT WEAVE STRUCTURE [ 1&times;&ndash;4&times; LOUPE ] &nearr;</span>

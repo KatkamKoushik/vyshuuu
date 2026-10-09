@@ -361,12 +361,12 @@ export default function Home() {
                   THE 6-YARD UNFURLING
                 </h2>
 
-                <p className="text-[10.5px] text-[var(--color-text-muted)] font-light leading-snug line-clamp-2">
+                <p className="text-[11px] text-[var(--color-text-muted)] font-light leading-relaxed line-clamp-2">
                   {getActiveChapterText()}
                 </p>
 
                 <div className="pt-1.5 flex items-center justify-between mono-spec text-[8.5px] text-[var(--color-text-muted)] border-t border-[var(--color-border-subtle)]">
-                  <span className="text-[var(--color-accent-zari)]/90">[ DRAG TO RAKE LIGHT ]</span>
+                  <span className="text-[var(--color-accent-zari)]/90">[ TOUCH TO RAKE LIGHT ]</span>
                   <span>{(unfurlProgress * 100).toFixed(0)}% Settled</span>
                 </div>
               </div>

@@ -193,10 +193,10 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
 
       {/* Minimal editorial annotation / caption */}
       {(caption || metadata) && (
-        <div className="mt-3 flex items-baseline justify-between gap-4">
+        <div className="mt-3 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-4">
           {caption && (
             <span
-              className={`caption-tracked text-[10px] tracking-[0.22em] ${
+              className={`caption-tracked text-[10.5px] sm:text-[10px] tracking-[0.22em] ${
                 isLight ? 'text-[#5c5449]' : 'text-[var(--color-text-muted)]'
               }`}
             >
@@ -205,7 +205,7 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
           )}
           {metadata && (
             <span
-              className={`mono-spec text-[9px] tracking-[0.16em] ${
+              className={`mono-spec text-[9.5px] sm:text-[9px] tracking-[0.16em] ${
                 isLight ? 'text-[#8c8273]' : 'text-[var(--color-accent-zari)]/80'
               }`}
             >
