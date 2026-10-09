@@ -63,6 +63,8 @@ export const CinematicTextileStage: React.FC<CinematicTextileStageProps> = ({
   // SCROLL-DRIVEN PROGRESSION
   // --------------------------------------------------------------------------
   useEffect(() => {
+    let rafId: number | null = null;
+
     const handleScroll = () => {
       const container = containerRef.current;
       if (!container) return;
@@ -80,7 +82,13 @@ export const CinematicTextileStage: React.FC<CinematicTextileStageProps> = ({
 
       // Only engage if container is currently in or around the viewport
       if (rect.top <= 0 && rect.bottom >= windowHeight) {
-        setScrollProgress(progress);
+        setScrollProgress((prev) => {
+          if (Math.abs(prev - progress) < 0.005 && progress > 0 && progress < 1) {
+            return prev;
+          }
+          return progress;
+        });
+
         const targetIdx = Math.min(
           plates.length - 1,
           Math.floor(progress * plates.length)
@@ -95,8 +103,20 @@ export const CinematicTextileStage: React.FC<CinematicTextileStageProps> = ({
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => {
+      if (rafId === null) {
+        rafId = requestAnimationFrame(() => {
+          rafId = null;
+          handleScroll();
+        });
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
   }, [plates.length]);
 
   // --------------------------------------------------------------------------

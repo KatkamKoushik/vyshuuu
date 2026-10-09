@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   title: 'VYSHUUU — The Unstitched Continuum',
   description:
     'A luxury digital fashion house experience centered on the Indian saree, handloom intelligence, and unstitched silk architecture.',
-  keywords: ['haute couture', 'saree', 'handloom', 'digital fashion', 'vyshuuu', 'vyshnavi', 'silk'],
+  keywords: ['haute couture', 'saree', 'handloom', 'digital fashion', 'vyshuuu', 'silk'],
   openGraph: {
     title: 'VYSHUUU — The Unstitched Continuum',
     description: 'The saree is the subject. The browser is the digital loom.',

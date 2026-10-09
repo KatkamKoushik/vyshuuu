@@ -25,6 +25,7 @@ export const ChiaroscuroCursorLight: React.FC = () => {
   const [isPointerActive, setIsPointerActive] = useState(false);
 
   const lightRef = useRef<HTMLDivElement>(null);
+  const scaleRef = useRef(1.0);
   const coordsRef = useRef({
     targetX: -1000,
     targetY: -1000,
@@ -65,19 +66,26 @@ export const ChiaroscuroCursorLight: React.FC = () => {
       setIsPointerActive(false);
     };
 
-    // Smooth viscous damping loop (LERP 0.08)
+    // Smooth viscous damping loop with resting breathing relaxation
     const animate = () => {
       const { targetX, targetY, currentX, currentY } = coordsRef.current;
 
       const dx = targetX - currentX;
       const dy = targetY - currentY;
 
-      // Heavy silk inertia
+      // Heavy silk inertia (CURSOR = PROXIMITY)
       coordsRef.current.currentX += dx * 0.08;
       coordsRef.current.currentY += dy * 0.08;
 
+      // Resting settling & breathing (REST = BREATHING):
+      // During active displacement, light subtly condenses.
+      // As pointer settles into stillness, light blooms gently back to 1.0 without artificial oscillation.
+      const dist = Math.hypot(dx, dy);
+      const targetScale = Math.max(0.965, 1.0 - Math.min(dist * 0.0008, 0.035));
+      scaleRef.current += (targetScale - scaleRef.current) * 0.05;
+
       if (lightRef.current) {
-        lightRef.current.style.transform = `translate3d(${coordsRef.current.currentX}px, ${coordsRef.current.currentY}px, 0)`;
+        lightRef.current.style.transform = `translate3d(${coordsRef.current.currentX}px, ${coordsRef.current.currentY}px, 0) scale(${scaleRef.current.toFixed(4)})`;
       }
 
       rafId = requestAnimationFrame(animate);
@@ -95,10 +103,20 @@ export const ChiaroscuroCursorLight: React.FC = () => {
       setIsLightZone((prev) => (prev !== inLight ? inLight : prev));
     };
 
+    let scrollRafId: number | null = null;
+    const onScroll = () => {
+      if (scrollRafId === null) {
+        scrollRafId = requestAnimationFrame(() => {
+          scrollRafId = null;
+          checkThemeZone();
+        });
+      }
+    };
+
     window.addEventListener('pointermove', onPointerMove, { passive: true });
     window.addEventListener('pointerleave', onPointerLeave);
-    window.addEventListener('scroll', checkThemeZone, { passive: true });
-    window.addEventListener('resize', checkThemeZone, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
 
     rafId = requestAnimationFrame(animate);
     checkThemeZone();
@@ -106,9 +124,10 @@ export const ChiaroscuroCursorLight: React.FC = () => {
     return () => {
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerleave', onPointerLeave);
-      window.removeEventListener('scroll', checkThemeZone);
-      window.removeEventListener('resize', checkThemeZone);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
       cancelAnimationFrame(rafId);
+      if (scrollRafId !== null) cancelAnimationFrame(scrollRafId);
     };
   }, [isReducedMotion, isPointerActive]);
 

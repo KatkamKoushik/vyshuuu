@@ -3,7 +3,7 @@
 import React, { useRef } from 'react';
 import { Wordmark } from '@/components/brand/Wordmark';
 import { useExperienceStore } from '@/stores/experienceStore';
-import { useScrollProgress } from '@/hooks/useScrollProgress';
+import { useScrollProgress, useScrollTriggerCallback } from '@/hooks/useScrollProgress';
 import { setUnfurlingProgress, setGlobalProgress } from '@/lib/scrollBridge';
 
 // Editorial Collection Sections
@@ -26,8 +26,8 @@ export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
   const unfurlingContainerRef = useRef<HTMLDivElement>(null);
 
-  // Overall page narrative progress (0 -> 1)
-  useScrollProgress({
+  // Overall page narrative progress (0 -> 1) without unnecessary root re-renders
+  useScrollTriggerCallback({
     triggerRef: containerRef,
     start: 'top top',
     end: 'bottom bottom',
@@ -95,6 +95,7 @@ export default function Home() {
           The Single Golden Filament descending from darkness
           ==================================================================== */}
       <section
+        id="threshold"
         aria-label="The Threshold"
         className="relative min-h-[85vh] w-full flex flex-col justify-between items-center px-6 py-10 md:py-14 text-center select-none"
       >

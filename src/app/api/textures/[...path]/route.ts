@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'node:fs';
 import path from 'node:path';
+import { getTextureUrl } from '@/lib/assets/cloudinaryAssets';
 
 const TEXTURES_VAULT_ROOT = path.resolve(process.cwd(), 'VYSHUUU-SOURCE-VAULT/04_TEXTURES');
 
@@ -27,6 +28,13 @@ export async function GET(
   }
 
   const requestedPath = pathSegments.join('/');
+
+  // Cloudinary Production Delivery (Zero-bundle Vercel Edge redirect)
+  const cloudinaryUrl = getTextureUrl(requestedPath);
+  if (cloudinaryUrl && cloudinaryUrl.startsWith('https://')) {
+    return NextResponse.redirect(cloudinaryUrl, 307);
+  }
+
   const relativeFilePath = SHORTCUT_MAP[requestedPath] || requestedPath;
 
   // Resolve absolute path and guard against directory traversal

@@ -32,7 +32,7 @@ export const ContinuumSequence: React.FC = () => {
         </div>
 
         {/* Sequence Movement 02: Asymmetric Viscous Fold & Pleats */}
-        <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-24 items-start">
+        <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-6 lg:gap-24 items-start">
           <div className="md:col-span-6 md:pt-28">
             <EditorialPlate
               src="/api/collection/vysh-arc-01/fold"
@@ -74,6 +74,7 @@ export const ContinuumSequence: React.FC = () => {
               aspectRatio="1/1"
               caption="06 // Solid Brocade Selvedge Ribbon"
               metadata="Transverse Zari Inset &middot; Madder Edge"
+              hasSelvedgeGesture={true}
             />
           </div>
         </div>

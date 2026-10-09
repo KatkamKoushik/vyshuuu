@@ -13,6 +13,11 @@ export interface ExperienceState {
   activeAtmosphereId: string;
   selectedAtmosphereId: string | null;
 
+  // Essential resource readiness for Custom Intro Loader
+  texturesLoadedCount: number; // 0 to 9
+  isTexturesLoaded: boolean;
+  hasCompletedIntro: boolean;
+
   // Actions
   setActiveScene: (scene: SceneId) => void;
   setQualityTier: (tier: QualityTier) => void;
@@ -21,6 +26,9 @@ export interface ExperienceState {
   setReducedMotion: (reduced: boolean) => void;
   setWebGLSupported: (supported: boolean) => void;
   setIntroSettled: (settled: boolean) => void;
+  setTexturesLoadedCount: (count: number) => void;
+  setTexturesLoaded: (loaded: boolean) => void;
+  setCompletedIntro: (completed: boolean) => void;
   setActiveAtmosphereId: (id: string) => void;
   setSelectedAtmosphereId: (id: string | null) => void;
   resetAtmosphere: () => void;
@@ -35,6 +43,9 @@ export const useExperienceStore = create<ExperienceState>((set) => ({
   isIntroSettled: false,
   activeAtmosphereId: 'vysh-arc-01',
   selectedAtmosphereId: null,
+  texturesLoadedCount: 0,
+  isTexturesLoaded: false,
+  hasCompletedIntro: false,
 
   setActiveScene: (scene) => set({ activeScene: scene }),
   setQualityTier: (tier) => set({ qualityTier: tier }),
@@ -43,6 +54,9 @@ export const useExperienceStore = create<ExperienceState>((set) => ({
   setReducedMotion: (reduced) => set({ isReducedMotion: reduced }),
   setWebGLSupported: (supported) => set({ webglSupported: supported }),
   setIntroSettled: (settled) => set({ isIntroSettled: settled }),
+  setTexturesLoadedCount: (count) => set({ texturesLoadedCount: count }),
+  setTexturesLoaded: (loaded) => set({ isTexturesLoaded: loaded }),
+  setCompletedIntro: (completed) => set({ hasCompletedIntro: completed }),
   setActiveAtmosphereId: (id) => set({ activeAtmosphereId: id }),
   setSelectedAtmosphereId: (id) =>
     set({

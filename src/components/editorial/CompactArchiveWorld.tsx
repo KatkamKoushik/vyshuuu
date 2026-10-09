@@ -185,6 +185,62 @@ export const CompactArchiveWorld: React.FC<CompactArchiveWorldProps> = ({
   const lastTimeRef = useRef<number | null>(null);
   const pauseUntilRef = useRef<number>(0);
 
+  // Tactile touch & drag physics (DRAG = TOUCH, REST = BREATHING)
+  const isDraggingRef = useRef(false);
+  const dragStartXRef = useRef(0);
+  const dragStartOffsetRef = useRef(0);
+  const dragVelocityRef = useRef(0);
+  const lastDragXRef = useRef(0);
+  const lastDragTimeRef = useRef(0);
+  const hasDraggedRef = useRef(false);
+  const [isPointerDown, setIsPointerDown] = useState(false);
+
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    isDraggingRef.current = true;
+    hasDraggedRef.current = false;
+    dragStartXRef.current = e.clientX;
+    dragStartOffsetRef.current = pixelOffset;
+    lastDragXRef.current = e.clientX;
+    lastDragTimeRef.current = performance.now();
+    dragVelocityRef.current = 0;
+    setIsPointerDown(true);
+    // Pause auto-drift during direct contact
+    pauseUntilRef.current = performance.now() + 60000;
+  }, [pixelOffset]);
+
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (!isDraggingRef.current) return;
+    const dx = e.clientX - dragStartXRef.current;
+    if (Math.abs(dx) > 4) {
+      hasDraggedRef.current = true;
+    }
+    const now = performance.now();
+    const dt = Math.max(1, now - lastDragTimeRef.current);
+    const stepDx = e.clientX - lastDragXRef.current;
+    dragVelocityRef.current = stepDx / dt;
+    lastDragXRef.current = e.clientX;
+    lastDragTimeRef.current = now;
+
+    const target = dragStartOffsetRef.current - dx;
+    setPixelOffset(Math.max(0, Math.min(maxScrollWidth, target)));
+  }, [maxScrollWidth]);
+
+  const handlePointerUp = useCallback(() => {
+    if (!isDraggingRef.current) return;
+    isDraggingRef.current = false;
+    setIsPointerDown(false);
+
+    // Overdamped silk settling momentum release
+    const releaseVelocity = dragVelocityRef.current;
+    if (Math.abs(releaseVelocity) > 0.12) {
+      const momentumDist = releaseVelocity * 300;
+      setPixelOffset((prev) => Math.max(0, Math.min(maxScrollWidth, prev - momentumDist)));
+    }
+
+    // Material settles into stillness before gentle drift resumes
+    pauseUntilRef.current = performance.now() + 2400;
+  }, [maxScrollWidth]);
+
   // Measure track scroll bounds
   const updateScrollBounds = useCallback(() => {
     if (!trackRef.current || !containerRef.current) return;
@@ -207,7 +263,7 @@ export const CompactArchiveWorld: React.FC<CompactArchiveWorldProps> = ({
       return;
     }
 
-    const baseDriftSpeed = isMobile ? 16 : 24; // Editorial fashion-film pacing
+    const baseDriftSpeed = isMobile ? 14 : 20; // Editorial fashion-film pacing
 
     const tick = (time: number) => {
       if (lastTimeRef.current === null) {
@@ -216,20 +272,15 @@ export const CompactArchiveWorld: React.FC<CompactArchiveWorldProps> = ({
       const delta = (time - lastTimeRef.current) / 1000.0;
       lastTimeRef.current = time;
 
-      // Handle pause when user hovers or interacts
-      if (time < pauseUntilRef.current) {
+      // Handle pause when user hovers or drags
+      if (time < pauseUntilRef.current || isDraggingRef.current) {
         animFrameRef.current = requestAnimationFrame(tick);
         return;
       }
 
-      // Organic momentum wave: subtle 0.7Hz breathing cadence mimicking physical silk drape
-      const momentumWave = 1.0 + 0.22 * Math.sin((time / 1000.0) * 0.7);
-      const effectiveSpeed = baseDriftSpeed * momentumWave;
-
       setPixelOffset((prev) => {
-        const next = prev + effectiveSpeed * delta;
+        const next = prev + baseDriftSpeed * delta;
         if (next >= maxScrollWidth) {
-          // Culmination reached: settle into quiet equilibrium hold (zero hard reset, zero jump)
           return maxScrollWidth;
         }
         return next;
@@ -324,7 +375,7 @@ export const CompactArchiveWorld: React.FC<CompactArchiveWorldProps> = ({
                 className="tracking-[0.3em] uppercase font-medium"
                 style={{ color: metallicAccent }}
               >
-                STUDY {String(saree.number).padStart(2, '0')} {'//'} {saree.code}
+                {saree.workNumber || `WORK ${String(saree.number).padStart(2, '0')}`} {'//'} {saree.code}
               </span>
               <span className="opacity-30">&middot;</span>
               <span className="text-white/40 tracking-[0.18em] uppercase">
@@ -341,7 +392,7 @@ export const CompactArchiveWorld: React.FC<CompactArchiveWorldProps> = ({
             </p>
           </div>
 
-          {/* Curatorial Spec Docket */}
+          {/* Curatorial Spec Docket (Museum Nomenclature Registry) */}
           <div
             className={`space-y-1.5 pt-2 ${
               personality.headerAlignment === 'centered'
@@ -350,15 +401,17 @@ export const CompactArchiveWorld: React.FC<CompactArchiveWorldProps> = ({
             }`}
           >
             <div
-              className={`flex items-center gap-3 mono-spec text-[10px] text-white/60 ${
+              className={`flex flex-wrap items-center gap-x-3 gap-y-1 mono-spec text-[10px] text-white/70 ${
                 personality.headerAlignment === 'centered' ? 'justify-center' : 'md:justify-end'
               }`}
             >
-              <span>{saree.weightHand}</span>
-              <span>&middot;</span>
+              <span className="text-white/90">{saree.field || saree.weightHand}</span>
+              <span className="opacity-30">&middot;</span>
               <span style={{ color: metallicAccent }}>
-                {atmosphere.editorial.metallicIdentity || saree.primaryZari}
+                {saree.metallicVocabulary || atmosphere.editorial.metallicIdentity || saree.primaryZari}
               </span>
+              <span className="opacity-30">&middot;</span>
+              <span className="text-white/60">{saree.structuralLogic || saree.textileFamily}</span>
             </div>
 
             <div
@@ -378,11 +431,15 @@ export const CompactArchiveWorld: React.FC<CompactArchiveWorldProps> = ({
         {/* ====================================================================
             THE CONTINUOUS TEXTILE APERTURE
             The photographic plates glide physically through the lit chamber frame.
-            100% natural vertical page scroll; horizontal gliding is an internal film.
+            Supports direct tactile dragging (DRAG = TOUCH) and overdamped settling (REST = BREATHING).
             ==================================================================== */}
         <div
-          className="relative w-full overflow-hidden"
+          className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing select-none"
           style={{ touchAction: 'pan-y' }}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
         >
           {/* Subtle Lateral Vignette Gradients framing the aperture */}
           <div className="absolute left-0 top-0 bottom-0 w-8 md:w-16 bg-gradient-to-r from-[rgba(0,0,0,0.5)] to-transparent z-20 pointer-events-none" />
@@ -393,7 +450,9 @@ export const CompactArchiveWorld: React.FC<CompactArchiveWorldProps> = ({
             className="flex items-start will-change-transform py-3"
             style={{
               transform: `translate3d(-${pixelOffset}px, 0, 0)`,
-              transition: isHovered ? 'transform 0.4s ease-out' : 'none',
+              transition: isPointerDown
+                ? 'none'
+                : 'transform 0.8s cubic-bezier(0.2, 0.9, 0.3, 1)',
             }}
           >
             {plates.map((item, pIdx) => {
@@ -407,7 +466,11 @@ export const CompactArchiveWorld: React.FC<CompactArchiveWorldProps> = ({
               return (
                 <div
                   key={item.key}
-                  onClick={() => onExamine(saree, item.key)}
+                  onClick={() => {
+                    if (!hasDraggedRef.current) {
+                      onExamine(saree, item.key);
+                    }
+                  }}
                   className={`group relative flex-shrink-0 cursor-pointer transition-all duration-700 ${
                     isMobile
                       ? 'w-[78vw] mr-[4.5vw]'

@@ -14,8 +14,14 @@ export function initLenis(): Lenis | null {
   if (lenisInstance) return lenisInstance;
 
   lenisInstance = new Lenis({
-    lerp: 0.08,
+    duration: 0.85,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    orientation: 'vertical',
+    gestureOrientation: 'vertical',
     smoothWheel: true,
+    wheelMultiplier: 1.0,
+    touchMultiplier: 1.0,
+    autoRaf: false,
   });
 
   // Synchronize Lenis scroll with GSAP ScrollTrigger
@@ -26,6 +32,7 @@ export function initLenis(): Lenis | null {
   };
 
   gsap.ticker.add(tickerCallback);
+  // Disable lag smoothing so GSAP ticker never stalls or skips frames during scroll
   gsap.ticker.lagSmoothing(0);
 
   return lenisInstance;

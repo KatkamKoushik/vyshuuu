@@ -7,6 +7,7 @@ import { useExperienceStore } from '@/stores/experienceStore';
 
 export const Masthead: React.FC = () => {
   const isIntroSettled = useExperienceStore((s) => s.isIntroSettled);
+  const hasCompletedIntro = useExperienceStore((s) => s.hasCompletedIntro);
   const [isLightZone, setIsLightZone] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -46,10 +47,14 @@ export const Masthead: React.FC = () => {
     };
   }, []);
 
+  if (!hasCompletedIntro) {
+    return null;
+  }
+
   return (
     <header
       className={`fixed top-0 left-0 w-full z-[50] h-[72px] px-6 md:px-12 flex items-center justify-between transition-all duration-700 ${
-        isIntroSettled ? 'opacity-100' : 'opacity-0'
+        isIntroSettled ? 'opacity-100' : 'opacity-0 pointer-events-none'
       } ${
         isScrolled
           ? isLightZone

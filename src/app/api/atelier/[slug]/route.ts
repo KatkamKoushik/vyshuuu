@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'node:fs';
 import path from 'node:path';
+import { getAtelierUrl } from '@/lib/assets/cloudinaryAssets';
 
 const ATELIER_VAULT_ROOT = path.resolve(process.cwd(), 'VYSHUUU-SOURCE-VAULT/08_ATELIER');
 
@@ -19,6 +20,12 @@ export async function GET(
 ) {
   const { slug } = await params;
   const normalizedSlug = slug.toLowerCase();
+
+  // Cloudinary Production Delivery (Zero-bundle Vercel Edge redirect)
+  const cloudinaryUrl = getAtelierUrl(normalizedSlug);
+  if (cloudinaryUrl && cloudinaryUrl.startsWith('https://')) {
+    return NextResponse.redirect(cloudinaryUrl, 307);
+  }
 
   const fileName = ATELIER_ASSET_MAP[normalizedSlug];
   if (!fileName) {

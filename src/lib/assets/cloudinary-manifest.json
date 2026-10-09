@@ -1,0 +1,693 @@
+{
+  "textures": {
+    "border-mask": {
+      "public_id": "vyshuuu/textures/border-mask",
+      "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545963/vyshuuu/textures/border-mask.png",
+      "bytes": 35809,
+      "width": 1997,
+      "height": 787
+    },
+    "pallu-mask": {
+      "public_id": "vyshuuu/textures/pallu-mask",
+      "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545962/vyshuuu/textures/pallu-mask.png",
+      "bytes": 4728,
+      "width": 1997,
+      "height": 787
+    },
+    "zari-mask": {
+      "public_id": "vyshuuu/textures/zari-mask",
+      "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545964/vyshuuu/textures/zari-mask.png",
+      "bytes": 529123,
+      "width": 1997,
+      "height": 787
+    },
+    "base-color": {
+      "public_id": "vyshuuu/textures/base-color",
+      "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545964/vyshuuu/textures/base-color.png",
+      "bytes": 2417134,
+      "width": 1997,
+      "height": 787
+    },
+    "red-accent": {
+      "public_id": "vyshuuu/textures/red-accent",
+      "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545965/vyshuuu/textures/red-accent.png",
+      "bytes": 9324,
+      "width": 1997,
+      "height": 787
+    },
+    "weave-direction": {
+      "public_id": "vyshuuu/textures/weave-direction",
+      "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545965/vyshuuu/textures/weave-direction.png",
+      "bytes": 490405,
+      "width": 1997,
+      "height": 787
+    },
+    "roughness": {
+      "public_id": "vyshuuu/textures/roughness",
+      "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545966/vyshuuu/textures/roughness.png",
+      "bytes": 383979,
+      "width": 1997,
+      "height": 787
+    },
+    "micro-normal": {
+      "public_id": "vyshuuu/textures/micro-normal",
+      "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545967/vyshuuu/textures/micro-normal.png",
+      "bytes": 1474324,
+      "width": 1997,
+      "height": 787
+    },
+    "edge-fringe": {
+      "public_id": "vyshuuu/textures/edge-fringe",
+      "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545968/vyshuuu/textures/edge-fringe.png",
+      "bytes": 7443,
+      "width": 1997,
+      "height": 787
+    }
+  },
+  "atelier": {
+    "vysh-atl-03": {
+      "public_id": "vyshuuu/atelier/vysh-atl-03",
+      "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545968/vyshuuu/atelier/vysh-atl-03.jpg",
+      "bytes": 777966,
+      "width": 896,
+      "height": 1200
+    },
+    "vysh-atl-02": {
+      "public_id": "vyshuuu/atelier/vysh-atl-02",
+      "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545968/vyshuuu/atelier/vysh-atl-02.jpg",
+      "bytes": 575367,
+      "width": 896,
+      "height": 1200
+    },
+    "vysh-atl-01": {
+      "public_id": "vyshuuu/atelier/vysh-atl-01",
+      "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545968/vyshuuu/atelier/vysh-atl-01.jpg",
+      "bytes": 861425,
+      "width": 896,
+      "height": 1200
+    },
+    "vysh-atl-04": {
+      "public_id": "vyshuuu/atelier/vysh-atl-04",
+      "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545969/vyshuuu/atelier/vysh-atl-04.jpg",
+      "bytes": 654821,
+      "width": 896,
+      "height": 1200
+    },
+    "vysh-atl-05": {
+      "public_id": "vyshuuu/atelier/vysh-atl-05",
+      "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545969/vyshuuu/atelier/vysh-atl-05.jpg",
+      "bytes": 696308,
+      "width": 896,
+      "height": 1200
+    }
+  },
+  "collection": {
+    "vysh-arc-01": {
+      "flat": {
+        "public_id": "vyshuuu/collection/vysh-arc-01/flat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545969/vyshuuu/collection/vysh-arc-01/flat.png",
+        "bytes": 2625775,
+        "width": 1672,
+        "height": 941
+      },
+      "hero": {
+        "public_id": "vyshuuu/collection/vysh-arc-01/hero",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545970/vyshuuu/collection/vysh-arc-01/hero.png",
+        "bytes": 2900372,
+        "width": 1122,
+        "height": 1402
+      },
+      "pleat": {
+        "public_id": "vyshuuu/collection/vysh-arc-01/pleat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545971/vyshuuu/collection/vysh-arc-01/pleat.png",
+        "bytes": 2867853,
+        "width": 1086,
+        "height": 1448
+      },
+      "pallu": {
+        "public_id": "vyshuuu/collection/vysh-arc-01/pallu",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545971/vyshuuu/collection/vysh-arc-01/pallu.png",
+        "bytes": 3221577,
+        "width": 1672,
+        "height": 941
+      },
+      "border": {
+        "public_id": "vyshuuu/collection/vysh-arc-01/border",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545971/vyshuuu/collection/vysh-arc-01/border.png",
+        "bytes": 3000426,
+        "width": 1254,
+        "height": 1254
+      },
+      "fold": {
+        "public_id": "vyshuuu/collection/vysh-arc-01/fold",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545971/vyshuuu/collection/vysh-arc-01/fold.png",
+        "bytes": 2803197,
+        "width": 1086,
+        "height": 1448
+      },
+      "editorial": {
+        "public_id": "vyshuuu/collection/vysh-arc-01/editorial",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545973/vyshuuu/collection/vysh-arc-01/editorial.png",
+        "bytes": 2688416,
+        "width": 1672,
+        "height": 941
+      },
+      "macro": {
+        "public_id": "vyshuuu/collection/vysh-arc-01/macro",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545973/vyshuuu/collection/vysh-arc-01/macro.png",
+        "bytes": 2750032,
+        "width": 1254,
+        "height": 1254
+      }
+    },
+    "vysh-chd-01": {
+      "flat": {
+        "public_id": "vyshuuu/collection/vysh-chd-01/flat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545973/vyshuuu/collection/vysh-chd-01/flat.png",
+        "bytes": 2634299,
+        "width": 1672,
+        "height": 941
+      },
+      "hero": {
+        "public_id": "vyshuuu/collection/vysh-chd-01/hero",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545973/vyshuuu/collection/vysh-chd-01/hero.png",
+        "bytes": 2844480,
+        "width": 1122,
+        "height": 1402
+      },
+      "fold": {
+        "public_id": "vyshuuu/collection/vysh-chd-01/fold",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545975/vyshuuu/collection/vysh-chd-01/fold.png",
+        "bytes": 2999870,
+        "width": 1086,
+        "height": 1448
+      },
+      "border": {
+        "public_id": "vyshuuu/collection/vysh-chd-01/border",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545975/vyshuuu/collection/vysh-chd-01/border.png",
+        "bytes": 2784092,
+        "width": 1254,
+        "height": 1254
+      },
+      "pallu": {
+        "public_id": "vyshuuu/collection/vysh-chd-01/pallu",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545975/vyshuuu/collection/vysh-chd-01/pallu.png",
+        "bytes": 3057003,
+        "width": 1672,
+        "height": 941
+      },
+      "pleat": {
+        "public_id": "vyshuuu/collection/vysh-chd-01/pleat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545975/vyshuuu/collection/vysh-chd-01/pleat.png",
+        "bytes": 2804476,
+        "width": 1086,
+        "height": 1448
+      },
+      "macro": {
+        "public_id": "vyshuuu/collection/vysh-chd-01/macro",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545976/vyshuuu/collection/vysh-chd-01/macro.png",
+        "bytes": 3260156,
+        "width": 1254,
+        "height": 1254
+      },
+      "editorial": {
+        "public_id": "vyshuuu/collection/vysh-chd-01/editorial",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545977/vyshuuu/collection/vysh-chd-01/editorial.png",
+        "bytes": 2765837,
+        "width": 1672,
+        "height": 941
+      }
+    },
+    "vysh-kjv-01": {
+      "flat": {
+        "public_id": "vyshuuu/collection/vysh-kjv-01/flat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545977/vyshuuu/collection/vysh-kjv-01/flat.png",
+        "bytes": 2922420,
+        "width": 1774,
+        "height": 887
+      },
+      "hero": {
+        "public_id": "vyshuuu/collection/vysh-kjv-01/hero",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545976/vyshuuu/collection/vysh-kjv-01/hero.png",
+        "bytes": 2857185,
+        "width": 1122,
+        "height": 1402
+      },
+      "fold": {
+        "public_id": "vyshuuu/collection/vysh-kjv-01/fold",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545978/vyshuuu/collection/vysh-kjv-01/fold.png",
+        "bytes": 2802460,
+        "width": 1402,
+        "height": 1122
+      },
+      "border": {
+        "public_id": "vyshuuu/collection/vysh-kjv-01/border",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545978/vyshuuu/collection/vysh-kjv-01/border.png",
+        "bytes": 2980828,
+        "width": 1122,
+        "height": 1402
+      },
+      "pallu": {
+        "public_id": "vyshuuu/collection/vysh-kjv-01/pallu",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545978/vyshuuu/collection/vysh-kjv-01/pallu.png",
+        "bytes": 3124108,
+        "width": 1122,
+        "height": 1402
+      },
+      "pleat": {
+        "public_id": "vyshuuu/collection/vysh-kjv-01/pleat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545978/vyshuuu/collection/vysh-kjv-01/pleat.png",
+        "bytes": 2672127,
+        "width": 1122,
+        "height": 1402
+      },
+      "macro": {
+        "public_id": "vyshuuu/collection/vysh-kjv-01/macro",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545980/vyshuuu/collection/vysh-kjv-01/macro.png",
+        "bytes": 2840762,
+        "width": 1122,
+        "height": 1402
+      },
+      "editorial": {
+        "public_id": "vyshuuu/collection/vysh-kjv-01/editorial",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545980/vyshuuu/collection/vysh-kjv-01/editorial.png",
+        "bytes": 2921017,
+        "width": 1122,
+        "height": 1402
+      }
+    },
+    "vysh-bnr-01": {
+      "hero": {
+        "public_id": "vyshuuu/collection/vysh-bnr-01/hero",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545980/vyshuuu/collection/vysh-bnr-01/hero.png",
+        "bytes": 2750709,
+        "width": 1122,
+        "height": 1402
+      },
+      "flat": {
+        "public_id": "vyshuuu/collection/vysh-bnr-01/flat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545980/vyshuuu/collection/vysh-bnr-01/flat.png",
+        "bytes": 3780811,
+        "width": 1122,
+        "height": 1402
+      },
+      "fold": {
+        "public_id": "vyshuuu/collection/vysh-bnr-01/fold",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545981/vyshuuu/collection/vysh-bnr-01/fold.png",
+        "bytes": 2761911,
+        "width": 1122,
+        "height": 1402
+      },
+      "border": {
+        "public_id": "vyshuuu/collection/vysh-bnr-01/border",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545982/vyshuuu/collection/vysh-bnr-01/border.png",
+        "bytes": 3054078,
+        "width": 1122,
+        "height": 1402
+      },
+      "pleat": {
+        "public_id": "vyshuuu/collection/vysh-bnr-01/pleat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545982/vyshuuu/collection/vysh-bnr-01/pleat.png",
+        "bytes": 2933251,
+        "width": 1122,
+        "height": 1402
+      },
+      "pallu": {
+        "public_id": "vyshuuu/collection/vysh-bnr-01/pallu",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545982/vyshuuu/collection/vysh-bnr-01/pallu.png",
+        "bytes": 3088217,
+        "width": 1122,
+        "height": 1402
+      },
+      "macro": {
+        "public_id": "vyshuuu/collection/vysh-bnr-01/macro",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545983/vyshuuu/collection/vysh-bnr-01/macro.png",
+        "bytes": 2798079,
+        "width": 1122,
+        "height": 1402
+      },
+      "editorial": {
+        "public_id": "vyshuuu/collection/vysh-bnr-01/editorial",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545984/vyshuuu/collection/vysh-bnr-01/editorial.png",
+        "bytes": 2943126,
+        "width": 1122,
+        "height": 1402
+      }
+    },
+    "vysh-pth-01": {
+      "hero": {
+        "public_id": "vyshuuu/collection/vysh-pth-01/hero",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545984/vyshuuu/collection/vysh-pth-01/hero.png",
+        "bytes": 3168483,
+        "width": 1122,
+        "height": 1402
+      },
+      "flat": {
+        "public_id": "vyshuuu/collection/vysh-pth-01/flat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545984/vyshuuu/collection/vysh-pth-01/flat.png",
+        "bytes": 2884723,
+        "width": 1672,
+        "height": 941
+      },
+      "fold": {
+        "public_id": "vyshuuu/collection/vysh-pth-01/fold",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545985/vyshuuu/collection/vysh-pth-01/fold.png",
+        "bytes": 2882134,
+        "width": 1402,
+        "height": 1122
+      },
+      "pleat": {
+        "public_id": "vyshuuu/collection/vysh-pth-01/pleat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545986/vyshuuu/collection/vysh-pth-01/pleat.png",
+        "bytes": 2966475,
+        "width": 1122,
+        "height": 1402
+      },
+      "border": {
+        "public_id": "vyshuuu/collection/vysh-pth-01/border",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545986/vyshuuu/collection/vysh-pth-01/border.png",
+        "bytes": 3591552,
+        "width": 1122,
+        "height": 1402
+      },
+      "pallu": {
+        "public_id": "vyshuuu/collection/vysh-pth-01/pallu",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545986/vyshuuu/collection/vysh-pth-01/pallu.png",
+        "bytes": 3612346,
+        "width": 1122,
+        "height": 1402
+      },
+      "macro": {
+        "public_id": "vyshuuu/collection/vysh-pth-01/macro",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545988/vyshuuu/collection/vysh-pth-01/macro.png",
+        "bytes": 3202318,
+        "width": 1122,
+        "height": 1402
+      },
+      "editorial": {
+        "public_id": "vyshuuu/collection/vysh-pth-01/editorial",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545988/vyshuuu/collection/vysh-pth-01/editorial.png",
+        "bytes": 2850296,
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    "vysh-jmd-01": {
+      "flat": {
+        "public_id": "vyshuuu/collection/vysh-jmd-01/flat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545989/vyshuuu/collection/vysh-jmd-01/flat.png",
+        "bytes": 2960789,
+        "width": 1672,
+        "height": 941
+      },
+      "hero": {
+        "public_id": "vyshuuu/collection/vysh-jmd-01/hero",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545989/vyshuuu/collection/vysh-jmd-01/hero.png",
+        "bytes": 2901501,
+        "width": 1122,
+        "height": 1402
+      },
+      "fold": {
+        "public_id": "vyshuuu/collection/vysh-jmd-01/fold",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545990/vyshuuu/collection/vysh-jmd-01/fold.png",
+        "bytes": 3048366,
+        "width": 1536,
+        "height": 1024
+      },
+      "pleat": {
+        "public_id": "vyshuuu/collection/vysh-jmd-01/pleat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545990/vyshuuu/collection/vysh-jmd-01/pleat.png",
+        "bytes": 2993596,
+        "width": 1122,
+        "height": 1402
+      },
+      "border": {
+        "public_id": "vyshuuu/collection/vysh-jmd-01/border",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545990/vyshuuu/collection/vysh-jmd-01/border.png",
+        "bytes": 2946252,
+        "width": 1536,
+        "height": 1024
+      },
+      "pallu": {
+        "public_id": "vyshuuu/collection/vysh-jmd-01/pallu",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545990/vyshuuu/collection/vysh-jmd-01/pallu.png",
+        "bytes": 3099231,
+        "width": 1122,
+        "height": 1402
+      },
+      "macro": {
+        "public_id": "vyshuuu/collection/vysh-jmd-01/macro",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545992/vyshuuu/collection/vysh-jmd-01/macro.png",
+        "bytes": 3148343,
+        "width": 1536,
+        "height": 1024
+      },
+      "editorial": {
+        "public_id": "vyshuuu/collection/vysh-jmd-01/editorial",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545992/vyshuuu/collection/vysh-jmd-01/editorial.png",
+        "bytes": 2845981,
+        "width": 1122,
+        "height": 1402
+      }
+    },
+    "vysh-kta-01": {
+      "hero": {
+        "public_id": "vyshuuu/collection/vysh-kta-01/hero",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545992/vyshuuu/collection/vysh-kta-01/hero.png",
+        "bytes": 3164869,
+        "width": 1122,
+        "height": 1402
+      },
+      "flat": {
+        "public_id": "vyshuuu/collection/vysh-kta-01/flat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545992/vyshuuu/collection/vysh-kta-01/flat.png",
+        "bytes": 3088416,
+        "width": 1086,
+        "height": 1448
+      },
+      "fold": {
+        "public_id": "vyshuuu/collection/vysh-kta-01/fold",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545993/vyshuuu/collection/vysh-kta-01/fold.png",
+        "bytes": 2829784,
+        "width": 1122,
+        "height": 1402
+      },
+      "pleat": {
+        "public_id": "vyshuuu/collection/vysh-kta-01/pleat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545994/vyshuuu/collection/vysh-kta-01/pleat.png",
+        "bytes": 2897861,
+        "width": 1122,
+        "height": 1402
+      },
+      "border": {
+        "public_id": "vyshuuu/collection/vysh-kta-01/border",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545994/vyshuuu/collection/vysh-kta-01/border.png",
+        "bytes": 3175301,
+        "width": 1254,
+        "height": 1254
+      },
+      "pallu": {
+        "public_id": "vyshuuu/collection/vysh-kta-01/pallu",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545994/vyshuuu/collection/vysh-kta-01/pallu.png",
+        "bytes": 3312353,
+        "width": 1672,
+        "height": 941
+      },
+      "macro": {
+        "public_id": "vyshuuu/collection/vysh-kta-01/macro",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545996/vyshuuu/collection/vysh-kta-01/macro.png",
+        "bytes": 3013450,
+        "width": 1254,
+        "height": 1254
+      },
+      "editorial": {
+        "public_id": "vyshuuu/collection/vysh-kta-01/editorial",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545997/vyshuuu/collection/vysh-kta-01/editorial.png",
+        "bytes": 3188024,
+        "width": 1086,
+        "height": 1448
+      }
+    },
+    "vysh-tsr-01": {
+      "hero": {
+        "public_id": "vyshuuu/collection/vysh-tsr-01/hero",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545997/vyshuuu/collection/vysh-tsr-01/hero.png",
+        "bytes": 2944401,
+        "width": 1122,
+        "height": 1402
+      },
+      "flat": {
+        "public_id": "vyshuuu/collection/vysh-tsr-01/flat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545997/vyshuuu/collection/vysh-tsr-01/flat.png",
+        "bytes": 3720041,
+        "width": 1536,
+        "height": 1024
+      },
+      "fold": {
+        "public_id": "vyshuuu/collection/vysh-tsr-01/fold",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545998/vyshuuu/collection/vysh-tsr-01/fold.png",
+        "bytes": 3060803,
+        "width": 1122,
+        "height": 1402
+      },
+      "pleat": {
+        "public_id": "vyshuuu/collection/vysh-tsr-01/pleat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545998/vyshuuu/collection/vysh-tsr-01/pleat.png",
+        "bytes": 2923158,
+        "width": 1122,
+        "height": 1402
+      },
+      "pallu": {
+        "public_id": "vyshuuu/collection/vysh-tsr-01/pallu",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545999/vyshuuu/collection/vysh-tsr-01/pallu.png",
+        "bytes": 3015020,
+        "width": 1122,
+        "height": 1402
+      },
+      "border": {
+        "public_id": "vyshuuu/collection/vysh-tsr-01/border",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791545999/vyshuuu/collection/vysh-tsr-01/border.png",
+        "bytes": 3010172,
+        "width": 1122,
+        "height": 1402
+      },
+      "macro": {
+        "public_id": "vyshuuu/collection/vysh-tsr-01/macro",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546000/vyshuuu/collection/vysh-tsr-01/macro.png",
+        "bytes": 2617038,
+        "width": 1122,
+        "height": 1402
+      },
+      "editorial": {
+        "public_id": "vyshuuu/collection/vysh-tsr-01/editorial",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546001/vyshuuu/collection/vysh-tsr-01/editorial.png",
+        "bytes": 3110362,
+        "width": 1122,
+        "height": 1402
+      }
+    },
+    "vysh-ctr-01": {
+      "hero": {
+        "public_id": "vyshuuu/collection/vysh-ctr-01/hero",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546001/vyshuuu/collection/vysh-ctr-01/hero.png",
+        "bytes": 3289537,
+        "width": 1122,
+        "height": 1402
+      },
+      "flat": {
+        "public_id": "vyshuuu/collection/vysh-ctr-01/flat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546001/vyshuuu/collection/vysh-ctr-01/flat.png",
+        "bytes": 4096514,
+        "width": 1536,
+        "height": 1024
+      },
+      "fold": {
+        "public_id": "vyshuuu/collection/vysh-ctr-01/fold",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546003/vyshuuu/collection/vysh-ctr-01/fold.png",
+        "bytes": 3713184,
+        "width": 1122,
+        "height": 1402
+      },
+      "pleat": {
+        "public_id": "vyshuuu/collection/vysh-ctr-01/pleat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546003/vyshuuu/collection/vysh-ctr-01/pleat.png",
+        "bytes": 3525606,
+        "width": 1254,
+        "height": 1254
+      },
+      "border": {
+        "public_id": "vyshuuu/collection/vysh-ctr-01/border",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546003/vyshuuu/collection/vysh-ctr-01/border.png",
+        "bytes": 3229175,
+        "width": 1254,
+        "height": 1254
+      },
+      "pallu": {
+        "public_id": "vyshuuu/collection/vysh-ctr-01/pallu",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546003/vyshuuu/collection/vysh-ctr-01/pallu.png",
+        "bytes": 3506443,
+        "width": 1672,
+        "height": 941
+      },
+      "macro": {
+        "public_id": "vyshuuu/collection/vysh-ctr-01/macro",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546005/vyshuuu/collection/vysh-ctr-01/macro.png",
+        "bytes": 3165811,
+        "width": 1254,
+        "height": 1254
+      },
+      "editorial": {
+        "public_id": "vyshuuu/collection/vysh-ctr-01/editorial",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546005/vyshuuu/collection/vysh-ctr-01/editorial.png",
+        "bytes": 3010365,
+        "width": 1086,
+        "height": 1448
+      }
+    },
+    "vysh-kjv-02": {
+      "hero": {
+        "public_id": "vyshuuu/collection/vysh-kjv-02/hero",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546005/vyshuuu/collection/vysh-kjv-02/hero.png",
+        "bytes": 2801127,
+        "width": 1122,
+        "height": 1402
+      },
+      "flat": {
+        "public_id": "vyshuuu/collection/vysh-kjv-02/flat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546006/vyshuuu/collection/vysh-kjv-02/flat.png",
+        "bytes": 3361575,
+        "width": 1122,
+        "height": 1402
+      },
+      "fold": {
+        "public_id": "vyshuuu/collection/vysh-kjv-02/fold",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546007/vyshuuu/collection/vysh-kjv-02/fold.png",
+        "bytes": 3290236,
+        "width": 1122,
+        "height": 1402
+      },
+      "pleat": {
+        "public_id": "vyshuuu/collection/vysh-kjv-02/pleat",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546008/vyshuuu/collection/vysh-kjv-02/pleat.png",
+        "bytes": 2972420,
+        "width": 1122,
+        "height": 1402
+      },
+      "border": {
+        "public_id": "vyshuuu/collection/vysh-kjv-02/border",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546008/vyshuuu/collection/vysh-kjv-02/border.png",
+        "bytes": 3149469,
+        "width": 1122,
+        "height": 1402
+      },
+      "pallu": {
+        "public_id": "vyshuuu/collection/vysh-kjv-02/pallu",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546008/vyshuuu/collection/vysh-kjv-02/pallu.png",
+        "bytes": 3255746,
+        "width": 1672,
+        "height": 941
+      },
+      "macro": {
+        "public_id": "vyshuuu/collection/vysh-kjv-02/macro",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546010/vyshuuu/collection/vysh-kjv-02/macro.png",
+        "bytes": 2788217,
+        "width": 1254,
+        "height": 1254
+      },
+      "editorial": {
+        "public_id": "vyshuuu/collection/vysh-kjv-02/editorial",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546011/vyshuuu/collection/vysh-kjv-02/editorial.png",
+        "bytes": 3045355,
+        "width": 1122,
+        "height": 1402
+      },
+      "edge": {
+        "public_id": "vyshuuu/collection/vysh-kjv-02/edge",
+        "secure_url": "https://res.cloudinary.com/xjdxk6mg/image/upload/v1791546010/vyshuuu/collection/vysh-kjv-02/edge.png",
+        "bytes": 2911312,
+        "width": 1122,
+        "height": 1402
+      }
+    }
+  }
+}

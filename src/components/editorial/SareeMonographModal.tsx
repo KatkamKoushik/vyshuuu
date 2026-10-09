@@ -4,7 +4,9 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { SareeConcept, SareeAssetMeta } from '@/lib/collection/collectionData';
 import { EditorialPlate } from './EditorialPlate';
+import { MicroscopicWeaveLoupe } from './MicroscopicWeaveLoupe';
 import { getAtmosphere } from '@/lib/atmosphere/collectionAtmospheres';
+import { getLenis } from '@/lib/lenis';
 
 export interface SareeMonographModalProps {
   saree: SareeConcept | null;
@@ -13,6 +15,7 @@ export interface SareeMonographModalProps {
 
 export const SareeMonographModal: React.FC<SareeMonographModalProps> = ({ saree, onClose }) => {
   const [activeAssetKey, setActiveAssetKey] = useState<string>('hero');
+  const [isLoupeOpen, setIsLoupeOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -40,10 +43,18 @@ export const SareeMonographModal: React.FC<SareeMonographModalProps> = ({ saree,
     if (saree) {
       window.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
+      const lenis = getLenis();
+      if (lenis) {
+        lenis.stop();
+      }
     }
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
+      const lenis = getLenis();
+      if (lenis) {
+        lenis.start();
+      }
     };
   }, [saree, handleKeyDown]);
 
@@ -65,17 +76,20 @@ export const SareeMonographModal: React.FC<SareeMonographModalProps> = ({ saree,
       role="dialog"
       aria-modal="true"
       aria-labelledby="monograph-title"
-      className="fixed inset-0 z-[150] flex items-center justify-center overflow-y-auto backdrop-blur-2xl p-4 sm:p-10 md:p-14 lg:p-20 select-none transition-colors duration-700"
+      data-lenis-prevent="true"
+      className="fixed inset-0 z-[150] flex items-start sm:items-center justify-center overflow-y-auto backdrop-blur-2xl p-3 sm:p-6 md:p-8 lg:p-10 transition-colors duration-700"
       style={{
         backgroundColor: `${atmosphere.palette.background}f5`,
       }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
+      onWheel={(e) => e.stopPropagation()}
     >
       {/* Archival Folio Object: Intimate examination chamber sheet surrounded by vast atmospheric negative space */}
       <div
-        className="relative w-full max-w-4xl lg:max-w-[56rem] max-h-[94vh] overflow-y-auto bg-[#faf7f0] text-[#1b1916] border border-[#ded5c6] shadow-[0_35px_100px_-25px_rgba(0,0,0,0.92)] p-6 sm:p-10 md:p-12 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        data-lenis-prevent="true"
+        className="relative w-full max-w-4xl lg:max-w-[62rem] my-auto max-h-[92vh] overflow-y-auto bg-[#faf7f0] text-[#1b1916] border border-[#ded5c6] shadow-[0_35px_100px_-25px_rgba(0,0,0,0.92)] p-5 sm:p-8 md:p-10 [scrollbar-width:thin] [scrollbar-color:#c5a869_#ede7dc] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-[#ede7dc] [&::-webkit-scrollbar-thumb]:bg-[#c5a869]/70 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#c5a869]"
       >
         {/* Subtle Top Dossier Bar: Archival Reference & Quiet Escape Inscription */}
         <div className="flex items-start justify-between gap-3 border-b border-[#ded5c6]/80 pb-3 mb-4.5">
@@ -87,7 +101,7 @@ export const SareeMonographModal: React.FC<SareeMonographModalProps> = ({ saree,
                 className="font-medium"
                 style={{ color: atmosphere.palette.accent }}
               >
-                STUDY {String(saree.number).padStart(2, '0')}
+                {saree.workNumber || `WORK ${String(saree.number).padStart(2, '0')}`}
               </span>
               <span>&middot;</span>
               <span>{saree.code}</span>
@@ -161,26 +175,47 @@ export const SareeMonographModal: React.FC<SareeMonographModalProps> = ({ saree,
           </div>
         </nav>
 
-        {/* Central Textile Examination Stage: The Specimen Plate Dominates */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 lg:gap-8 items-start mb-8">
+        {/* Central Textile Examination Stage: The Specimen Plate and Curatorial Docket */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start mb-8">
           
-          {/* Main Textile Specimen Plate */}
-          <div className="lg:col-span-8">
-            <EditorialPlate
-              src={currentAsset.src}
-              alt={`${saree.name} — ${currentAsset.caption}`}
-              aspectRatio={currentAsset.aspectRatio}
-              variant="light"
-              speed="standard"
-              priority={true}
-              caption={currentAsset.caption}
-              metadata={currentAsset.metadata}
-              className="w-full"
-            />
+          {/* Main Textile Specimen Plate with Microscopic Weave Loupe Integration */}
+          <div className="lg:col-span-7 flex flex-col gap-2.5">
+            <div
+              className="relative group cursor-pointer"
+              onClick={() => setIsLoupeOpen(true)}
+              title="Click to enter Microscopic Weave Loupe (1×–4×)"
+            >
+              <EditorialPlate
+                src={currentAsset.src}
+                alt={`${saree.name} — ${currentAsset.caption}`}
+                aspectRatio={currentAsset.aspectRatio}
+                variant="light"
+                speed="standard"
+                priority={true}
+                caption={currentAsset.caption}
+                metadata={currentAsset.metadata}
+                className="w-full max-h-[58vh]"
+                imageClassName="max-h-[52vh] object-cover"
+              />
+              {/* Quiet Museum Reticle Hover Cue */}
+              <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 mono-spec text-[8px] tracking-[0.2em] uppercase px-2 py-1 bg-black/85 text-[#faf7f0] rounded-[1px] pointer-events-none">
+                [ ⌕ MICROSCOPIC LOUPE ]
+              </div>
+            </div>
+
+            {/* Direct Loupe Trigger Button */}
+            <button
+              type="button"
+              onClick={() => setIsLoupeOpen(true)}
+              className="self-start flex items-center gap-2 mono-spec text-[8.5px] text-[#786c59] hover:text-[#1b1916] tracking-[0.22em] uppercase transition-colors py-0.5 cursor-pointer"
+            >
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: atmosphere.palette.accent }} />
+              <span>INSPECT WEAVE STRUCTURE [ 1&times;&ndash;4&times; LOUPE ] &nearr;</span>
+            </button>
           </div>
 
           {/* Archival Specimen Docket & Observations (Quiet, Integrated Parchment Column) */}
-          <div className="lg:col-span-4 flex flex-col justify-between space-y-6 lg:border-l lg:border-[#ded5c6]/70 lg:pl-6 lg:py-1">
+          <div className="lg:col-span-5 flex flex-col justify-between space-y-5 lg:border-l lg:border-[#ded5c6]/70 lg:pl-6 lg:py-1">
             <div className="space-y-4">
               <div className="space-y-1">
                 <span
@@ -200,28 +235,40 @@ export const SareeMonographModal: React.FC<SareeMonographModalProps> = ({ saree,
                 </p>
               </div>
 
-              {/* Curatorial Art-Directed Attributes (Correction 04: No physical alloy claim) */}
-              <div className="pt-3.5 border-t border-[#ded5c6]/70 space-y-2 mono-spec text-[9.5px] text-[#635a4d]">
-                <div className="flex justify-between">
-                  <span className="opacity-60">HAND FEEL &middot; DRAPE</span>
-                  <span className="font-medium text-[#1b1916]">{saree.weightHand}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="opacity-60">OPTICAL DENSITY</span>
-                  <span className="font-medium text-[#1b1916]">{saree.opacity}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="opacity-60">SIGNATURE METALLIC TONE</span>
-                  <span
-                    className="font-medium"
-                    style={{ color: atmosphere.palette.accent }}
-                  >
-                    {saree.primaryZari}
+              {/* Curatorial Art-Directed Attributes (Museum Nomenclature Registry) */}
+              <div className="pt-3 border-t border-[#ded5c6]/70 space-y-2.5 mono-spec text-[9px] text-[#635a4d]">
+                <div className="flex justify-between items-baseline gap-3">
+                  <span className="opacity-60 shrink-0 font-medium">WORK REGISTRY</span>
+                  <span className="font-semibold text-[#1b1916] text-right">
+                    {saree.workNumber || `WORK ${String(saree.number).padStart(2, '0')}`}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="opacity-60">TEXTILE LINEAGE</span>
-                  <span className="font-medium text-[#1b1916]">{saree.textileFamily}</span>
+                <div className="flex justify-between items-baseline gap-3">
+                  <span className="opacity-60 shrink-0">FIELD</span>
+                  <span className="font-medium text-[#1b1916] text-right">
+                    {saree.field || saree.weightHand}
+                  </span>
+                </div>
+                <div className="flex justify-between items-baseline gap-3">
+                  <span className="opacity-60 shrink-0">METALLIC VOCABULARY</span>
+                  <span
+                    className="font-medium text-right"
+                    style={{ color: atmosphere.palette.accent }}
+                  >
+                    {saree.metallicVocabulary || saree.primaryZari}
+                  </span>
+                </div>
+                <div className="flex justify-between items-baseline gap-3">
+                  <span className="opacity-60 shrink-0">STRUCTURAL LOGIC</span>
+                  <span className="font-medium text-[#1b1916] text-right">
+                    {saree.structuralLogic || saree.textileFamily}
+                  </span>
+                </div>
+                <div className="flex justify-between items-baseline gap-3">
+                  <span className="opacity-60 shrink-0">SIMULATED BEHAVIOR</span>
+                  <span className="font-medium text-[#1b1916] text-right">
+                    {saree.simulatedBehavior || saree.weightHand}
+                  </span>
                 </div>
               </div>
             </div>
@@ -318,6 +365,19 @@ export const SareeMonographModal: React.FC<SareeMonographModalProps> = ({ saree,
         </div>
 
       </div>
+
+      {/* Microscopic Weave Loupe Overlay (Pillar 2) */}
+      <MicroscopicWeaveLoupe
+        isOpen={isLoupeOpen}
+        onClose={() => setIsLoupeOpen(false)}
+        src={currentAsset.src}
+        alt={`${saree.name} — ${currentAsset.caption}`}
+        title={`${saree.name} // ${currentAsset.label}`}
+        workNumber={saree.workNumber || `WORK ${String(saree.number).padStart(2, '0')}`}
+        structuralLogic={saree.structuralLogic}
+        metallicAccent={atmosphere.palette.accent}
+        movementTag={currentAsset.movementTag}
+      />
     </div>,
     document.body
   );

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'node:fs';
 import path from 'node:path';
+import { getCollectionUrl } from '@/lib/assets/cloudinaryAssets';
 
 const COLLECTION_VAULT_ROOT = path.resolve(process.cwd(), 'VYSHUUU-SOURCE-VAULT/07_COLLECTION');
 
@@ -125,6 +126,13 @@ export async function GET(
   if (pathSegments.length === 2) {
     const sareeKey = pathSegments[0].toLowerCase();
     const assetType = pathSegments[1].toLowerCase();
+
+    // Cloudinary Production Delivery (Zero-bundle Vercel Edge redirect)
+    const cloudinaryUrl = getCollectionUrl(sareeKey, assetType);
+    if (cloudinaryUrl && cloudinaryUrl.startsWith('https://')) {
+      return NextResponse.redirect(cloudinaryUrl, 307);
+    }
+
     if (ASSET_MAP[sareeKey] && ASSET_MAP[sareeKey][assetType]) {
       relativeFilePath = ASSET_MAP[sareeKey][assetType];
     }

@@ -9,7 +9,7 @@ export const AtelierChamber: React.FC = () => {
     <section
       id="atelier"
       aria-label="The Atelier — The Nocturnal Chamber"
-      className="relative w-full py-32 md:py-48 select-none bg-[#070605] text-[#e8e4dc] border-t border-[#c5a869]/15 overflow-hidden scroll-mt-20"
+      className="relative w-full pt-32 pb-14 md:pt-48 md:pb-16 select-none bg-[#070605] text-[#e8e4dc] border-t border-[#c5a869]/15 overflow-hidden scroll-mt-20"
     >
       {/* Background Darkroom Ambient Gradient */}
       <div className="absolute inset-0 bg-radial-at-c from-[#12100e]/40 via-[#070605] to-[#070605] pointer-events-none" />

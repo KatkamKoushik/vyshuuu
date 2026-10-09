@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
+import { SecretSelvedgeGesture } from './SecretSelvedgeGesture';
 
 export interface EditorialPlateProps {
   src: string;
@@ -14,6 +15,7 @@ export interface EditorialPlateProps {
   imageClassName?: string;
   variant?: 'dark' | 'light';
   speed?: 'standard' | 'slow';
+  hasSelvedgeGesture?: boolean;
 }
 
 export const EditorialPlate: React.FC<EditorialPlateProps> = ({
@@ -27,6 +29,7 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
   imageClassName = '',
   variant = 'dark',
   speed = 'standard',
+  hasSelvedgeGesture = false,
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -61,10 +64,16 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
     };
   }, [src]);
 
+  const settleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   // Restrained pointer-responsive depth & conservation glass specular sheen (max ±1.6°)
   const handlePointerMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
       if (isReducedMotion || e.pointerType === 'touch' || !frameRef.current) return;
+
+      if (settleTimeoutRef.current) {
+        clearTimeout(settleTimeoutRef.current);
+      }
 
       const rect = frameRef.current.getBoundingClientRect();
       const nx = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
@@ -81,11 +90,24 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
         ny: clampedY,
       });
       setIsHovered(true);
+
+      // REST = BREATHING: When cursor rests, material gently settles towards equilibrium
+      settleTimeoutRef.current = setTimeout(() => {
+        setTilt((prev) => ({
+          rotX: prev.rotX * 0.6,
+          rotY: prev.rotY * 0.6,
+          nx: prev.nx * 0.8,
+          ny: prev.ny * 0.8,
+        }));
+      }, 350);
     },
     [isReducedMotion]
   );
 
   const handlePointerLeave = useCallback(() => {
+    if (settleTimeoutRef.current) {
+      clearTimeout(settleTimeoutRef.current);
+    }
     setTilt({ rotX: 0, rotY: 0, nx: 0, ny: 0 });
     setIsHovered(false);
   }, []);
@@ -113,7 +135,7 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
       {/* Outer frame: Refined luxury border & architectural drop-shadow with subtle exhibition mount depth */}
       <div
         ref={frameRef}
-        className={`relative w-full overflow-hidden ${aspectClass} transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`relative w-full overflow-hidden ${aspectClass} transition-all duration-900 ease-[cubic-bezier(0.2,0.9,0.3,1)] ${
           isLight
             ? 'bg-[#ede7dc] border border-[#dfd6c5]/70 shadow-[0_16px_48px_-16px_rgba(78,65,48,0.12)]'
             : 'bg-[#121110] border border-[var(--color-border-subtle)] shadow-[0_20px_50px_-20px_rgba(0,0,0,0.5)]'
@@ -164,6 +186,9 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
             }}
           />
         )}
+
+        {/* Secret Textile Gesture (Pillar 3 — The Gold/Zari Selvedge Thread) */}
+        {hasSelvedgeGesture && <SecretSelvedgeGesture />}
       </div>
 
       {/* Minimal editorial annotation / caption */}

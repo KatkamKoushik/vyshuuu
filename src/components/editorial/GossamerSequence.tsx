@@ -33,7 +33,7 @@ export const GossamerSequence: React.FC = () => {
         </div>
 
         {/* Sequence Movement 02: Asymmetric Grid Fold & Sunlit Pleats */}
-        <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-24 items-start">
+        <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-6 lg:gap-24 items-start">
           <div className="md:col-span-6 md:pt-28">
             <EditorialPlate
               src="/api/collection/vysh-chd-01/fold"

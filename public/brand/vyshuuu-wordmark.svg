@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" width="1200" height="360" fill="none">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&amp;display=swap');
+      .vyshuuu-brand-title {
+        font-family: 'Cormorant Garamond', 'Didot', 'Bodoni MT', serif;
+        font-size: 112px;
+        font-weight: 400;
+        letter-spacing: 0.26em;
+        fill: #FAF7F0;
+        text-anchor: middle;
+        dominant-baseline: central;
+      }
+      .vyshuuu-brand-sub {
+        font-family: 'Cormorant Garamond', 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: 0.42em;
+        fill: #c5a869;
+        text-anchor: middle;
+        text-transform: uppercase;
+        opacity: 0.9;
+      }
+    </style>
+  </defs>
+  <text x="615" y="170" class="vyshuuu-brand-title">VYSHUUU</text>
+  <text x="600" y="245" class="vyshuuu-brand-sub">THE UNSTITCHED CONTINUUM</text>
+</svg>

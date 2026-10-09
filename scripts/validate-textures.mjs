@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 
-const TEXTURES_ROOT = path.resolve('d:/saree/VYSHUUU-SOURCE-VAULT/04_TEXTURES');
+const TEXTURES_ROOT = path.resolve(process.cwd(), 'VYSHUUU-SOURCE-VAULT/04_TEXTURES');
 export const EXPECTED_WIDTH = 1997;
 export const EXPECTED_HEIGHT = 787;
 

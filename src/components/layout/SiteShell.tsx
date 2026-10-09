@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { initLenis, destroyLenis } from '@/lib/lenis';
 import { Masthead } from './Masthead';
+import VyshuuuLoader from '../editorial/VyshuuuLoader';
 import { MaterialGrain } from '../ambient/MaterialGrain';
 import { ChiaroscuroCursorLight } from '../ambient/ChiaroscuroCursorLight';
 import { SkipLink } from './SkipLink';
@@ -16,10 +17,16 @@ interface SiteShellProps {
 export const SiteShell: React.FC<SiteShellProps> = ({ children }) => {
   const isReducedMotion = usePrefersReducedMotion();
   const [debugActive, setDebugActive] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const activeScene = useExperienceStore((s) => s.activeScene);
   const webglSupported = useExperienceStore((s) => s.webglSupported);
+  const hasCompletedIntro = useExperienceStore((s) => s.hasCompletedIntro);
+  const setCompletedIntro = useExperienceStore((s) => s.setCompletedIntro);
+  const setIntroSettled = useExperienceStore((s) => s.setIntroSettled);
 
   useEffect(() => {
+    setMounted(true);
+
     // Check for development debug flag (?debug=1)
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -40,10 +47,20 @@ export const SiteShell: React.FC<SiteShellProps> = ({ children }) => {
 
   return (
     <div className="relative min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] selection:bg-[var(--color-accent-zari)] selection:text-[var(--color-bg)]">
+      {!hasCompletedIntro && (
+        <VyshuuuLoader
+          wordmarkSrc="/brand/vyshuuu-wordmark.png"
+          durationMs={2200}
+          onDone={() => {
+            setCompletedIntro(true);
+            setIntroSettled(true);
+          }}
+        />
+      )}
       <SkipLink />
       <MaterialGrain />
       <ChiaroscuroCursorLight />
-      <Masthead />
+      {mounted && hasCompletedIntro && <Masthead />}
 
       {/* Main Content Area */}
       <main id="content" className="relative z-[10] focus:outline-none">
