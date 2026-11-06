@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { SareeConcept, SareeAssetMeta } from '@/lib/collection/collectionData';
 import { EditorialPlate } from './EditorialPlate';
@@ -13,21 +13,19 @@ export interface SareeMonographModalProps {
   onClose: () => void;
 }
 
+const emptySubscribe = () => () => {};
+
 export const SareeMonographModal: React.FC<SareeMonographModalProps> = ({ saree, onClose }) => {
   const [activeAssetKey, setActiveAssetKey] = useState<string>('hero');
+  const [prevSareeId, setPrevSareeId] = useState(saree?.id);
   const [isLoupeOpen, setIsLoupeOpen] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  // Reset active movement to hero whenever a new saree is opened
-  useEffect(() => {
-    if (saree) {
-      setActiveAssetKey('hero');
-    }
-  }, [saree]);
+  // Reset active movement to hero whenever a new saree is opened (canonical React pattern)
+  if (prevSareeId !== saree?.id) {
+    setPrevSareeId(saree?.id);
+    setActiveAssetKey('hero');
+  }
 
   // Handle ESC key to dismiss
   const handleKeyDown = useCallback(

@@ -2,20 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'node:fs';
 import path from 'node:path';
 import { getTextureUrl } from '@/lib/assets/cloudinaryAssets';
+import {
+  sanitizeAndCheckTraversal,
+  verifyTextureRequest,
+  validateRemoteAssetUrl,
+} from '@/lib/security/assetPathSecurity';
 
 const TEXTURES_VAULT_ROOT = path.resolve(process.cwd(), 'VYSHUUU-SOURCE-VAULT/04_TEXTURES');
-
-const SHORTCUT_MAP: Record<string, string> = {
-  'base-color': '01_BASE_COLOR/VYSHUUU-TEX-01-base-color.png',
-  'zari-mask': '02_ZARI_MASK/VYSHUUU-TEX-02-zari-mask.png',
-  'border-mask': '03_BORDER_MASK/VYSHUUU-TEX-03-border-mask.png',
-  'pallu-mask': '04_PALLU_MASK/VYSHUUU-TEX-04-pallu-mask.png',
-  'red-accent': '05_RED_ACCENT/VYSHUUU-TEX-05-red-accent.png',
-  'weave-direction': '06_WEAVE_DIRECTION/VYSHUUU-TEX-06-weave-direction.png',
-  'roughness': '07_ROUGHNESS/VYSHUUU-TEX-07-roughness.png',
-  'micro-normal': '08_MICRO_NORMAL/VYSHUUU-TEX-08-micro-normal.png',
-  'edge-fringe': '09_EDGE_FRINGE/VYSHUUU-TEX-09-edge-fringe.png',
-};
 
 export async function GET(
   request: NextRequest,
@@ -29,29 +22,38 @@ export async function GET(
 
   const requestedPath = pathSegments.join('/');
 
-  // Cloudinary Production Delivery (Zero-bundle Vercel Edge redirect)
+  // 1. Guard against path traversal, encoded separators, null bytes in requested path
+  const sanitizeCheck = sanitizeAndCheckTraversal(requestedPath);
+  if (!sanitizeCheck.isSafe) {
+    return new NextResponse(`Invalid path sequence: ${sanitizeCheck.reason}`, { status: 400 });
+  }
+
+  // 2. Cloudinary Production Delivery (Strictly validated redirect target)
   const cloudinaryUrl = getTextureUrl(requestedPath);
   if (cloudinaryUrl && cloudinaryUrl.startsWith('https://')) {
-    return NextResponse.redirect(cloudinaryUrl, 307);
+    const urlValidation = validateRemoteAssetUrl(cloudinaryUrl);
+    if (urlValidation.isAllowed) {
+      return NextResponse.redirect(cloudinaryUrl, 307);
+    }
   }
 
-  const relativeFilePath = SHORTCUT_MAP[requestedPath] || requestedPath;
-
-  // Resolve absolute path and guard against directory traversal
-  const absolutePath = path.resolve(TEXTURES_VAULT_ROOT, relativeFilePath);
-  if (!absolutePath.startsWith(TEXTURES_VAULT_ROOT)) {
-    return new NextResponse('Access denied', { status: 403 });
+  // 3. Verify against trusted production manifest and canonical containment
+  const verification = verifyTextureRequest(requestedPath, TEXTURES_VAULT_ROOT);
+  if (!verification.isValid || !verification.canonicalPath || !verification.asset) {
+    return new NextResponse(`Access denied or texture unlisted: ${verification.error}`, {
+      status: verification.error?.includes('traversal') || verification.error?.includes('escape') ? 403 : 404,
+    });
   }
 
-  if (!fs.existsSync(absolutePath)) {
-    return new NextResponse(`Texture not found: ${requestedPath}`, { status: 404 });
-  }
-
-  const fileBuffer = fs.readFileSync(absolutePath);
+  // 4. Read canonical verified file
+  const fileBuffer = fs.readFileSync(verification.canonicalPath);
   return new NextResponse(fileBuffer, {
     status: 200,
     headers: {
-      'Content-Type': 'image/png',
+      'Content-Type': verification.asset.mimeType || 'image/png',
+      'Content-Length': verification.asset.byteSize.toString(),
+      'X-Content-Type-Options': 'nosniff',
+      'X-Asset-SHA256': verification.asset.sha256,
       'Cache-Control': 'public, max-age=31536000, immutable',
       'X-Texture-Vault': 'LOCKED_PRODUCTION_MAPS',
     },

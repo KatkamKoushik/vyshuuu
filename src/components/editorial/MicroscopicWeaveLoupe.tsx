@@ -33,8 +33,18 @@ export const MicroscopicWeaveLoupe: React.FC<MicroscopicWeaveLoupeProps> = ({
   // Transform state (Scale: 1.0 to 4.0, Offsets: pan coordinates in px)
   const [scale, setScale] = useState(1.0);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
   const [isDragging, setIsDragging] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  // Adjust state during render when isOpen toggles
+  if (prevIsOpen !== isOpen) {
+    setPrevIsOpen(isOpen);
+    if (isOpen) {
+      setScale(1.0);
+      setOffset({ x: 0, y: 0 });
+    }
+  }
 
   // Raking light coordinates relative to container (px)
   const [lightPos, setLightPos] = useState({ x: 0, y: 0 });
@@ -54,16 +64,6 @@ export const MicroscopicWeaveLoupe: React.FC<MicroscopicWeaveLoupeProps> = ({
   // Reset transforms whenever opened or when source changes
   useEffect(() => {
     if (isOpen) {
-      setScale(1.0);
-      setOffset({ x: 0, y: 0 });
-
-      // Immediate cache check to avoid opacity-0 when already in browser memory
-      if (imageRef.current?.complete && imageRef.current.naturalWidth > 0) {
-        setIsLoaded(true);
-      } else {
-        setIsLoaded(false);
-      }
-
       const timer = setTimeout(() => {
         setIsLoaded(true);
       }, 500);

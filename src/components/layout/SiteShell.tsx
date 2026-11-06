@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useSyncExternalStore } from 'react';
 import { initLenis, destroyLenis } from '@/lib/lenis';
 import { Masthead } from './Masthead';
 import VyshuuuLoader from '../editorial/VyshuuuLoader';
@@ -14,27 +14,30 @@ interface SiteShellProps {
   children: React.ReactNode;
 }
 
+const emptySubscribe = () => () => {};
+
 export const SiteShell: React.FC<SiteShellProps> = ({ children }) => {
   const isReducedMotion = usePrefersReducedMotion();
-  const [debugActive, setDebugActive] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [debugActive] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const params = new URLSearchParams(window.location.search);
+    return params.get('debug') === '1';
+  });
+
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+
   const activeScene = useExperienceStore((s) => s.activeScene);
   const webglSupported = useExperienceStore((s) => s.webglSupported);
+  const isContextLost = useExperienceStore((s) => s.isContextLost);
   const hasCompletedIntro = useExperienceStore((s) => s.hasCompletedIntro);
   const setCompletedIntro = useExperienceStore((s) => s.setCompletedIntro);
   const setIntroSettled = useExperienceStore((s) => s.setIntroSettled);
 
   useEffect(() => {
-    setMounted(true);
-
-    // Check for development debug flag (?debug=1)
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('debug') === '1') {
-        setDebugActive(true);
-      }
-    }
-
     // Initialize smooth scrolling unless reduced motion is preferred
     if (!isReducedMotion) {
       initLenis();
@@ -63,7 +66,7 @@ export const SiteShell: React.FC<SiteShellProps> = ({ children }) => {
       {mounted && hasCompletedIntro && <Masthead />}
 
       {/* Main Content Area */}
-      <main id="content" className="relative z-[10] focus:outline-none">
+      <main id="content" className="relative z-[10] focus:outline-none" tabIndex={-1}>
         {children}
       </main>
 
@@ -75,7 +78,7 @@ export const SiteShell: React.FC<SiteShellProps> = ({ children }) => {
         >
           <div className="text-[var(--color-accent-zari)] font-bold tracking-wider">VYSHUUU DEBUG v0.4 [SHOT 12.5A]</div>
           <div>Scene: {activeScene.toUpperCase()}</div>
-          <div>WebGL: {webglSupported ? 'Active (WebGL2)' : 'Fallback (Static)'}</div>
+          <div>WebGL: {webglSupported && !isContextLost ? 'Active (WebGL2)' : 'Fallback (Static)'}</div>
           <div>Motion: {isReducedMotion ? 'Reduced' : 'Dynamic'}</div>
           <div className="pt-1 border-t border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
             <div>Warp/Weft: 160 &times; 120</div>

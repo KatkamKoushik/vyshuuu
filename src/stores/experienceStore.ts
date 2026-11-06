@@ -9,6 +9,9 @@ export interface ExperienceState {
   isAudioMuted: boolean;
   isReducedMotion: boolean;
   webglSupported: boolean;
+  isContextLost: boolean;
+  hasTextureError: boolean;
+  isAnimationPaused: boolean;
   isIntroSettled: boolean;
   activeAtmosphereId: string;
   selectedAtmosphereId: string | null;
@@ -25,6 +28,10 @@ export interface ExperienceState {
   toggleAudio: () => void;
   setReducedMotion: (reduced: boolean) => void;
   setWebGLSupported: (supported: boolean) => void;
+  setContextLost: (lost: boolean) => void;
+  setHasTextureError: (hasError: boolean) => void;
+  setAnimationPaused: (paused: boolean) => void;
+  toggleAnimationPaused: () => void;
   setIntroSettled: (settled: boolean) => void;
   setTexturesLoadedCount: (count: number) => void;
   setTexturesLoaded: (loaded: boolean) => void;
@@ -40,6 +47,9 @@ export const useExperienceStore = create<ExperienceState>((set) => ({
   isAudioMuted: true,
   isReducedMotion: false,
   webglSupported: true,
+  isContextLost: false,
+  hasTextureError: false,
+  isAnimationPaused: false,
   isIntroSettled: false,
   activeAtmosphereId: 'vysh-arc-01',
   selectedAtmosphereId: null,
@@ -53,6 +63,10 @@ export const useExperienceStore = create<ExperienceState>((set) => ({
   toggleAudio: () => set((state) => ({ isAudioMuted: !state.isAudioMuted })),
   setReducedMotion: (reduced) => set({ isReducedMotion: reduced }),
   setWebGLSupported: (supported) => set({ webglSupported: supported }),
+  setContextLost: (lost) => set({ isContextLost: lost }),
+  setHasTextureError: (hasError) => set({ hasTextureError: hasError }),
+  setAnimationPaused: (paused) => set({ isAnimationPaused: paused }),
+  toggleAnimationPaused: () => set((state) => ({ isAnimationPaused: !state.isAnimationPaused })),
   setIntroSettled: (settled) => set({ isIntroSettled: settled }),
   setTexturesLoadedCount: (count) => set({ texturesLoadedCount: count }),
   setTexturesLoaded: (loaded) => set({ isTexturesLoaded: loaded }),

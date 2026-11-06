@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Wordmark } from '@/components/brand/Wordmark';
 import { useExperienceStore } from '@/stores/experienceStore';
 import { useScrollProgress, useScrollTriggerCallback } from '@/hooks/useScrollProgress';
@@ -22,6 +22,7 @@ export default function Home() {
   const isReducedMotion = useExperienceStore((s) => s.isReducedMotion);
   const setActiveScene = useExperienceStore((s) => s.setActiveScene);
   const webglSupported = useExperienceStore((s) => s.webglSupported);
+  const [lightStatus, setLightStatus] = useState('Neutral raking light angle');
 
   const containerRef = useRef<HTMLDivElement>(null);
   const unfurlingContainerRef = useRef<HTMLDivElement>(null);
@@ -172,10 +173,59 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Interaction Callout (Desktop Cursor & Mobile Touch) */}
-                <div className="mono-spec text-[10px] text-[var(--color-text-muted)] flex items-center gap-3">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--color-accent-zari)] animate-ping" />
-                  <span>[ MOVE CURSOR OR DRAG TO RAKE LIGHT ACROSS ZARI MOTIFS &amp; PLEATS ]</span>
+                {/* Interaction Callout & Accessible Lighting Controls */}
+                <div className="space-y-3 pointer-events-auto">
+                  <div className="mono-spec text-[10px] text-[var(--color-text-muted)] flex items-center gap-3">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--color-accent-zari)] animate-ping" />
+                    <span>[ MOVE CURSOR, DRAG, OR USE CONTROLS TO RAKE LIGHT ]</span>
+                  </div>
+
+                  {/* Accessible Lighting Angle Stepper Controls */}
+                  <div
+                    role="group"
+                    aria-label="3D Raking Light Direction Controls"
+                    className="flex flex-wrap items-center gap-2 pt-1"
+                  >
+                    <span className="sr-only">Adjust key light raking angle across unstitched silk:</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        window.dispatchEvent(new CustomEvent('vyshuuu:rake-light', { detail: { x: -0.85, y: 0.2 } }));
+                        setLightStatus('Raking light positioned on left selvedge');
+                      }}
+                      className="px-2.5 py-1.5 min-h-[44px] inline-flex items-center border border-white/20 hover:border-[#c5a869] text-[9.5px] mono-spec text-[#e8e4dc] bg-black/40 backdrop-blur-sm rounded-[1px] transition-colors focus-visible:ring-2 focus-visible:ring-[#c5a869] focus-visible:outline-none cursor-pointer"
+                    >
+                      [← RAKE LEFT]
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        window.dispatchEvent(new CustomEvent('vyshuuu:rake-light', { detail: { x: 0.0, y: 0.0 } }));
+                        setLightStatus('Raking light centered on warp');
+                      }}
+                      className="px-2.5 py-1.5 min-h-[44px] inline-flex items-center border border-white/20 hover:border-[#c5a869] text-[9.5px] mono-spec text-[#e8e4dc] bg-black/40 backdrop-blur-sm rounded-[1px] transition-colors focus-visible:ring-2 focus-visible:ring-[#c5a869] focus-visible:outline-none cursor-pointer"
+                    >
+                      [• CENTER LIGHT]
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        window.dispatchEvent(new CustomEvent('vyshuuu:rake-light', { detail: { x: 0.85, y: -0.2 } }));
+                        setLightStatus('Raking light positioned on right pallu');
+                      }}
+                      className="px-2.5 py-1.5 min-h-[44px] inline-flex items-center border border-white/20 hover:border-[#c5a869] text-[9.5px] mono-spec text-[#e8e4dc] bg-black/40 backdrop-blur-sm rounded-[1px] transition-colors focus-visible:ring-2 focus-visible:ring-[#c5a869] focus-visible:outline-none cursor-pointer"
+                    >
+                      [→ RAKE RIGHT]
+                    </button>
+                    <span className="mono-spec text-[9px] text-[#8a7f6e] ml-2 hidden lg:inline">
+                      (Arrow keys or WASD also active)
+                    </span>
+                  </div>
+
+                  {/* Accessible live region for screen readers */}
+                  <div aria-live="polite" aria-atomic="true" className="sr-only">
+                    {lightStatus}
+                  </div>
                 </div>
               </div>
             ) : (
@@ -365,9 +415,43 @@ export default function Home() {
                   {getActiveChapterText()}
                 </p>
 
-                <div className="pt-1.5 flex items-center justify-between mono-spec text-[8.5px] text-[var(--color-text-muted)] border-t border-[var(--color-border-subtle)]">
-                  <span className="text-[var(--color-accent-zari)]/90">[ TOUCH TO RAKE LIGHT ]</span>
-                  <span>{(unfurlProgress * 100).toFixed(0)}% Settled</span>
+                <div className="pt-1.5 flex flex-col gap-1.5 mono-spec text-[8.5px] text-[var(--color-text-muted)] border-t border-[var(--color-border-subtle)]">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[var(--color-accent-zari)]/90">[ TOUCH OR TAP TO RAKE LIGHT ]</span>
+                    <span>{(unfurlProgress * 100).toFixed(0)}% Settled</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        window.dispatchEvent(new CustomEvent('vyshuuu:rake-light', { detail: { x: -0.85, y: 0.2 } }));
+                        setLightStatus('Raking light positioned on left selvedge');
+                      }}
+                      className="flex-1 py-1.5 px-1 text-center border border-white/20 text-[#e8e4dc] rounded-[1px] min-h-[44px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#c5a869] focus-visible:outline-none"
+                    >
+                      [← LEFT]
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        window.dispatchEvent(new CustomEvent('vyshuuu:rake-light', { detail: { x: 0.0, y: 0.0 } }));
+                        setLightStatus('Raking light centered on warp');
+                      }}
+                      className="flex-1 py-1.5 px-1 text-center border border-white/20 text-[#e8e4dc] rounded-[1px] min-h-[44px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#c5a869] focus-visible:outline-none"
+                    >
+                      [• CENTER]
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        window.dispatchEvent(new CustomEvent('vyshuuu:rake-light', { detail: { x: 0.85, y: -0.2 } }));
+                        setLightStatus('Raking light positioned on right pallu');
+                      }}
+                      className="flex-1 py-1.5 px-1 text-center border border-white/20 text-[#e8e4dc] rounded-[1px] min-h-[44px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#c5a869] focus-visible:outline-none"
+                    >
+                      [RIGHT →]
+                    </button>
+                  </div>
                 </div>
               </div>
 

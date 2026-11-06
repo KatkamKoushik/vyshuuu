@@ -28,6 +28,7 @@ export const UnfurlingScene: React.FC = () => {
 
   const qualityTier = useExperienceStore((s) => s.qualityTier);
   const isReducedMotion = useExperienceStore((s) => s.isReducedMotion);
+  const isAnimationPaused = useExperienceStore((s) => s.isAnimationPaused);
 
   // Quality tier numeric mapping
   const tierNumeric = useMemo(() => {
@@ -122,21 +123,63 @@ export const UnfurlingScene: React.FC = () => {
       }
     };
 
+    const handleCustomLight = (e: Event) => {
+      const ce = e as CustomEvent<{ x: number; y: number }>;
+      if (ce.detail) {
+        pointerTarget.current.set(ce.detail.x, ce.detail.y);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const activeTag = document.activeElement?.tagName.toLowerCase();
+      if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') return;
+
+      const step = 0.25;
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        pointerTarget.current.x = Math.max(-1.0, pointerTarget.current.x - step);
+      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        pointerTarget.current.x = Math.min(1.0, pointerTarget.current.x + step);
+      } else if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+        pointerTarget.current.y = Math.min(1.0, pointerTarget.current.y + step);
+      } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
+        pointerTarget.current.y = Math.max(-1.0, pointerTarget.current.y - step);
+      } else if (e.key === 'r' || e.key === 'R') {
+        pointerTarget.current.set(0, 0);
+      }
+    };
+
     window.addEventListener('mousemove', handlePointerMove, { passive: true });
     window.addEventListener('pointermove', handlePointerMove, { passive: true });
     window.addEventListener('touchmove', handleTouchMove, { passive: true });
     window.addEventListener('touchstart', handleTouchMove, { passive: true });
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('vyshuuu:rake-light', handleCustomLight);
 
     return () => {
       window.removeEventListener('mousemove', handlePointerMove);
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchstart', handleTouchMove);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('vyshuuu:rake-light', handleCustomLight);
     };
   }, [isReducedMotion]);
 
+  // Clean up GPU resources on unmount
+  useEffect(() => {
+    const mat = materialRef.current;
+    const backdropMat = backdropMaterialRef.current;
+    const floorMat = floorMaterialRef.current;
+    return () => {
+      geometry.dispose();
+      if (mat) mat.dispose();
+      if (backdropMat) backdropMat.dispose();
+      if (floorMat) floorMat.dispose();
+    };
+  }, [geometry]);
+
   useFrame((state, delta) => {
-    if (!materialRef.current || !meshRef.current) return;
+    if (!materialRef.current || !meshRef.current || isAnimationPaused) return;
 
     const mat = materialRef.current;
     const u = mat.uniforms as unknown as UnfurlingUniforms;

@@ -10,6 +10,7 @@ export const ThresholdScene: React.FC = () => {
   const meshRef = useRef<THREE.Mesh>(null);
   const setIntroSettled = useExperienceStore((s) => s.setIntroSettled);
   const isReducedMotion = useExperienceStore((s) => s.isReducedMotion);
+  const isAnimationPaused = useExperienceStore((s) => s.isAnimationPaused);
   const progressRef = useRef(0);
   const settledNotified = useRef(false);
 
@@ -51,8 +52,15 @@ export const ThresholdScene: React.FC = () => {
     }
   }, [isReducedMotion, setIntroSettled]);
 
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+      material.dispose();
+    };
+  }, [geometry, material]);
+
   useFrame((state, delta) => {
-    if (!meshRef.current) return;
+    if (!meshRef.current || isAnimationPaused) return;
 
     if (isReducedMotion) {
       meshRef.current.position.y = 0;

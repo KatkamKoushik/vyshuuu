@@ -1,26 +1,30 @@
 'use client';
 
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useSyncExternalStore } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { ExperienceRoot } from './ExperienceRoot';
 import { StaticFallback } from './fallback/StaticFallback';
 import { useWebGLSupport } from '@/hooks/useWebGLSupport';
+import { useExperienceStore } from '@/stores/experienceStore';
+
+const emptySubscribe = () => () => {};
 
 export const GlobalCanvas: React.FC = () => {
   const isWebGLSupported = useWebGLSupport();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const isContextLost = useExperienceStore((s) => s.isContextLost);
+  const isMounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
   // Avoid SSR hydration issues; render nothing or fallback until mounted
-  if (!mounted) {
+  if (!isMounted) {
     return <StaticFallback />;
   }
 
-  // Graceful degradation when WebGL is unsupported or disabled
-  if (!isWebGLSupported) {
+  // Graceful degradation when WebGL is unsupported, disabled, or context lost
+  if (!isWebGLSupported || isContextLost) {
     return <StaticFallback />;
   }
 
@@ -41,6 +45,21 @@ export const GlobalCanvas: React.FC = () => {
           fov: 38,
           near: 0.1,
           far: 50,
+        }}
+        onCreated={({ gl }) => {
+          const canvas = gl.domElement;
+          const handleContextLost = (event: Event) => {
+            event.preventDefault();
+            console.warn('[VYSHUUU WebGL] Context lost event received');
+            useExperienceStore.getState().setContextLost(true);
+          };
+          const handleContextRestored = () => {
+            console.info('[VYSHUUU WebGL] Context restored event received');
+            useExperienceStore.getState().setContextLost(false);
+          };
+
+          canvas.addEventListener('webglcontextlost', handleContextLost, false);
+          canvas.addEventListener('webglcontextrestored', handleContextRestored, false);
         }}
       >
         <Suspense fallback={null}>

@@ -28,7 +28,10 @@ export const CustomIntroLoader: React.FC = () => {
   const setCompletedIntro = useExperienceStore((s) => s.setCompletedIntro);
 
   // Local state
-  const [fontsReady, setFontsReady] = useState(false);
+  const [fontsReady, setFontsReady] = useState(() => {
+    if (typeof document === 'undefined') return true;
+    return !document.fonts;
+  });
   const [canvasReady, setCanvasReady] = useState(false);
   const [isDismissing, setIsDismissing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
@@ -36,7 +39,12 @@ export const CustomIntroLoader: React.FC = () => {
 
   const safetyTimerRef = useRef<NodeJS.Timeout | null>(null);
   const autoDismissTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const mountTimeRef = useRef<number>(Date.now());
+  const mountTimeRef = useRef<number>(0);
+
+  // Initialize mount time in effect
+  useEffect(() => {
+    mountTimeRef.current = Date.now();
+  }, []);
 
   // 1. Measure fonts readiness
   useEffect(() => {
@@ -44,8 +52,6 @@ export const CustomIntroLoader: React.FC = () => {
       document.fonts.ready
         .then(() => setFontsReady(true))
         .catch(() => setFontsReady(true)); // Safe fallback
-    } else {
-      setFontsReady(true);
     }
   }, []);
 

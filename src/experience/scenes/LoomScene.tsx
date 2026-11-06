@@ -15,6 +15,7 @@ export const LoomScene: React.FC = () => {
 
   const qualityTier = useExperienceStore((s) => s.qualityTier);
   const isReducedMotion = useExperienceStore((s) => s.isReducedMotion);
+  const isAnimationPaused = useExperienceStore((s) => s.isAnimationPaused);
 
   // Quality tier numeric mapping
   const tierNumeric = useMemo(() => {
@@ -65,8 +66,19 @@ export const LoomScene: React.FC = () => {
     };
   }, [isReducedMotion]);
 
+  // Clean up GPU resources on unmount
+  useEffect(() => {
+    const mat = materialRef.current;
+    return () => {
+      geometry.dispose();
+      if (mat) {
+        mat.dispose();
+      }
+    };
+  }, [geometry]);
+
   useFrame((state, delta) => {
-    if (!materialRef.current || !meshRef.current) return;
+    if (!materialRef.current || !meshRef.current || isAnimationPaused) return;
 
     const mat = materialRef.current;
     const u = mat.uniforms as unknown as LoomUniforms;

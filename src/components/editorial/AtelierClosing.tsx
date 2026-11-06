@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useSyncExternalStore } from 'react';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 
 interface StudyEncounter {
@@ -9,6 +9,8 @@ interface StudyEncounter {
   name: string;
   encountered: boolean;
 }
+
+const emptySubscribe = () => () => {};
 
 const CANONICAL_STUDIES = [
   { id: 'vysh-arc-01', number: '01', name: 'The Continuum Archetype' },
@@ -40,17 +42,27 @@ const CANONICAL_STUDIES = [
  */
 export const AtelierClosing: React.FC = () => {
   const isReducedMotion = usePrefersReducedMotion();
-  const [encounteredIds, setEncounteredIds] = useState<string[]>([]);
-  const [isClient, setIsClient] = useState(false);
+  const isClient = useSyncExternalStore(emptySubscribe, () => true, () => false);
+  const [encounteredIds, setEncounteredIds] = useState<string[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const cached = sessionStorage.getItem('vyshuuu_session_encounters');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {
+      // Safe fallback
+    }
+    return [];
+  });
 
   // Session-local encounter discovery tracking (strictly in-session, zero tracking/analytics)
   useEffect(() => {
-    setIsClient(true);
     if (typeof window === 'undefined') return;
 
     const storageKey = 'vyshuuu_session_encounters';
     const encounteredSet = new Set<string>();
-
     try {
       const cached = sessionStorage.getItem(storageKey);
       if (cached) {
@@ -72,11 +84,6 @@ export const AtelierClosing: React.FC = () => {
         // Safe fallback
       }
     };
-
-    // Initial update from session storage if present
-    if (encounteredSet.size > 0) {
-      setEncounteredIds(Array.from(encounteredSet));
-    }
 
     // Map targets to study IDs
     const elementsToWatch: { el: Element; id: string }[] = [];
@@ -103,22 +110,24 @@ export const AtelierClosing: React.FC = () => {
       }
     });
 
-    // Check elements immediately (e.g. if scrolled or landed directly)
-    let hasChanged = false;
-    const windowH = window.innerHeight;
-    elementsToWatch.forEach(({ el, id }) => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top <= windowH && rect.bottom >= 0) {
-        if (!encounteredSet.has(id)) {
-          encounteredSet.add(id);
-          hasChanged = true;
+    // Check elements asynchronously after mount (e.g. if scrolled or landed directly)
+    const initialCheckTimer = setTimeout(() => {
+      let hasChanged = false;
+      const windowH = window.innerHeight;
+      elementsToWatch.forEach(({ el, id }) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= windowH && rect.bottom >= 0) {
+          if (!encounteredSet.has(id)) {
+            encounteredSet.add(id);
+            hasChanged = true;
+          }
         }
-      }
-    });
+      });
 
-    if (hasChanged) {
-      updateStorageAndState();
-    }
+      if (hasChanged) {
+        updateStorageAndState();
+      }
+    }, 0);
 
     // Set up IntersectionObserver for dynamic scrolling
     let observer: IntersectionObserver | null = null;
@@ -176,6 +185,7 @@ export const AtelierClosing: React.FC = () => {
     window.addEventListener('scroll', onScroll, { passive: true });
 
     return () => {
+      clearTimeout(initialCheckTimer);
       if (observer) {
         observer.disconnect();
       }

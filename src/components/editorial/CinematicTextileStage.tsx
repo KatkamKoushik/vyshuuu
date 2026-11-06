@@ -37,10 +37,22 @@ export const CinematicTextileStage: React.FC<CinematicTextileStageProps> = ({
 
   const [activePlateIndex, setActivePlateIndex] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [prevSareeId, setPrevSareeId] = useState(saree.id);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
-  const lastInteractionTimeRef = useRef<number>(Date.now());
+  const lastInteractionTimeRef = useRef<number>(0);
   const activeIndexRef = useRef(activePlateIndex);
-  activeIndexRef.current = activePlateIndex;
+
+  // Sync ref outside render
+  useEffect(() => {
+    activeIndexRef.current = activePlateIndex;
+  }, [activePlateIndex]);
+
+  // Adjust state during render when saree prop changes (canonical React pattern)
+  if (prevSareeId !== saree.id) {
+    setPrevSareeId(saree.id);
+    setActivePlateIndex(0);
+    setScrollProgress(0);
+  }
 
   // Retrieve art-directed atmosphere and synchronized progression
   const atmosphere = useMemo(() => getAtmosphere(saree.id), [saree.id]);
@@ -51,13 +63,6 @@ export const CinematicTextileStage: React.FC<CinematicTextileStageProps> = ({
     const normProgress = plates.length > 1 ? activePlateIndex / (plates.length - 1) : 0;
     return getProgressionColor(atmosphere, normProgress);
   }, [atmosphere, activePlateIndex, plates.length]);
-
-  // Reset to Plate 01 whenever the saree world changes
-  useEffect(() => {
-    setActivePlateIndex(0);
-    setScrollProgress(0);
-    lastInteractionTimeRef.current = Date.now();
-  }, [saree.id]);
 
   // --------------------------------------------------------------------------
   // SCROLL-DRIVEN PROGRESSION

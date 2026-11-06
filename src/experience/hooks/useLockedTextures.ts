@@ -32,9 +32,11 @@ const TEXTURE_ROUTES: { key: keyof LockedTextureSet; textureKey: string; isSRGB:
 export function useLockedTextures(): {
   textures: LockedTextureSet;
   isLoaded: boolean;
+  loadErrors: string[];
 } {
   const [isLoaded, setIsLoaded] = useState(false);
-  const texturesRef = useRef<LockedTextureSet>({
+  const [loadErrors, setLoadErrors] = useState<string[]>([]);
+  const [textures, setTextures] = useState<LockedTextureSet>({
     baseColor: null,
     zariMask: null,
     borderMask: null,
@@ -46,11 +48,14 @@ export function useLockedTextures(): {
     edgeFringe: null,
   });
 
+  const activeTexturesRef = useRef<Record<string, THREE.Texture>>({});
+
   useEffect(() => {
     let isCancelled = false;
     const loader = new THREE.TextureLoader();
     loader.setCrossOrigin('anonymous');
-    let loadedCount = 0;
+    let completedCount = 0;
+    const currentErrors: string[] = [];
 
     TEXTURE_ROUTES.forEach(({ key, textureKey, isSRGB }) => {
       const url = getTextureUrl(textureKey);
@@ -69,11 +74,13 @@ export function useLockedTextures(): {
           tex.colorSpace = isSRGB ? THREE.SRGBColorSpace : THREE.NoColorSpace;
           tex.needsUpdate = true;
 
-          texturesRef.current[key] = tex;
-          loadedCount++;
-          useExperienceStore.getState().setTexturesLoadedCount(loadedCount);
+          activeTexturesRef.current[key] = tex;
+          setTextures((prev) => ({ ...prev, [key]: tex }));
 
-          if (loadedCount === TEXTURE_ROUTES.length) {
+          completedCount++;
+          useExperienceStore.getState().setTexturesLoadedCount(completedCount);
+
+          if (completedCount === TEXTURE_ROUTES.length) {
             setIsLoaded(true);
             useExperienceStore.getState().setTexturesLoaded(true);
           }
@@ -81,10 +88,13 @@ export function useLockedTextures(): {
         undefined,
         (err) => {
           console.warn(`[VYSHUUU Texture Loader] Failed to load ${key} from ${url}:`, err);
-          // Safely advance counter so failure does not block experience entrance
-          loadedCount++;
-          useExperienceStore.getState().setTexturesLoadedCount(loadedCount);
-          if (loadedCount === TEXTURE_ROUTES.length) {
+          currentErrors.push(key);
+          setLoadErrors([...currentErrors]);
+          useExperienceStore.getState().setHasTextureError(true);
+
+          completedCount++;
+          useExperienceStore.getState().setTexturesLoadedCount(completedCount);
+          if (completedCount === TEXTURE_ROUTES.length) {
             setIsLoaded(true);
             useExperienceStore.getState().setTexturesLoaded(true);
           }
@@ -92,14 +102,16 @@ export function useLockedTextures(): {
       );
     });
 
-    const currentTextures = texturesRef.current;
     return () => {
       isCancelled = true;
-      Object.values(currentTextures).forEach((tex) => {
-        if (tex) tex.dispose();
+      Object.values(activeTexturesRef.current).forEach((tex) => {
+        if (tex) {
+          tex.dispose();
+        }
       });
+      activeTexturesRef.current = {};
     };
   }, []);
 
-  return { textures: texturesRef.current, isLoaded };
+  return { textures, isLoaded, loadErrors };
 }

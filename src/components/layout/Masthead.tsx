@@ -8,6 +8,8 @@ import { useExperienceStore } from '@/stores/experienceStore';
 export const Masthead: React.FC = () => {
   const isIntroSettled = useExperienceStore((s) => s.isIntroSettled);
   const hasCompletedIntro = useExperienceStore((s) => s.hasCompletedIntro);
+  const isAnimationPaused = useExperienceStore((s) => s.isAnimationPaused);
+  const toggleAnimationPaused = useExperienceStore((s) => s.toggleAnimationPaused);
   const [isLightZone, setIsLightZone] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -97,11 +99,11 @@ export const Masthead: React.FC = () => {
         </span>
       </div>
 
-      {/* Right Anchor: Direct Navigation */}
-      <nav aria-label="Primary" className="flex items-center gap-2 sm:gap-6 md:gap-8">
+      {/* Right Anchor: Direct Navigation and Motion Control */}
+      <nav aria-label="Primary" className="flex items-center gap-2 sm:gap-4 md:gap-6">
         <Link
           href="#collection"
-          className={`caption-tracked text-[10.5px] sm:text-[10px] py-2 px-2 -my-2 inline-flex items-center transition-colors duration-500 ${
+          className={`caption-tracked text-[10.5px] sm:text-[10px] py-2 px-2.5 inline-flex items-center min-h-[44px] transition-colors duration-500 rounded-[1px] focus-visible:ring-2 focus-visible:ring-[#c5a869] focus-visible:outline-none ${
             isLightZone
               ? 'text-[#6d6457] hover:text-[#1e1b18]'
               : 'text-[#a89f91] sm:text-[var(--color-text-muted)] hover:text-[var(--color-text)]'
@@ -112,7 +114,7 @@ export const Masthead: React.FC = () => {
 
         <Link
           href="#atelier"
-          className={`caption-tracked text-[10.5px] sm:text-[10px] py-2 px-2 -my-2 inline-flex items-center transition-colors duration-500 ${
+          className={`caption-tracked text-[10.5px] sm:text-[10px] py-2 px-2.5 inline-flex items-center min-h-[44px] transition-colors duration-500 rounded-[1px] focus-visible:ring-2 focus-visible:ring-[#c5a869] focus-visible:outline-none ${
             isLightZone
               ? 'text-[#6d6457] hover:text-[#1e1b18]'
               : 'text-[#a89f91] sm:text-[var(--color-text-muted)] hover:text-[var(--color-text)]'
@@ -123,7 +125,7 @@ export const Masthead: React.FC = () => {
 
         <Link
           href="#collection-wall"
-          className={`caption-tracked text-[10.5px] sm:text-[10px] py-2 px-2 -my-2 inline-flex items-center transition-colors duration-500 ${
+          className={`caption-tracked text-[10.5px] sm:text-[10px] py-2 px-2.5 inline-flex items-center min-h-[44px] transition-colors duration-500 rounded-[1px] focus-visible:ring-2 focus-visible:ring-[#c5a869] focus-visible:outline-none ${
             isLightZone
               ? 'text-[#8c7443] hover:text-[#1e1b18] font-medium'
               : 'text-[var(--color-accent-zari)] hover:text-[var(--color-text)]'
@@ -131,6 +133,24 @@ export const Masthead: React.FC = () => {
         >
           Archive
         </Link>
+
+        {/* Accessible 3D Animation Pause / Resume Control */}
+        <button
+          type="button"
+          onClick={toggleAnimationPaused}
+          aria-pressed={isAnimationPaused}
+          aria-label={isAnimationPaused ? 'Resume 3D motion and animations' : 'Pause 3D motion and animations'}
+          className={`px-2.5 py-1 min-h-[44px] min-w-[44px] inline-flex items-center justify-center border text-[9px] sm:text-[10px] tracking-[0.16em] uppercase rounded-[1px] transition-colors focus-visible:ring-2 focus-visible:ring-[#c5a869] focus-visible:outline-none cursor-pointer ${
+            isAnimationPaused
+              ? 'border-[#c5a869] text-[#c5a869] bg-[#c5a869]/15'
+              : isLightZone
+              ? 'border-[#6d6457]/30 text-[#6d6457] hover:border-[#1e1b18] hover:text-[#1e1b18]'
+              : 'border-white/20 text-[#a89f91] hover:border-white/50 hover:text-[#faf7f0]'
+          }`}
+          title={isAnimationPaused ? 'Resume 3D Motion' : 'Pause 3D Motion'}
+        >
+          {isAnimationPaused ? '▶ RESUME' : '❚❚ PAUSE'}
+        </button>
       </nav>
     </header>
   );

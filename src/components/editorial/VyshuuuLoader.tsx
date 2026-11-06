@@ -27,18 +27,19 @@ export default function VyshuuuLoader({
   autoDismiss = true,
   onDone,
 }: VyshuuuLoaderProps) {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    return !(reduced && autoDismiss);
+  });
 
   useEffect(() => {
+    if (!visible || !autoDismiss) return;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) {
-      if (autoDismiss) {
-        setVisible(false);
-        onDone?.();
-      }
+      onDone?.();
       return;
     }
-    if (!autoDismiss) return;
 
     const timer = window.setTimeout(() => {
       setVisible(false);
@@ -46,7 +47,7 @@ export default function VyshuuuLoader({
     }, Math.max(700, Math.min(durationMs, 2600)));
 
     return () => window.clearTimeout(timer);
-  }, [autoDismiss, durationMs, onDone]);
+  }, [autoDismiss, durationMs, onDone, visible]);
 
   if (!visible) return null;
 

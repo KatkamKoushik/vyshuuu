@@ -20,7 +20,10 @@ import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
  */
 export const ChiaroscuroCursorLight: React.FC = () => {
   const isReducedMotion = usePrefersReducedMotion();
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [isTouchDevice] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(pointer: coarse)').matches;
+  });
   const [isLightZone, setIsLightZone] = useState(false);
   const [isPointerActive, setIsPointerActive] = useState(false);
 
@@ -34,13 +37,7 @@ export const ChiaroscuroCursorLight: React.FC = () => {
   });
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    // Detect touch / coarse pointer
-    const isCoarse = window.matchMedia('(pointer: coarse)').matches;
-    setIsTouchDevice(isCoarse);
-
-    if (isCoarse || isReducedMotion) return;
+    if (typeof window === 'undefined' || isTouchDevice || isReducedMotion) return;
 
     let rafId: number;
 
@@ -129,7 +126,7 @@ export const ChiaroscuroCursorLight: React.FC = () => {
       cancelAnimationFrame(rafId);
       if (scrollRafId !== null) cancelAnimationFrame(scrollRafId);
     };
-  }, [isReducedMotion, isPointerActive]);
+  }, [isReducedMotion, isPointerActive, isTouchDevice]);
 
   if (isTouchDevice || isReducedMotion) {
     return null;
