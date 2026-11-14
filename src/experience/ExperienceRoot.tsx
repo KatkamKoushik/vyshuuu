@@ -4,6 +4,7 @@ import React from 'react';
 import { CameraController } from './controllers/CameraController';
 import { ThresholdScene } from './scenes/ThresholdScene';
 import { UnfurlingScene } from './scenes/UnfurlingScene';
+import { GoldParticles } from './scenes/GoldParticles';
 
 export const ExperienceRoot: React.FC = () => {
   return (
@@ -28,6 +29,9 @@ export const ExperienceRoot: React.FC = () => {
 
       {/* Threshold Scene (Intro single golden filament) */}
       <ThresholdScene />
+
+      {/* Floating Golden Micro-Dust Particles (~400 filaments reacting to velocity) */}
+      <GoldParticles />
 
       {/* The Signature 6-Yard Unfurling Scene (Continuous woven saree with 9 locked maps) */}
       <UnfurlingScene />

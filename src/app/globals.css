@@ -96,3 +96,27 @@ html.lenis body {
   pointer-events: none;
 }
 
+/* --------------------------------------------------------------------------
+   Web Audio Waveform Keyframes & Kinetic Mask Transitions
+   -------------------------------------------------------------------------- */
+@keyframes waveBar1 {
+  0%, 100% { height: 3px; }
+  50% { height: 12px; }
+}
+
+@keyframes waveBar2 {
+  0%, 100% { height: 11px; }
+  50% { height: 4px; }
+}
+
+@keyframes waveBar3 {
+  0%, 100% { height: 5px; }
+  50% { height: 13px; }
+}
+
+@keyframes waveBar4 {
+  0%, 100% { height: 12px; }
+  50% { height: 6px; }
+}
+
+

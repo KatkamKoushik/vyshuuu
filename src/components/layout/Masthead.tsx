@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Monogram } from '../brand/Monogram';
 import { useExperienceStore } from '@/stores/experienceStore';
+import { SoundWaveToggle } from '../audio/SoundWaveToggle';
 
 export const Masthead: React.FC = () => {
   const isIntroSettled = useExperienceStore((s) => s.isIntroSettled);
@@ -131,6 +132,9 @@ export const Masthead: React.FC = () => {
         >
           Archive
         </Link>
+
+        {/* Minimalist Procedural Sound Scenography Toggle */}
+        <SoundWaveToggle isLightZone={isLightZone} />
       </nav>
     </header>
   );

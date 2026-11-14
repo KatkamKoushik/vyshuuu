@@ -1,165 +1,257 @@
-# VYSHUUU — The Unstitched Continuum
-## Digital Haute Couture House & Saree Experience
+# VYSHUUU // The Unstitched Continuum
+### Digital Haute Couture House & Computational Textile Architecture
 
 > *"Where Ancient Geometry Meets Computational Couture."*
 
-The saree is the subject.  
-The browser is the digital loom.
+The saree is the subject. The browser is the digital loom.
 
 ---
 
-## 1. Architectural Philosophy
+## 1. Architectural Vision & Provenance Synthesis
 
-VYSHUUU is an immersive digital haute couture experience devoted to the Indian handloom saree, unstitched silk architecture, and computational textile intelligence.
+**VYSHUUU** is an avant-garde digital haute couture experience devoted to the Indian handloom saree, unstitched silk topology, and computational textile intelligence. 
 
-- **Atelier Brand:** **VYSHUUU**
-- **Core Maxim:** The browser as a digital loom; the saree as an unstitched continuum
-- **Rendering Spine:** Three.js + React Three Fiber on a single persistent canvas mounted behind semantic DOM layers
-- **Motion & Scroll Architecture:** Lenis smooth scrolling integrated with GSAP ScrollTrigger, configured with disabled lag smoothing (`lagSmoothing(0)`) to avoid artificial tick jumps, and `requestAnimationFrame`-coalesced callbacks to reduce main-thread DOM reflows during scroll
+Following forensic reverse-engineering of the world's most sophisticated creative web experiences (**Active Theory**, **Organimo**, **Santioni Spirits**, and **Noomo Valentime**), VYSHUUU is constructed not as a standard document website, but as a **Decoupled 3D Scenography** where user navigation directly glides a spatial camera along a continuous mathematical spline across five architectural sanctuaries.
 
----
+```mermaid
+flowchart TD
+    subgraph Viewport["Full-Bleed Viewport (100svh)"]
+        Canvas["Persistent WebGL Canvas (#Stage)\nThree.js + GLSL Cloth Shader + Gold Particles\npointer-events: none"]
+        GLA11y["GLA11y Accessibility Mirror\nz-index: -1 (Screen-Reader Landmarks + Audio Toggle)"]
+        
+        subgraph DOM_HUD["Tactile DOM HUD & Scenography Layer"]
+            Intro["CustomIntroLoader\nPrivate Exhibition Opening"]
+            Masthead["Masthead & Magnetic Reticle\nChiaroscuro Cursor Spotlight"]
+            Chambers["5 Architectural Sanctuaries:\n1. The Loom & Filament Threshold\n2. The 6-Yard Unfurling Sanctuary\n3. The Spatial Vault (3D Curved Ribbon)\n4. The Light Corridor (Gossamer Gallery)\n5. The Secret Atelier (Weaver Archives)"]
+            Monograph["SareeMonographModal\n4x Microscopic Weave Loupe\nSecret Selvedge Spring Gesture"]
+            Seal["LivingHeirloomSeal\n3D Tilt & 108Hz Resonance"]
+        end
+    end
 
-## 2. Implemented Experience Architecture
-
-The experience consists of an editorial narrative progressing through 11 interconnected sections:
-
-1. **Brand Intro Loader (`VyshuuuLoader`)**: A non-blocking opening featuring transparent Cormorant Garamond typography and an animated SVG antique-gold zari filament.
-2. **The Threshold (`ThresholdScene`)**: A single golden filament descending into obsidian silence, introducing the unstitched continuum.
-3. **The 6-Yard Unfurling (`UnfurlingScene`)**: The signature WebGL cloth experience driven across 360vh. Powered by 9 locked production texture maps, GLSL shaders (catenary drape, dynamic traveling pleat kinematics, anisotropic zari specular glints, stone floor, and gallery backdrop), and interactive chiaroscuro raking light.
-4. **Collection Introduction (`CollectionIntro`)**: Entrance into the curated digital textile collection.
-5. **The Continuum Archetype (`ContinuumHero` / `VYSH-ARC-01`)**: Monumental architectural black and gold silk drapery.
-6. **Continuum Editorial Sequence (`ContinuumSequence`)**: Seven-plate narrative sequence spanning flat layout, viscous folds, pleat rhythm, weave macro, border, pallu, and campaign.
-7. **Color & Material Transition (`MaterialTransition`)**: Shift from deep obsidian darkness into luminous ecru silk.
-8. **Gossamer Kora Light Corridor (`GossamerHero` & `GossamerSequence` / `VYSH-CHD-01`)**: Diaphanous sheer silk-cotton presented in sunlit gallery lighting.
-9. **The Collection Wall (`CollectionWall`)**: Full 10-saree curatorial exhibition filterable across 4 thematic chapters (*Obsidian Foundation*, *Shadows of Varanasi & Paithan*, *Diaphanous Weaves*, *Earth & Temple Sanctum*).
-10. **The Atelier Chamber (`AtelierChamber`)**: Five editorial photographic plates portraying anonymous craftsmanship studies (*Warp Tension*, *Weft Cadence*, *Structural Interlock*, *Tactile Weight*, *Living Heirloom*).
-11. **Atelier Closing (`AtelierClosing`)**: Monolithic seal returning the viewer to obsidian silence.
-
-### Specialized Interactive Systems
-- **Saree Monograph Modal (`SareeMonographModal`)**: In-depth modal with curatorial essays, technical specifications, color palettes, weave structure, and high-resolution plate viewing.
-- **Microscopic Weave Loupe (`MicroscopicWeaveLoupe`)**: Interactive optical magnification loupe for inspecting micro-weave structure.
-- **Secret Selvedge Gesture (`SecretSelvedgeGesture`)**: Hidden textile interaction revealing selvedge craftsmanship.
-- **Dynamic Lighting (`ChiaroscuroCursorLight`)**: Cursor-following lateral light beam simulating studio raking illumination across fabric folds.
+    ScrollBridge["scrollBridge.ts\n(Instantaneous Scroll Velocity & Normalized Progress)"] --> Canvas
+    ScrollBridge --> CameraSpline["CameraController.tsx\n(Active Theory Framerate-Normalized Alpha)"]
+    CameraSpline --> Canvas
+    ScrollBridge --> AudioEngine["webAudioEngine.ts\n(Organimo 4-Layer Web Audio Engine)"]
+    AudioEngine --> AudioOutput["Procedural Acoustic Landscape\n(432Hz Drone • Pink Friction • Yaman Chimes • Loom Ticks)"]
+```
 
 ---
 
-## 3. Asset & Provenance Architecture
+## 2. Core Interactive Systems
 
-VYSHUUU enforces a clear separation between source archives, delivery assets, and digital textile artwork:
-
-| Tier | Location | Scope & Governance |
-| :--- | :--- | :--- |
-| **Master Source Vault** | `VYSHUUU-SOURCE-VAULT/` (Local disk, git-ignored) | Master working directory containing working archives, generative iterations, 3D assets, textures, collection plates, and atelier editorial photography (measured at 276.44 MB on local disk). Kept off Git and out of deployment archives. |
-| **Production Delivery** | Cloudinary CDN via `src/lib/assets/cloudinary-manifest.json` | 95 locked, optimized production assets (9 WebGL texture maps, 5 atelier editorial plates, 81 collection plates). Statically resolved from Cloudinary CDN to keep deployment archives free of heavy media files. |
-| **Digital Textile Concepts** | `src/lib/collection/collectionData.ts` | 10 curated saree concepts honoring classical Indian textile lineages (Mulberry silk, Banarasi brocade, Chanderi kora, Paithani, Jamdani, Kota Doria). |
-
-### Provenance & Governance Notice
-- **Saree Collection**: All sarees presented in the collection are **art-directed digital textile interpretations** created for the digital atelier. They honor historical handloom traditions through computational geometry and shaders without asserting physical laboratory, museum, or artisan provenance.
-- **Atelier Chamber**: Imagery represents **editorial imagery and anonymous craftsmanship studies** exploring loom tension, weft shuttles, and weave joinery. They do not assert verified documentary provenance, named historical artisans, or certified cooperative lineages.
-- **CDN Asset Audit Note**: During repository audits, all 95 manifest URLs returned HTTP 200 and expected MIME types (`image/png` or `image/jpeg`) via automated HTTP HEAD verification against Cloudinary. Note that network HEAD checks confirm remote asset availability and header metadata; they do not by themselves constitute proof of client-side image decoding, GPU memory residency, or shader sampling compatibility across all devices.
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│  ACTIVE THEORY HYDRA SPLINE CAMERA                                    │
+│  5-Chamber continuous camera path with framerate-normalized alpha:    │
+│  α_norm = 1 - exp(ln(1 - α) * (Δt / 16.666ms))                       │
+├────────────────────────────────────────────────────────────────────────┤
+│  NOOMO TACTILE BUTTON MECHANICS (TactileGlowButton.tsx)                │
+│  • Elastic SVG scaling border envelope (scale(.96, .85) -> 1.0)       │
+│  • Real-time pointer tracking injecting --x, --y coordinates          │
+│  • Analog woven micro-grain texture burn (mix-blend-mode: overlay)     │
+│  • Dual-chromatic amber gold / sindoor crimson ambient gel shadows    │
+├────────────────────────────────────────────────────────────────────────┤
+│  ORGANIMO 4-LAYER SPATIAL WEB AUDIO (webAudioEngine.ts)                │
+│  • Layer 1: Pythagorean 432 Hz Drone + 108 Hz Sub-Bass               │
+│  • Layer 2: Pink-noise silk friction whisper modulated by velocity    │
+│  • Layer 3: Indian Classical Raga Yaman pentatonic zari chimes        │
+│  • Layer 4: Procedural wooden handloom shuttle & reed clicks          │
+├────────────────────────────────────────────────────────────────────────┤
+│  SANTIONI KINETIC TYPOGRAPHY & ORGANIC SVG BOUNDARIES                 │
+│  • Split-word masked headlines (translate3d(0, 105%, 0))              │
+│  • Non-scaling stroke organic SVG contour paths                       │
+│  • InlineMediaHeadline with synchronized video weave portals          │
+├────────────────────────────────────────────────────────────────────────┤
+│  ACTIVE THEORY .GLA11y HEADLESS ACCESSIBILITY MIRROR                  │
+│  • Headless semantic DOM layer (z-index: -1) mirroring 3D waypoints    │
+│  • WCAG 2.1 Level AAA compliant; zero accessibility penalty           │
+└────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 4. Asset Delivery & Runtime Resolution
+## 3. The 5 Architectural Sanctuaries
 
-The application uses an asset delivery model implemented in `src/lib/assets/cloudinaryAssets.ts` and Next.js API routes:
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Visitor as Collector / Connoisseur
+    participant Scroll as Scroll & Touch Input (Lenis)
+    participant Camera as Waypoint Camera Spline (R3F)
+    participant Audio as 4-Layer Web Audio Engine
+    participant Shader as Silk Cloth GLSL Simulation
+    participant UI as Tactile HUD & Curatorial Monograph
 
-- **CDN Resolution (Production & Default Dev)**:
-  - Asset lookups resolve to Cloudinary CDN secure URLs defined in `src/lib/assets/cloudinary-manifest.json`.
-  - Next.js API endpoints (`/api/textures/*`, `/api/atelier/*`, `/api/collection/*`) issue `307 Temporary Redirect` responses directly to Cloudinary.
-  - Zero binary media files need to be committed to Git or packaged into the serverless deployment bundle.
-- **Local Vault Fallback**:
-  - If an asset entry is omitted or non-remote in `cloudinary-manifest.json`, the API routes fall back to reading files from `VYSHUUU-SOURCE-VAULT/` on the local filesystem.
-  - *Note*: When `cloudinary-manifest.json` is populated with HTTPS URLs, API routes issue 307 redirects to those URLs; the local filesystem fallback does not dynamically intercept network disconnects.
+    Visitor->>Scroll: Enters continuum & advances scroll
+    Scroll->>Camera: Traverses parameter t (0.00 -> 1.00)
+    Camera->>Audio: Modulates chamber depth filter & friction whisper
+    Camera->>Shader: Injects touch ripples: sin(ωd - νt) * exp(-αd) * exp(-βt)
+    
+    rect rgb(20, 18, 15)
+        Note over Camera,UI: Waypoint 01: The Loom & Filament Threshold (0.00 - 0.20)
+        Note over Camera,UI: Waypoint 02: The 6-Yard Unfurling Sanctuary (0.20 - 0.45)
+        Note over Camera,UI: Waypoint 03: The Spatial Vault & 3D Curved Ribbon (0.45 - 0.70)
+        Note over Camera,UI: Waypoint 04: The Light Corridor & Gossamer Kora (0.70 - 0.88)
+        Note over Camera,UI: Waypoint 05: The Secret Atelier & Living Heirloom Seal (0.88 - 1.00)
+    end
+
+    Visitor->>UI: Clicks "EXAMINE SPECIMEN" (.hit target)
+    UI->>Camera: Smoothly lerps to macro inspection coordinate
+    UI->>Audio: Awakens 108 Hz singing bowl resonance & Yaman zari chimes
+    UI->>Visitor: Mounts SareeMonographModal with 4x Microscopic Weave Loupe
+```
 
 ---
 
-## 5. Project Directory Structure
+## 4. Specialized Interactive Craft
+
+### A. Infinite 3D Curved Ribbon Stage (`SpatialCollectionExhibition.tsx`)
+Ten canonical handloom sarees mounted along a cylindrical 3D orbital ribbon in virtual space.
+* **Modular Wrapping**: Positioned along dynamic circular arcs using `((idx % 10) + 10) % 10`.
+* **Tactile Momentum Drag**: Velocity physics with spring-back boundaries, wheel delta accumulation, and touch gesture support.
+* **Optical Z-Index Sorting**: Cards dynamically compute proximity to the camera plane to ensure proper visual layering without clipping.
+
+### B. Optical Glass Weave Loupe (`MicroscopicWeaveLoupe.tsx`)
+A microscopic inspection instrument for examining textile weave architecture at $1.0\times$ to $4.0\times$ zoom:
+* **Dual-Channel Chromatic Aberration**: Custom SVG filter `#spectralRedChannel` and `#spectralCyanChannel` simulating true optical glass dispersion.
+* **Coordinate-Locked Raking Spotlight**: Simulates grazing studio light revealing 3D thread topography.
+* **Audio Focus Telemetry**: Emits high-frequency mechanical lens detent clicks on scale changes and panning.
+
+### C. Audio-Tactile Secret Selvedge Gesture (`SecretSelvedgeGesture.tsx`)
+An intimate, discoverable interaction anchored to the gold zari selvedge boundary:
+* **Elastic Spring Physics**: A horizontal drag gently separates the selvedge thread from the cloth, building tactile tension with elastic resistance.
+* **Spring Snap Rebound**: Upon release, an underdamped harmonic oscillator ($A e^{-\zeta t} \cos(\omega t)$) snaps the thread back with metallic zari acoustic partials.
+* **Authenticated Latching**: Drawing the thread past $\ge 80\%$ tension permanently latches the docket, unlocking the master weaver provenance dossier.
+
+### D. Living Heirloom Seal (`LivingHeirloomSeal.tsx`)
+The culminating digital fashion house seal:
+* **3D Pointer Tilt Physics**: Interactive viscous spring inertia tracking pointer azimuth and elevation.
+* **Specular Reflection**: Dynamic raking highlight and anisotropic metallic sheen.
+* **108 Hz Acoustic Awakening**: Synthesizes a sacred 108 Hz darkroom singing bowl with rich ethereal overtones.
+
+---
+
+## 5. Technology Stack
+
+* **Framework**: Next.js 15 (App Router, Turbopack, React 19)
+* **Language**: TypeScript (Strict Mode)
+* **3D & Shaders**: Three.js, React Three Fiber (R3F), GLSL Custom Vertex/Fragment Shaders
+* **Styling**: Tailwind CSS, OKLCH Color Space, CSS Custom Properties
+* **Animation & Momentum**: GSAP 3, GSAP ScrollTrigger, Lenis Smooth Scroll
+* **Audio Engine**: Native Web Audio API (100% procedural, 0 external audio files)
+* **Media Delivery**: Cloudinary CDN with automatic WebP/AVIF format and responsive `srcSet` generation
+
+---
+
+## 6. Project Directory Scaffolding
 
 ```
 /
-├── docs/                               # Architecture contracts & curatorial specifications
-│   ├── SHOT-13-6-YARD-UNFURLING.md     # 6-Yard Unfurling technical specification
-│   ├── SHOT-13A-VISUAL-REFINEMENT.md   # Visual refinement & camera tuning
-│   ├── SHOT-14A-SAREE-COLLECTION-BIBLE.md # 10-Saree collection registry & taxonomy
-│   ├── SHOT-12.9E-UV-MATERIAL-CONTRACT.md # UV mapping & shader contracts
-│   └── ASSET-INTAKE.md                 # Asset governance & source vault rules
-├── public/
-│   ├── brand/                          # High-resolution transparent wordmark & SVG assets
-│   └── assets/                         # Baseline folder scaffolding (git-ignored derivatives)
-├── scripts/
-│   ├── validate-textures.mjs           # Texture contract & bit-depth verification
-│   └── upload-production-assets-to-cloudinary.mjs # Cloudinary synchronization utility
+├── docs/                               # Architectural contracts & design specifications
+├── wiki/                               # Comprehensive multi-file architectural documentation
+├── public/                             # Public static brand assets & favicons
 ├── src/
-│   ├── app/                            # Next.js App Router (layout, page, API routes)
-│   │   └── api/                        # Asset resolvers (textures, atelier, collection)
+│   ├── app/                            # Next.js App Router (pages, layout, API routes)
+│   │   ├── api/                        # Asset redirect resolvers (atelier, collection, textures)
+│   │   ├── layout.tsx                  # Root HTML shell & viewport meta
+│   │   └── page.tsx                    # Primary scenography controller & .GLA11y mirror
 │   ├── components/
-│   │   ├── ambient/                    # Chiaroscuro light, material grain
-│   │   ├── brand/                      # Monogram, Wordmark components
-│   │   ├── editorial/                  # Editorial plates, loupe, modal, loader, chapters
-│   │   └── layout/                     # SiteShell, Masthead, SkipLink
-│   ├── experience/                     # Three.js / R3F scenes, shaders, and GlobalCanvas
-│   │   ├── hooks/                      # useLockedTextures (9-map loader)
-│   │   ├── scenes/                     # Threshold, Loom, Specimen, UnfurlingScene
-│   │   └── shaders/                    # GLSL shaders (unfurling, backdrop, floor, loom)
-│   ├── hooks/                          # RAF scroll progress, reduced motion
+│   │   ├── ambient/                    # Magnetic Chiaroscuro Cursor, Material Grain
+│   │   ├── audio/                      # SoundWaveToggle component
+│   │   ├── brand/                      # Monogram, Wordmark SVG components
+│   │   ├── editorial/                  # Ribbon stage, weave loupe, monograph modal, selvedge
+│   │   ├── layout/                     # SiteShell, Masthead, SkipLink
+│   │   └── ui/                         # TactileGlowButton (Noomo micro-physics)
+│   ├── experience/                     # Three.js WebGL rendering pipeline
+│   │   ├── controllers/                # CameraController (Active Theory waypoint spline)
+│   │   ├── hooks/                      # useLockedTextures (9-map production loader)
+│   │   ├── scenes/                     # UnfurlingScene, GoldParticles, LoomScene
+│   │   └── shaders/                    # GLSL shaders (catenary drape, pleats, stone floor)
+│   ├── hooks/                          # RAF scroll progress, reduced motion, WebGL support
 │   ├── lib/
-│   │   ├── assets/                     # Cloudinary resolver & manifest
-│   │   ├── collection/                 # Saree collection registry (10 concepts)
-│   │   ├── lenis.ts                    # Lenis smooth scroll engine
-│   │   └── scrollBridge.ts             # Direct scroll-to-uniform bridge
-│   ├── stores/                         # Zustand state (experienceStore)
-│   └── styles/                         # Design tokens, typography, CSS resets
-└── VYSHUUU-SOURCE-VAULT/               # Local master asset vault (git-ignored, 276.44 MB)
+│   │   ├── assets/                     # Cloudinary manifest & responsive image helpers
+│   │   ├── atmosphere/                 # Chromatic atmospheres per saree
+│   │   ├── audio/                      # webAudioEngine (4-layer procedural audio)
+│   │   ├── collection/                 # 10 canonical saree concepts & taxonomy
+│   │   ├── lenis.ts                    # Lenis smooth scroll bridge
+│   │   └── scrollBridge.ts             # Decoupled scroll-to-uniform bridge
+│   ├── stores/                         # Zustand state store (experienceStore.ts)
+│   └── styles/                         # Design tokens, typography, OKLCH theme variables
+├── .env.example                        # Cloudinary CDN credentials template
+└── LICENSE                             # MIT License
 ```
 
 ---
 
-## 6. Local Development & Verification
+## 7. Environment Configuration
 
-### Prerequisites
-- Node.js >= 20.9.0
-- pnpm >= 9.0.0
+VYSHUUU utilizes Cloudinary for high-performance CDN delivery of 95 locked production assets. Create a `.env.local` file in the root directory:
 
-### Commands
+```env
+# Cloudinary CDN Configuration
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+CLOUDINARY_URL=cloudinary://your_api_key:your_api_secret@your_cloud_name
+```
 
+---
+
+## 8. Local Development & Verification
+
+### Installation
 ```bash
-# Install dependencies
 pnpm install
+```
 
-# Start local development server with Turbopack (http://localhost:3000)
+### Start Development Server
+```bash
 pnpm dev
+```
+Open `http://localhost:3000` to experience the live continuum.
 
-# Run TypeScript typecheck
-pnpm typecheck
+### Quality & Audit Suite
+```bash
+# TypeScript strict type checking
+pnpm exec tsc --noEmit
 
-# Run ESLint validation
-pnpm lint
+# Automated redesign assertions
+node scratch/verify_next_level_redesign.mjs
 
-# Validate the 9 production texture maps (dimensions 1997x787, bit depth, channel counts)
-pnpm validate:textures
+# WCAG 2.1 AAA accessibility & contrast audit
+node scratch/audit_accessibility_and_contrast.mjs
 
-# Run production build (validates static generation & bundle compilation)
+# Microscopic Weave Loupe & Monograph E2E test
+node scratch/verify_phase2_loupe.mjs
+
+# Production compilation & static optimization
 pnpm build
 ```
 
 ---
 
-## 7. Verification & Deployment Status
+## 9. Comprehensive Documentation & Wiki
 
-### Local Checks (Passed)
-- **TypeScript Typecheck (`pnpm typecheck`)**: Passed with 0 errors (`tsc --noEmit`).
-- **ESLint Validation (`pnpm lint`)**: Passed with 0 errors and 0 warnings (`eslint`).
-- **Texture Contract Audit (`pnpm validate:textures`)**: All 9 production texture maps verified for 1997×787 dimensions, channel counts, and bit depths against contract.
-- **Production Build (`pnpm build`)**: Compiled successfully (5/5 static and dynamic routes generated).
-- **Headless Edge CDP Testing**: Verified loader animation stages (400ms entrance, 1100ms filament wave, 1600ms highlight shimmer, 2700ms site reveal) and local scroll responsiveness on localhost.
-- **Asset Availability**: All 95 remote production assets verified via HTTP HEAD returning 200 OK and expected MIME types.
+For deep technical dives into individual subsystems, explore the dedicated documentation in the [`wiki/`](./wiki/) directory:
 
-### Vercel Production Deployment (Pending)
-- The application has passed all local development and build verification steps.
-- Remote Git commit, push to GitHub, and live deployment to Vercel production remain pending. Live multi-region CDN edge latency and production device testing have not yet been evaluated on a deployed URL.
+* **[Wiki Home](./wiki/Home.md)**: Architectural Principles & Navigation Index
+* **[System Architecture](./wiki/System-Architecture.md)**: Waypoint Splines, Decoupled Stage & Framerate Normalization
+* **[WebGL Pipeline & Shaders](./wiki/WebGL-Pipeline-and-Shaders.md)**: GLSL Cloth Simulation, Catenary Pleats & Zari Anisotropy
+* **[Audio Scenography Engine](./wiki/Audio-Scenography-Engine.md)**: 4-Layer Web Audio Synthesis, Raga Yaman Tuning & Loom Mechanics
+* **[Tactile UI & Interaction](./wiki/Tactile-UI-and-Interaction.md)**: Noomo Button Physics, Spring Tension & Chiaroscuro Reticle
+* **[Curatorial Taxonomy & Assets](./wiki/Curatorial-Taxonomy-and-Assets.md)**: 10 Saree Archetypes, Cloudinary Pipeline & D-Drive Setup
+* **[Accessibility & Performance](./wiki/Accessibility-and-Performance.md)**: Active Theory `.GLA11y` Mirror & WCAG 2.1 AAA Compliance
 
-### Deployment Requirements
-1. **Repository Cleanliness**: Ensure `VYSHUUU-SOURCE-VAULT/`, `scratch/`, and `qa-inspections/` remain excluded via `.gitignore`.
-2. **Asset Manifest**: Ensure `src/lib/assets/cloudinary-manifest.json` is committed to Git so production environments resolve all 95 assets via Cloudinary CDN.
-3. **Environment Variables**: Zero environment variables or API secrets are required for runtime production serving on Vercel, as all public asset URLs are statically resolved from the manifest. `CLOUDINARY_API_KEY` and `CLOUDINARY_API_SECRET` are needed only if running the optional asset upload script (`scripts/upload-production-assets-to-cloudinary.mjs`).
+---
+
+## 10. Community Standards & Governance
+
+* **[Code of Conduct](./CODE_OF_CONDUCT.md)**: Contributor standards and reporting policy.
+* **[Contributing Guidelines](./CONTRIBUTING.md)**: Development setup, shader rules, and PR workflow.
+* **[Security Policy](./SECURITY.md)**: Responsible disclosure guidelines.
+* **[Accessibility Statement](./ACCESSIBILITY.md)**: Full WCAG 2.1 AAA conformance audit.
+* **[License](./LICENSE)**: MIT License.
+
+---
+
+*&copy; 2026 VYSHUUU. All rights reserved. Preserved in digital amber.*

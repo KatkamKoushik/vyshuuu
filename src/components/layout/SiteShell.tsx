@@ -6,6 +6,7 @@ import { Masthead } from './Masthead';
 import VyshuuuLoader from '../editorial/VyshuuuLoader';
 import { MaterialGrain } from '../ambient/MaterialGrain';
 import { ChiaroscuroCursorLight } from '../ambient/ChiaroscuroCursorLight';
+import { MagneticChiaroscuroCursor } from '../ambient/MagneticChiaroscuroCursor';
 import { SkipLink } from './SkipLink';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import { useExperienceStore } from '@/stores/experienceStore';
@@ -60,6 +61,7 @@ export const SiteShell: React.FC<SiteShellProps> = ({ children }) => {
       <SkipLink />
       <MaterialGrain />
       <ChiaroscuroCursorLight />
+      <MagneticChiaroscuroCursor />
       {mounted && hasCompletedIntro && <Masthead />}
 
       {/* Main Content Area */}

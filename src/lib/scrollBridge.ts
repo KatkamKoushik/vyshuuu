@@ -5,6 +5,8 @@
  * and instantaneous scroll velocity with zero component re-renders.
  */
 
+import { audioEngine } from './audio/webAudioEngine';
+
 export interface ScrollBridgeState {
   globalProgress: number;
   loomProgress: number;
@@ -32,6 +34,7 @@ export function setUnfurlingProgress(progress: number, velocity: number = 0): vo
   scrollBridge.unfurlingProgress = Math.max(0, Math.min(1, progress));
   scrollBridge.loomProgress = scrollBridge.unfurlingProgress;
   scrollBridge.scrollVelocity = velocity;
+  audioEngine.modulateVelocity(velocity);
 }
 
 export function setSpecimenProgress(progress: number): void {

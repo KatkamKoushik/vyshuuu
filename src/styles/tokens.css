@@ -1,30 +1,50 @@
 /* ==========================================================================
    VYSHUUU DESIGN TOKENS
    "The Sacred Code" — Obsidian, Kora Silk, and Antique Zari
+   Color Space: OKLCH (Uniform Perceptual Lightness & Wide-Gamut Chromatography)
    ========================================================================== */
 
 :root {
   /* ------------------------------------------------------------------------
-     1. Master Color Chromatography
+     1. Master Color Chromatography (OKLCH Native with Hex Provenance)
      ------------------------------------------------------------------------ */
-  --vy-color-obsidian: #0b0a09;
-  --vy-color-charcoal: #171513;
-  --vy-color-kora-silk: #f5f2eb;
-  --vy-color-warm-ivory: #e8e2d5;
-  --vy-color-antique-zari: #c5a869;
-  --vy-color-raw-madder: #581818;
-  --vy-color-alizarin: #8a1c1c;
+  /* Obsidian Darkroom Void (#0b0a09) */
+  --vy-color-obsidian: oklch(0.146 0.0028 68.6);
+  /* Deep Basalt Charcoal (#171513) */
+  --vy-color-charcoal: oklch(0.197 0.0051 67.5);
+  /* Elevated Dark Plinth (#1a1816) */
+  --vy-color-elevated: oklch(0.211 0.0050 67.6);
+  /* Kora Raw Unbleached Silk (#f5f2eb) */
+  --vy-color-kora-silk: oklch(0.962 0.0098 87.5);
+  /* Warm Ivory Parchment (#e8e2d5) */
+  --vy-color-warm-ivory: oklch(0.914 0.0186 86.1);
+  /* Antique Metallic Zari (#c5a869) */
+  --vy-color-antique-zari: oklch(0.743 0.0883 85.6);
+  /* Raw Madder Root (#581818) */
+  --vy-color-raw-madder: oklch(0.315 0.0944 24.3);
+  /* Alizarin Crimson Glint (#8a1c1c) */
+  --vy-color-alizarin: oklch(0.416 0.1455 26.3);
+  /* Curatorial Patina Muted Text (#9e9689) */
+  --vy-color-patina: oklch(0.676 0.0209 80.1);
+
+  /* Light Corridor Chromatic Tokens */
+  --vy-color-light-bg: oklch(0.959 0.0127 86.8);     /* #f5f1e8 */
+  --vy-color-light-fg: oklch(0.224 0.0074 67.4);     /* #1e1b18 */
+  --vy-color-light-border: oklch(0.879 0.0250 83.4); /* #dfd6c5 */
+  --vy-color-light-muted: oklch(0.508 0.0230 77.1);  /* #6d6457 */
 
   /* ------------------------------------------------------------------------
      2. Semantic Token Mappings
      ------------------------------------------------------------------------ */
   --color-bg: var(--vy-color-obsidian);
   --color-surface: var(--vy-color-charcoal);
+  --color-surface-elevated: var(--vy-color-elevated);
   --color-text: var(--vy-color-kora-silk);
-  --color-text-muted: #9e9689;
-  --color-border: rgba(197, 168, 105, 0.18);
-  --color-border-subtle: rgba(245, 242, 235, 0.08);
+  --color-text-muted: var(--vy-color-patina);
+  --color-border: oklch(0.743 0.0883 85.6 / 0.18);
+  --color-border-subtle: oklch(0.962 0.0098 87.5 / 0.08);
   --color-accent-zari: var(--vy-color-antique-zari);
+  --color-accent-zari-subtle: oklch(0.743 0.0883 85.6 / 0.16);
   --color-accent-madder: var(--vy-color-raw-madder);
   --color-accent-alizarin: var(--vy-color-alizarin);
 
@@ -56,7 +76,9 @@
   --z-overlay: 20;
   --z-masthead: 50;
   --z-drawer: 60;
-  --z-a11y: 100;
+  --z-modal: 150;
+  --z-loupe: 200;
+  --z-a11y: 250;
 
   /* ------------------------------------------------------------------------
      6. Motion & Viscous Curves
@@ -67,4 +89,14 @@
   --duration-whisper: 350ms;
   --duration-standard: 800ms;
   --duration-cinematic: 1600ms;
+}
+
+/* Light Zone Semantic Inversion */
+[data-theme="light"] {
+  --color-bg: var(--vy-color-light-bg);
+  --color-surface: var(--vy-color-warm-ivory);
+  --color-text: var(--vy-color-light-fg);
+  --color-text-muted: var(--vy-color-light-muted);
+  --color-border: var(--vy-color-light-border);
+  --color-border-subtle: oklch(0.508 0.0230 77.1 / 0.12);
 }

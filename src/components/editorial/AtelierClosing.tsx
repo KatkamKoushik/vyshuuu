@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
+import { LivingHeirloomSeal } from './LivingHeirloomSeal';
 
 interface StudyEncounter {
   id: string;
@@ -24,19 +25,15 @@ const CANONICAL_STUDIES = [
 ];
 
 /**
- * AtelierClosing (Phase 4 — Memory Layer + Digital Atelier Closing)
- * 
- * Synthesizes the visitor's journey through the six yards and ten textile worlds
- * into the quiet, monumental brand closing:
- * 
- * VYSHUUU
- * A DIGITAL ATELIER FOR THE UNSTITCHED CONTINUUM
- * 
- * "An experimental fashion house devoted to the saree—where textile,
- * structure, light, and movement become digital art."
- * 
- * TEXTILE · STRUCTURE · LIGHT · MOVEMENT
- * VYSHUUU DIGITAL ATELIER
+ * AtelierClosing (Phase 6 — Sensory Summit & Atelier Nocturnal Sanctuary)
+ *
+ * Synthesizes the visitor's journey through the six unbroken yards and ten textile worlds:
+ * 1. The Archival Memory Layer (Recollection Ledger)
+ * 2. The Golden Filament Bridge (Closing the loop of creation)
+ * 3. The Living Heirloom Seal (Interactive gold medallion with 3D tilt & harmonic resonance)
+ * 4. The Digital Fashion House Identity (Avant-garde brand dedication)
+ * 5. Discreet Return Navigation & Terminus
+ * 6. Monumental Obsidian Silence (The ultimate quietude)
  */
 export const AtelierClosing: React.FC = () => {
   const isReducedMotion = usePrefersReducedMotion();
@@ -86,7 +83,8 @@ export const AtelierClosing: React.FC = () => {
       elementsToWatch.push({ el: continuumEl, id: 'vysh-arc-01' });
     }
 
-    const gossamerEl = document.getElementById('gossamer') || document.querySelector('[data-theme="light"]');
+    const gossamerEl =
+      document.getElementById('gossamer') || document.querySelector('[data-theme="light"]');
     if (gossamerEl) {
       elementsToWatch.push({ el: gossamerEl, id: 'vysh-chd-01' });
     }
@@ -145,7 +143,7 @@ export const AtelierClosing: React.FC = () => {
       elementsToWatch.forEach(({ el }) => observer?.observe(el));
     }
 
-    // Also a passive scroll listener as fallback for rapid scrolling
+    // Fallback passive scroll listener
     let rafId: number | null = null;
     const checkScroll = () => {
       let scrollChanged = false;
@@ -199,10 +197,10 @@ export const AtelierClosing: React.FC = () => {
     <footer
       id="dedication"
       aria-label="Atelier Dedication and Closing"
-      className="relative w-full min-h-screen flex flex-col justify-between items-center px-6 md:px-16 lg:px-24 pt-8 pb-24 md:pt-14 md:pb-32 select-none bg-[#050404] text-[#e8e4dc] overflow-hidden"
+      className="relative w-full min-h-screen flex flex-col justify-between items-center px-6 md:px-16 lg:px-24 pt-10 pb-0 select-none bg-[#050404] text-[#e8e4dc] overflow-hidden"
     >
       {/* Background Subtle Radial Vignette */}
-      <div className="absolute inset-0 bg-radial-at-c from-[#110e0c]/30 via-[#050404] to-[#050404] pointer-events-none" />
+      <div className="absolute inset-0 bg-radial-at-c from-[#110e0c]/40 via-[#050404] to-[#050404] pointer-events-none" />
 
       {/* ====================================================================
           PART I: THE MEMORY LAYER (RECOLLECTION LEDGER)
@@ -210,7 +208,7 @@ export const AtelierClosing: React.FC = () => {
           ==================================================================== */}
       <section
         aria-label="Archival Memory Layer"
-        className="relative z-10 w-full max-w-4xl mx-auto pt-0 text-center space-y-6"
+        className="relative z-10 w-full max-w-4xl mx-auto pt-4 text-center space-y-6"
       >
         <div className="space-y-2">
           <span className="mono-spec text-[9px] sm:text-[10px] text-[#c5a869] tracking-[0.32em] uppercase block">
@@ -236,7 +234,9 @@ export const AtelierClosing: React.FC = () => {
             {studiesWithEncounter.map((s) => (
               <div
                 key={s.id}
-                className={`py-1.5 px-1 border text-center rounded-[1px] ${
+                data-magnetic
+                data-magnetic-label={`STUDY ${s.number}`}
+                className={`py-1.5 px-1 border text-center rounded-[1px] cursor-pointer ${
                   isReducedMotion ? '' : 'transition-colors duration-500'
                 } ${
                   s.encountered
@@ -258,17 +258,29 @@ export const AtelierClosing: React.FC = () => {
           PART II: THE GOLDEN FILAMENT BRIDGE
           Echoes the opening Threshold filament, closing the 6-yard loop.
           ==================================================================== */}
-      <div className="relative z-10 my-12 sm:my-16 flex flex-col items-center">
-        <div className="w-[1px] h-20 sm:h-28 bg-gradient-to-b from-[#c5a869]/60 via-[#c5a869]/20 to-transparent" />
+      <div className="relative z-10 my-8 sm:my-12 flex flex-col items-center">
+        <div className="w-[1px] h-20 sm:h-24 bg-gradient-to-b from-[#c5a869]/60 via-[#c5a869]/20 to-transparent" />
       </div>
 
       {/* ====================================================================
-          PART III & IV: THE DIGITAL ATELIER CLOSING IDENTITY
+          PART III: THE LIVING HEIRLOOM SEAL (SENSORY SUMMIT)
+          Interactive gold medallion responding to pointer tilt & emitting harmonic resonance
+          ==================================================================== */}
+      <section
+        id="seal"
+        aria-label="The Living Heirloom Seal"
+        className="relative z-10 w-full max-w-xl mx-auto flex flex-col items-center my-4"
+      >
+        <LivingHeirloomSeal />
+      </section>
+
+      {/* ====================================================================
+          PART IV: THE DIGITAL ATELIER CLOSING IDENTITY
           VYSHUUU (House Identity) + Avant-Garde Brand Closing
           ==================================================================== */}
       <section
         aria-label="Atelier Creative Institution Closing"
-        className="relative z-10 w-full max-w-3xl mx-auto text-center space-y-12 sm:space-y-16 my-auto"
+        className="relative z-10 w-full max-w-3xl mx-auto text-center space-y-10 sm:space-y-14 my-12"
       >
         {/* Digital Fashion House Identity */}
         <div className="space-y-4 sm:space-y-5">
@@ -313,7 +325,7 @@ export const AtelierClosing: React.FC = () => {
           ==================================================================== */}
       <nav
         aria-label="Return Navigation"
-        className="relative z-10 w-full max-w-[var(--max-content-width)] mx-auto flex flex-col md:flex-row justify-between items-center gap-6 pt-16 mt-16 border-t border-white/10 text-[9.5px] mono-spec text-[#8a7f6e]"
+        className="relative z-10 w-full max-w-[var(--max-content-width)] mx-auto flex flex-col md:flex-row justify-between items-center gap-6 pt-12 pb-12 border-t border-white/10 text-[9.5px] mono-spec text-[#8a7f6e]"
       >
         <span className="tracking-[0.18em]">
           VYSHUUU DIGITAL ATELIER &middot; AN UNSTITCHED ARTWORK
@@ -322,6 +334,8 @@ export const AtelierClosing: React.FC = () => {
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-6 tracking-[0.16em]">
           <a
             href="#threshold"
+            data-magnetic
+            data-magnetic-label="THRESHOLD"
             className="py-2 px-2 -my-2 inline-flex items-center text-[#a89f91] sm:text-[#8a7f6e] hover:text-[#c5a869] transition-colors cursor-pointer"
             title="Return to The Threshold"
           >
@@ -329,6 +343,8 @@ export const AtelierClosing: React.FC = () => {
           </a>
           <a
             href="#unfurling"
+            data-magnetic
+            data-magnetic-label="6-YARD"
             className="py-2 px-2 -my-2 inline-flex items-center text-[#a89f91] sm:text-[#8a7f6e] hover:text-[#c5a869] transition-colors cursor-pointer"
             title="Return to 6-Yard Unfurling"
           >
@@ -336,6 +352,8 @@ export const AtelierClosing: React.FC = () => {
           </a>
           <a
             href="#collection-wall"
+            data-magnetic
+            data-magnetic-label="ARCHIVE"
             className="py-2 px-2 -my-2 inline-flex items-center text-[#a89f91] sm:text-[#8a7f6e] hover:text-[#c5a869] transition-colors cursor-pointer"
             title="Return to Archive Worlds"
           >
@@ -343,6 +361,8 @@ export const AtelierClosing: React.FC = () => {
           </a>
           <a
             href="#atelier"
+            data-magnetic
+            data-magnetic-label="ATELIER"
             className="py-2 px-2 -my-2 inline-flex items-center text-[#a89f91] sm:text-[#8a7f6e] hover:text-[#c5a869] transition-colors cursor-pointer"
             title="Return to The Atelier"
           >
@@ -354,6 +374,37 @@ export const AtelierClosing: React.FC = () => {
           &copy; {isClient ? new Date().getFullYear() : 2025} VYSHUUU. ALL RIGHTS RESERVED.
         </span>
       </nav>
+
+      {/* ====================================================================
+          PART VI: THE MONUMENTAL SILENCE (THE OBSIDIAN STILLNESS)
+          Monumental quiet ending returning the viewer to absolute obsidian silence
+          ==================================================================== */}
+      <section
+        aria-label="The Obsidian Stillness"
+        className="relative z-10 w-full min-h-[55vh] flex flex-col items-center justify-center text-center px-6 py-24 bg-gradient-to-b from-transparent via-[#000000] to-[#000000]"
+      >
+        <div className="w-[1px] h-28 bg-gradient-to-b from-[#c5a869]/50 via-[#c5a869]/15 to-transparent mb-8" />
+
+        <p className="font-serif italic text-base sm:text-lg md:text-xl text-[#8a7f6e] tracking-wide max-w-md mx-auto leading-relaxed">
+          &ldquo;Nothing is cut. Nothing is joined.<br />The continuum breathes in stillness.&rdquo;
+        </p>
+
+        <div className="mt-8 space-y-2">
+          <span className="mono-spec text-[8.5px] sm:text-[9.5px] text-[#c5a869]/60 tracking-[0.38em] uppercase block">
+            VYSHUUU &middot; THE UNSTITCHED CONTINUUM &middot; SILENCE
+          </span>
+          <span className="mono-spec text-[7.5px] text-[#8a7f6e]/40 tracking-[0.24em] block">
+            [ OBSIDIAN EQUILIBRIUM &middot; LOOM SETTLED ]
+          </span>
+        </div>
+
+        <div
+          data-magnetic
+          data-magnetic-label="STILLNESS"
+          className="w-1.5 h-1.5 rounded-full bg-[#c5a869]/50 hover:bg-[#c5a869] shadow-[0_0_8px_rgba(197,168,105,0.4)] animate-pulse mt-8 cursor-pointer transition-colors"
+          title="The Continuum Breathes in Stillness"
+        />
+      </section>
     </footer>
   );
 };

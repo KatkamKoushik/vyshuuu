@@ -4,6 +4,7 @@ import Lenis from 'lenis';
 import { gsap, ScrollTrigger } from './gsap';
 
 let lenisInstance: Lenis | null = null;
+let tickerCallback: ((time: number) => void) | null = null;
 
 export function getLenis(): Lenis | null {
   return lenisInstance;
@@ -27,7 +28,7 @@ export function initLenis(): Lenis | null {
   // Synchronize Lenis scroll with GSAP ScrollTrigger
   lenisInstance.on('scroll', ScrollTrigger.update);
 
-  const tickerCallback = (time: number) => {
+  tickerCallback = (time: number) => {
     lenisInstance?.raf(time * 1000);
   };
 
@@ -39,6 +40,10 @@ export function initLenis(): Lenis | null {
 }
 
 export function destroyLenis(): void {
+  if (tickerCallback) {
+    gsap.ticker.remove(tickerCallback);
+    tickerCallback = null;
+  }
   if (lenisInstance) {
     lenisInstance.destroy();
     lenisInstance = null;

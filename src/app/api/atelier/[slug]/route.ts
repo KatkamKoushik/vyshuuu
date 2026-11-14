@@ -34,8 +34,9 @@ export async function GET(
 
   const absolutePath = path.resolve(ATELIER_VAULT_ROOT, fileName);
 
-  // Security barrier: prevent directory traversal outside vault root
-  if (!absolutePath.startsWith(ATELIER_VAULT_ROOT)) {
+  // Security barrier: strict boundary check preventing directory traversal
+  const rel = path.relative(ATELIER_VAULT_ROOT, absolutePath);
+  if (rel.startsWith('..') || path.isAbsolute(rel)) {
     return new NextResponse('Access denied', { status: 403 });
   }
 

@@ -138,14 +138,17 @@ export async function GET(
     }
   }
 
-  // Fallback to direct path segments
+  // Reject requests that do not map to approved collection assets
   if (!relativeFilePath) {
-    relativeFilePath = pathSegments.join('/');
+    return new NextResponse(`Invalid collection asset identifier: ${pathSegments.join('/')}`, {
+      status: 404,
+    });
   }
 
-  // Guard against directory traversal
+  // Guard strictly against directory traversal outside vault root
   const absolutePath = path.resolve(COLLECTION_VAULT_ROOT, relativeFilePath);
-  if (!absolutePath.startsWith(COLLECTION_VAULT_ROOT)) {
+  const rel = path.relative(COLLECTION_VAULT_ROOT, absolutePath);
+  if (rel.startsWith('..') || path.isAbsolute(rel)) {
     return new NextResponse('Access denied', { status: 403 });
   }
 

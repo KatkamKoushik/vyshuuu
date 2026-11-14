@@ -32,8 +32,10 @@ const TEXTURE_ROUTES: { key: keyof LockedTextureSet; textureKey: string; isSRGB:
 export function useLockedTextures(): {
   textures: LockedTextureSet;
   isLoaded: boolean;
+  hasValidTextures: boolean;
 } {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [hasValidTextures, setHasValidTextures] = useState(false);
   const texturesRef = useRef<LockedTextureSet>({
     baseColor: null,
     zariMask: null,
@@ -51,6 +53,18 @@ export function useLockedTextures(): {
     const loader = new THREE.TextureLoader();
     loader.setCrossOrigin('anonymous');
     let loadedCount = 0;
+    let successCount = 0;
+    let failureCount = 0;
+
+    const checkCompletion = () => {
+      if (loadedCount === TEXTURE_ROUTES.length) {
+        setIsLoaded(true);
+        // Only mark textures valid if all required textures loaded successfully
+        const allValid = successCount === TEXTURE_ROUTES.length && failureCount === 0;
+        setHasValidTextures(allValid);
+        useExperienceStore.getState().setTexturesLoaded(allValid);
+      }
+    };
 
     TEXTURE_ROUTES.forEach(({ key, textureKey, isSRGB }) => {
       const url = getTextureUrl(textureKey);
@@ -71,23 +85,17 @@ export function useLockedTextures(): {
 
           texturesRef.current[key] = tex;
           loadedCount++;
+          successCount++;
           useExperienceStore.getState().setTexturesLoadedCount(loadedCount);
-
-          if (loadedCount === TEXTURE_ROUTES.length) {
-            setIsLoaded(true);
-            useExperienceStore.getState().setTexturesLoaded(true);
-          }
+          checkCompletion();
         },
         undefined,
         (err) => {
           console.warn(`[VYSHUUU Texture Loader] Failed to load ${key} from ${url}:`, err);
-          // Safely advance counter so failure does not block experience entrance
           loadedCount++;
+          failureCount++;
           useExperienceStore.getState().setTexturesLoadedCount(loadedCount);
-          if (loadedCount === TEXTURE_ROUTES.length) {
-            setIsLoaded(true);
-            useExperienceStore.getState().setTexturesLoaded(true);
-          }
+          checkCompletion();
         }
       );
     });
@@ -101,5 +109,5 @@ export function useLockedTextures(): {
     };
   }, []);
 
-  return { textures: texturesRef.current, isLoaded };
+  return { textures: texturesRef.current, isLoaded, hasValidTextures };
 }

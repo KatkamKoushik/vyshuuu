@@ -7,6 +7,7 @@ import {
   getProgressionColor,
   generateAtmosphereCSSVars,
 } from '@/lib/atmosphere/collectionAtmospheres';
+import { getOptimizedCloudinaryUrl, getCloudinarySrcSet } from '@/lib/assets/cloudinaryAssets';
 
 export interface CinematicTextileStageProps {
   saree: SareeConcept;
@@ -278,9 +279,12 @@ export const CinematicTextileStage: React.FC<CinematicTextileStageProps> = ({
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={plate.src}
+                    src={getOptimizedCloudinaryUrl(plate.src, { width: 1440 })}
+                    srcSet={getCloudinarySrcSet(plate.src)}
+                    sizes="(max-width: 768px) 100vw, 90vw"
                     alt={`${saree.name} — ${plate.caption}`}
                     loading={idx < 2 ? 'eager' : 'lazy'}
+                    decoding="async"
                     className="max-h-full max-w-full w-auto h-auto object-contain shadow-[0_30px_90px_-20px_rgba(0,0,0,0.95)] cursor-pointer transition-transform duration-700 ease-out hover:scale-[1.01]"
                   />
                 </div>

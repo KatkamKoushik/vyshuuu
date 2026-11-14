@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+/playwright-report/
+/test-results/
 
 # next.js
 /.next/
@@ -45,5 +47,13 @@ next-env.d.ts
 /qa-inspections/
 /scratch/
 /vyshuuu_nextjs_loader_implementation/
+
+# reference reverse engineering transcripts & benchmark notes
+/DESIGN.md
+/active theory.md
+/noomo.md
+/organimo.md
+/santioni spirits.md
+
 
 

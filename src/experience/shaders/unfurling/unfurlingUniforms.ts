@@ -34,6 +34,16 @@ export interface UnfurlingUniforms {
   tMicroNormal: { value: THREE.Texture | null };
   tEdgeFringe: { value: THREE.Texture | null };
   uHasTextures: { value: number };
+
+  // Living Cloth Touch Physics & Transverse Ripple Impulses
+  uTouchPos: { value: THREE.Vector2 };
+  uTouchVelocity: { value: THREE.Vector2 };
+  uTouchIntensity: { value: number };
+  uTouchWaveTime: { value: number };
+  uTouchImpulse0: { value: THREE.Vector4 };
+  uTouchImpulse1: { value: THREE.Vector4 };
+  uTouchImpulse2: { value: THREE.Vector4 };
+  uTouchImpulse3: { value: THREE.Vector4 };
 }
 
 /**
@@ -74,5 +84,15 @@ export function createUnfurlingUniforms(qualityTier: number = 3): UnfurlingUnifo
     tMicroNormal: { value: null },
     tEdgeFringe: { value: null },
     uHasTextures: { value: 0 },
+
+    // Living Cloth Touch Physics Impulses
+    uTouchPos: { value: new THREE.Vector2(0.5, 0.5) },
+    uTouchVelocity: { value: new THREE.Vector2(0, 0) },
+    uTouchIntensity: { value: 0 },
+    uTouchWaveTime: { value: 0 },
+    uTouchImpulse0: { value: new THREE.Vector4(-1, -1, 0, 0) },
+    uTouchImpulse1: { value: new THREE.Vector4(-1, -1, 0, 0) },
+    uTouchImpulse2: { value: new THREE.Vector4(-1, -1, 0, 0) },
+    uTouchImpulse3: { value: new THREE.Vector4(-1, -1, 0, 0) },
   };
 }

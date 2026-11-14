@@ -17,6 +17,7 @@ import {
 } from '../shaders/unfurling/stoneFloorShader';
 import { createUnfurlingUniforms, UnfurlingUniforms } from '../shaders/unfurling/unfurlingUniforms';
 import { useLockedTextures } from '../hooks/useLockedTextures';
+import { audioEngine } from '@/lib/audio/webAudioEngine';
 
 export const UnfurlingScene: React.FC = () => {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -46,13 +47,27 @@ export const UnfurlingScene: React.FC = () => {
   }, [qualityTier]);
 
   // Load all 9 locked production texture maps
-  const { textures, isLoaded } = useLockedTextures();
+  const { textures, isLoaded, hasValidTextures } = useLockedTextures();
 
   // Pointer tracking refs (strictly outside Zustand to avoid frame-by-frame state churn)
   const pointerTarget = useRef(new THREE.Vector2(0, 0));
   const pointerDamped = useRef(new THREE.Vector2(0, 0));
   const lightPosDamped = useRef(new THREE.Vector3(-1.8, 2.2, 3.2));
   const velocityDamped = useRef(0);
+
+  // Living Cloth Touch Physics & Transverse Ripple Tracking
+  const clockTimeRef = useRef(0);
+  const touchImpulses = useRef<[THREE.Vector4, THREE.Vector4, THREE.Vector4, THREE.Vector4]>([
+    new THREE.Vector4(-1, -1, 0, 0),
+    new THREE.Vector4(-1, -1, 0, 0),
+    new THREE.Vector4(-1, -1, 0, 0),
+    new THREE.Vector4(-1, -1, 0, 0),
+  ]);
+  const touchImpulseIndex = useRef(0);
+  const touchIntensity = useRef(0);
+  const touchVelocity = useRef(new THREE.Vector2(0, 0));
+  const touchClothUv = useRef(new THREE.Vector2(0.5, 0.5));
+  const lastContact = useRef({ x: 0, y: 0, time: 0 });
 
   // Initialize shader uniforms
   const uniforms = useMemo<UnfurlingUniforms>(() => {
@@ -83,18 +98,23 @@ export const UnfurlingScene: React.FC = () => {
   useEffect(() => {
     if (isLoaded && materialRef.current) {
       const u = materialRef.current.uniforms as unknown as UnfurlingUniforms;
-      u.tBaseColor.value = textures.baseColor;
-      u.tZariMask.value = textures.zariMask;
-      u.tBorderMask.value = textures.borderMask;
-      u.tPalluMask.value = textures.palluMask;
-      u.tRedAccent.value = textures.redAccent;
-      u.tWeaveDirection.value = textures.weaveDirection;
-      u.tRoughness.value = textures.roughness;
-      u.tMicroNormal.value = textures.microNormal;
-      u.tEdgeFringe.value = textures.edgeFringe;
-      u.uHasTextures.value = 1.0;
+      if (hasValidTextures && textures.baseColor) {
+        u.tBaseColor.value = textures.baseColor;
+        u.tZariMask.value = textures.zariMask;
+        u.tBorderMask.value = textures.borderMask;
+        u.tPalluMask.value = textures.palluMask;
+        u.tRedAccent.value = textures.redAccent;
+        u.tWeaveDirection.value = textures.weaveDirection;
+        u.tRoughness.value = textures.roughness;
+        u.tMicroNormal.value = textures.microNormal;
+        u.tEdgeFringe.value = textures.edgeFringe;
+        u.uHasTextures.value = 1.0;
+      } else {
+        // Fallback to high-fidelity procedural loom shader when textures are incomplete/failed
+        u.uHasTextures.value = 0.0;
+      }
     }
-  }, [isLoaded, textures]);
+  }, [isLoaded, hasValidTextures, textures]);
 
   // Geometry: Subdivided plane for smooth sculptural continuous manifold
   const geometry = useMemo(() => {
@@ -107,10 +127,51 @@ export const UnfurlingScene: React.FC = () => {
   useEffect(() => {
     if (typeof window === 'undefined' || isReducedMotion) return;
 
-    const handlePointerMove = (e: MouseEvent | PointerEvent) => {
+    const registerTouchInteraction = (nx: number, ny: number) => {
+      pointerTarget.current.set(nx, ny);
+
+      // Harmonize with Three.js state.clock.getElapsedTime() for coherent wave physics
+      const now = clockTimeRef.current;
+      const dt = Math.max(0.005, now - lastContact.current.time);
+      const dx = nx - lastContact.current.x;
+      const dy = ny - lastContact.current.y;
+      const speed = Math.sqrt(dx * dx + dy * dy) / dt;
+      lastContact.current = { x: nx, y: ny, time: now };
+
+      // Map normalized view coordinates to cloth manifold UV coordinate plane
+      const u = Math.max(0, Math.min(1, (nx + 0.85) / 1.55));
+      const v = Math.max(0, Math.min(1, (ny + 0.75) / 1.35));
+
+      if (speed > 0.12) {
+        touchClothUv.current.set(u, v);
+        touchVelocity.current.set(dx / dt, dy / dt);
+        const intensity = Math.min(1.0, speed * 0.45);
+        touchIntensity.current = Math.max(touchIntensity.current, intensity);
+
+        // Sonic feedback: procedural silk thread friction modulated by drag intensity
+        audioEngine.triggerTouchFriction(intensity);
+
+        // Check if last impulse was > 90ms ago to emit continuous decaying ripples
+        const prevIdx = (touchImpulseIndex.current - 1 + 4) % 4;
+        const timeSinceLastImpulse = now - touchImpulses.current[prevIdx].z;
+
+        if (timeSinceLastImpulse > 0.09) {
+          const idx = touchImpulseIndex.current % 4;
+          touchImpulses.current[idx].set(u, v, now, intensity);
+          touchImpulseIndex.current++;
+
+          // Raking light catching gold zari threads in pallu region (u > 0.62)
+          if (u > 0.62) {
+            audioEngine.triggerZariChime(1.0 + (1.0 - v) * 0.35, intensity);
+          }
+        }
+      }
+    };
+
+    const handlePointerMove = (e: PointerEvent) => {
       const nx = (e.clientX / window.innerWidth) * 2 - 1;
       const ny = -(e.clientY / window.innerHeight) * 2 + 1;
-      pointerTarget.current.set(nx, ny);
+      registerTouchInteraction(nx, ny);
     };
 
     const handleTouchMove = (e: TouchEvent) => {
@@ -118,17 +179,16 @@ export const UnfurlingScene: React.FC = () => {
         const touch = e.touches[0];
         const nx = (touch.clientX / window.innerWidth) * 2 - 1;
         const ny = -(touch.clientY / window.innerHeight) * 2 + 1;
-        pointerTarget.current.set(nx, ny);
+        registerTouchInteraction(nx, ny);
       }
     };
 
-    window.addEventListener('mousemove', handlePointerMove, { passive: true });
+    // Use pointermove as single source of truth (covers mouse, pen, and touch) to prevent double-firing
     window.addEventListener('pointermove', handlePointerMove, { passive: true });
     window.addEventListener('touchmove', handleTouchMove, { passive: true });
     window.addEventListener('touchstart', handleTouchMove, { passive: true });
 
     return () => {
-      window.removeEventListener('mousemove', handlePointerMove);
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchstart', handleTouchMove);
@@ -143,6 +203,7 @@ export const UnfurlingScene: React.FC = () => {
 
     // Time progression
     const elapsed = state.clock.getElapsedTime();
+    clockTimeRef.current = elapsed;
     u.uTime.value = elapsed;
 
     // Read normalized scroll progress for the 6-Yard Unfurling sequence
@@ -202,6 +263,17 @@ export const UnfurlingScene: React.FC = () => {
       // Reduced motion: static restrained lateral raking angle
       u.uLightPos.value.set(-3.2, 2.2, 2.8);
     }
+
+    // Update Living Cloth Touch Physics Uniforms & decay
+    touchIntensity.current *= Math.pow(0.88, delta * 60.0);
+    u.uTouchPos.value.copy(touchClothUv.current);
+    u.uTouchVelocity.value.copy(touchVelocity.current);
+    u.uTouchIntensity.value = touchIntensity.current;
+    u.uTouchWaveTime.value = elapsed;
+    u.uTouchImpulse0.value.copy(touchImpulses.current[0]);
+    u.uTouchImpulse1.value.copy(touchImpulses.current[1]);
+    u.uTouchImpulse2.value.copy(touchImpulses.current[2]);
+    u.uTouchImpulse3.value.copy(touchImpulses.current[3]);
 
     // Sync gallery backdrop uniforms
     if (backdropMaterialRef.current) {

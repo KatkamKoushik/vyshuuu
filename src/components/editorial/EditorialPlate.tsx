@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
+import { getOptimizedCloudinaryUrl, getCloudinarySrcSet } from '@/lib/assets/cloudinaryAssets';
 import { SecretSelvedgeGesture } from './SecretSelvedgeGesture';
 
 export interface EditorialPlateProps {
@@ -16,6 +17,7 @@ export interface EditorialPlateProps {
   variant?: 'dark' | 'light';
   speed?: 'standard' | 'slow';
   hasSelvedgeGesture?: boolean;
+  sizes?: string;
 }
 
 export const EditorialPlate: React.FC<EditorialPlateProps> = ({
@@ -30,6 +32,7 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
   variant = 'dark',
   speed = 'standard',
   hasSelvedgeGesture = false,
+  sizes,
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -38,6 +41,10 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
   const isReducedMotion = usePrefersReducedMotion();
   const frameRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
+
+  const optimizedSrc = getOptimizedCloudinaryUrl(src, { width: 1280 });
+  const srcSet = getCloudinarySrcSet(src);
+  const defaultSizes = '(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 1200px';
 
   // Sync cache state & guarantee visibility even if browser cache bypassed onLoad
   useEffect(() => {
@@ -62,7 +69,7 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
       clearInterval(checkInterval);
       clearTimeout(timer);
     };
-  }, [src]);
+  }, [src, optimizedSrc]);
 
   const settleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -152,7 +159,9 @@ export const EditorialPlate: React.FC<EditorialPlateProps> = ({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={imgRef}
-          src={src}
+          src={optimizedSrc}
+          srcSet={srcSet}
+          sizes={sizes || defaultSizes}
           alt={alt}
           loading={priority ? 'eager' : 'lazy'}
           decoding="async"

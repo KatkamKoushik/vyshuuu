@@ -35,11 +35,15 @@ export async function GET(
     return NextResponse.redirect(cloudinaryUrl, 307);
   }
 
-  const relativeFilePath = SHORTCUT_MAP[requestedPath] || requestedPath;
+  const relativeFilePath = SHORTCUT_MAP[requestedPath];
+  if (!relativeFilePath) {
+    return new NextResponse('Invalid texture identifier', { status: 400 });
+  }
 
-  // Resolve absolute path and guard against directory traversal
+  // Resolve absolute path and guard strictly against directory traversal
   const absolutePath = path.resolve(TEXTURES_VAULT_ROOT, relativeFilePath);
-  if (!absolutePath.startsWith(TEXTURES_VAULT_ROOT)) {
+  const rel = path.relative(TEXTURES_VAULT_ROOT, absolutePath);
+  if (rel.startsWith('..') || path.isAbsolute(rel)) {
     return new NextResponse('Access denied', { status: 403 });
   }
 

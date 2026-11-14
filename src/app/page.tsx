@@ -5,6 +5,10 @@ import { Wordmark } from '@/components/brand/Wordmark';
 import { useExperienceStore } from '@/stores/experienceStore';
 import { useScrollProgress, useScrollTriggerCallback } from '@/hooks/useScrollProgress';
 import { setUnfurlingProgress, setGlobalProgress } from '@/lib/scrollBridge';
+import { audioEngine } from '@/lib/audio/webAudioEngine';
+import { TactileGlowButton } from '@/components/ui/TactileGlowButton';
+import { KineticHeadline } from '@/components/editorial/KineticHeadline';
+import { OrganicBoundaryDivider } from '@/components/editorial/OrganicBoundaryDivider';
 
 // Editorial Collection Sections
 import { CollectionIntro } from '@/components/editorial/CollectionIntro';
@@ -31,8 +35,10 @@ export default function Home() {
     triggerRef: containerRef,
     start: 'top top',
     end: 'bottom bottom',
-    onUpdate: (p) => {
+    onUpdate: (p, velocity) => {
       setGlobalProgress(p);
+      audioEngine.modulateVelocity(velocity / 1000.0);
+      audioEngine.modulateChamberDepth(p);
     },
   });
 
@@ -43,9 +49,16 @@ export default function Home() {
     end: 'bottom bottom',
     onUpdate: (p, velocity) => {
       setUnfurlingProgress(p, velocity / 1000.0);
+      if (Math.abs(velocity) > 220) {
+        audioEngine.triggerHandloomShuttle('reed', 0.22);
+      }
 
       // Discrete scene state toggle at boundaries
-      if (p > 0.05) {
+      if (p >= 1.05) {
+        if (useExperienceStore.getState().activeScene !== 'anthology') {
+          setActiveScene('anthology');
+        }
+      } else if (p > 0.05) {
         if (useExperienceStore.getState().activeScene !== 'unfurling') {
           setActiveScene('unfurling');
         }
@@ -91,6 +104,52 @@ export default function Home() {
   return (
     <div ref={containerRef} className="relative w-full">
       {/* ====================================================================
+          ACTIVE THEORY .GLA11y ACCESSIBILITY MIRROR (WCAG 2.1 AAA)
+          Hidden from visual view, completely transparent to keyboard & screen readers
+          ==================================================================== */}
+      <div
+        className="GLA11y"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '1px',
+          height: '1px',
+          overflow: 'hidden',
+          clip: 'rect(0 0 0 0)',
+          clipPath: 'inset(50%)',
+          whiteSpace: 'nowrap',
+          zIndex: -1,
+        }}
+        aria-hidden="false"
+      >
+        <nav aria-label="Spatial Chamber Waypoints">
+          <a href="#threshold" className="hit" aria-label="Chamber 1: The Loom and Golden Filament Threshold">
+            Chamber 1: The Threshold
+          </a>
+          <a href="#unfurling" className="hit" aria-label="Chamber 2: The Six-Yard Unfurling Continuum">
+            Chamber 2: The Six-Yard Unfurling
+          </a>
+          <a href="#collection-wall" className="hit" aria-label="Chamber 3: The Spatial Vault and Curved Ribbon Exhibition">
+            Chamber 3: Spatial Vault Exhibition
+          </a>
+          <a href="#atelier" className="hit" aria-label="Chamber 4: The Secret Atelier and Human Mastery Archive">
+            Chamber 4: The Secret Atelier
+          </a>
+          <a href="#seal" className="hit" aria-label="Chamber 5: The Living Heirloom Custody Seal">
+            Chamber 5: Living Heirloom Seal
+          </a>
+          <button
+            type="button"
+            onClick={() => audioEngine.toggle()}
+            aria-label="Toggle procedural Web Audio soundscape"
+          >
+            Toggle Web Audio Scenography
+          </button>
+        </nav>
+      </div>
+
+      {/* ====================================================================
           SECTION 01: THE THRESHOLD (0vh — 100vh)
           The Single Golden Filament descending from darkness
           ==================================================================== */}
@@ -104,42 +163,56 @@ export default function Home() {
         {/* Central Threshold Core: Wordmark Reveal */}
         <div className="relative z-[10] flex flex-col items-center justify-center w-full max-w-5xl mx-auto whitespace-nowrap">
           <div
-            className={`whitespace-nowrap transition-all duration-700 ease-out ${
-              isIntroSettled
+            className={`whitespace-nowrap transition-all duration-700 ease-out ${isIntroSettled
                 ? 'opacity-100 translate-y-0 scale-100'
                 : 'opacity-0 translate-y-4 scale-95 pointer-events-none'
-            }`}
+              }`}
             style={{ whiteSpace: 'nowrap' }}
           >
             <Wordmark size="hero" className="text-[var(--color-text)] drop-shadow-sm whitespace-nowrap" />
           </div>
 
           <p
-            className={`mt-4 md:mt-6 caption-tracked text-[11px] md:text-xs text-[var(--color-text-muted)] tracking-[0.28em] whitespace-nowrap transition-all duration-700 delay-150 ${
-              isIntroSettled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-            }`}
+            className={`mt-4 md:mt-6 caption-tracked text-[11px] md:text-xs text-[var(--color-text-muted)] tracking-[0.28em] whitespace-nowrap transition-all duration-700 delay-150 ${isIntroSettled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+              }`}
             style={{ whiteSpace: 'nowrap' }}
           >
             THE UNSTITCHED CONTINUUM
           </p>
         </div>
 
-        {/* Bottom Scroll Cue */}
+        {/* Bottom CTA with Noomo Micro-Physics & Scroll Cue */}
         <div
-          className={`flex flex-col items-center gap-2.5 whitespace-nowrap transition-all duration-700 delay-300 ${
-            isIntroSettled ? 'opacity-70 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
-          }`}
+          className={`flex flex-col items-center gap-4 whitespace-nowrap transition-all duration-700 delay-300 ${isIntroSettled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
+            }`}
           style={{ whiteSpace: 'nowrap' }}
         >
+          <TactileGlowButton
+            variant="zari"
+            size="md"
+            soundTone="yaman"
+            onClick={() => {
+              const el = document.getElementById('unfurling');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+              audioEngine.triggerYamanZariChime(0, 0.55);
+            }}
+            className="pointer-events-auto shadow-[0_4px_24px_rgba(197,168,105,0.25)]"
+          >
+            ENTER CONTINUUM &bull; UNFURL SIX YARDS &darr;
+          </TactileGlowButton>
+
           <span
-            className="mono-spec text-[10px] text-[var(--color-text-muted)] tracking-[0.2em] whitespace-nowrap select-none"
+            className="mono-spec text-[9.5px] text-[var(--color-text-muted)] tracking-[0.2em] whitespace-nowrap select-none"
             style={{ whiteSpace: 'nowrap' }}
           >
-            [ SCROLL TO UNFURL &mdash; {yardsDraped} / 6.00 YARDS ]
+            [ SCROLL OR CLICK TO ADVANCE &mdash; {yardsDraped} / 6.00 YARDS ]
           </span>
-          <div className="w-[1px] h-8 bg-gradient-to-b from-[var(--color-accent-zari)] to-transparent opacity-40 animate-pulse" />
+          <div className="w-[1px] h-6 bg-gradient-to-b from-[var(--color-accent-zari)] to-transparent opacity-40 animate-pulse" />
         </div>
       </section>
+
+      {/* Organic Draped Silk Boundary */}
+      <OrganicBoundaryDivider variant="crest" />
 
       {/* ====================================================================
           SECTION 02: THE 6-YARD UNFURLING (Sticky sequence across 360vh)
@@ -154,7 +227,7 @@ export default function Home() {
         {/* Sticky Editorial Layer: Aligned to bottom on mobile so 3D cloth dominates the upper 70% */}
         <div className="sticky top-0 h-screen w-full flex flex-col justify-end md:justify-center items-center px-4 md:px-16 lg:px-24 pb-6 md:pb-0 overflow-hidden pointer-events-none">
           <div className="w-full max-w-[var(--max-content-width)] mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-            
+
             {/* Left Spatial Field: Either Spatial negative space (WebGL active) OR Photographic Continuum Fallback (No WebGL) */}
             {webglSupported ? (
               <div className="md:col-span-7 lg:col-span-8 hidden md:flex flex-col justify-between h-[65vh] pointer-events-none select-none">
@@ -216,16 +289,16 @@ export default function Home() {
 
             {/* Right Editorial Field: Compact, bottom-anchored slate on mobile; full column panel on desktop */}
             <div className="pointer-events-auto md:col-span-4 md:col-start-9 lg:col-span-3 lg:col-start-10 w-full max-w-[310px] md:max-w-[320px] mx-auto md:ml-auto space-y-2 md:space-y-4 relative z-20 p-3.5 md:p-5 rounded-[1px] bg-[rgba(8,7,6,0.65)] md:bg-[rgba(8,7,6,0.35)] backdrop-blur-[10px] md:backdrop-blur-[8px] border border-[rgba(197,168,105,0.12)] md:border-[rgba(197,168,105,0.05)] shadow-[0_20px_50px_rgba(0,0,0,0.6)] md:shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition-opacity duration-700 hover:opacity-100">
-              
+
               {/* Desktop Full Editorial Narrative (md and up) */}
               <div className="hidden md:block space-y-4">
                 <div>
                   <span className="caption-tracked text-[11px] text-[var(--color-accent-zari)] block mb-2">
                     Signature Narrative &mdash; 6 Yards
                   </span>
-                  <h2 className="display-md text-[var(--color-text)] font-normal mb-3">
+                  <KineticHeadline as="h2" className="display-md text-[var(--color-text)] font-normal mb-3">
                     THE 6-YARD UNFURLING
-                  </h2>
+                  </KineticHeadline>
                   <p className="body-editorial text-xs md:text-sm text-[var(--color-text-muted)] italic">
                     &ldquo;One continuous piece of woven silk emerging from darkness&mdash;sculpted by fold, mass, and lateral raking light.&rdquo;
                   </p>
@@ -235,11 +308,10 @@ export default function Home() {
                 <div className="space-y-3 pt-3 border-t border-[var(--color-border-subtle)]">
                   {/* 01: EMERGENCE (0% - 30%) */}
                   <div
-                    className={`transition-all duration-700 ${
-                      isReducedMotion || unfurlProgress >= 0.15
+                    className={`transition-all duration-700 ${isReducedMotion || unfurlProgress >= 0.15
                         ? 'opacity-100 translate-x-0'
                         : 'opacity-25 translate-x-2'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-baseline justify-between mb-0.5">
                       <span className="caption-tracked text-xs text-[var(--color-text)]">
@@ -256,11 +328,10 @@ export default function Home() {
 
                   {/* 02: UNFURLING (30% - 45%) */}
                   <div
-                    className={`transition-all duration-700 ${
-                      isReducedMotion || unfurlProgress >= 0.30
+                    className={`transition-all duration-700 ${isReducedMotion || unfurlProgress >= 0.30
                         ? 'opacity-100 translate-x-0'
                         : 'opacity-25 translate-x-2'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-baseline justify-between mb-0.5">
                       <span className="caption-tracked text-xs text-[var(--color-text)]">
@@ -277,11 +348,10 @@ export default function Home() {
 
                   {/* 03: TRAVELING PLEATS (45% - 60%) */}
                   <div
-                    className={`transition-all duration-700 ${
-                      isReducedMotion || unfurlProgress >= 0.45
+                    className={`transition-all duration-700 ${isReducedMotion || unfurlProgress >= 0.45
                         ? 'opacity-100 translate-x-0'
                         : 'opacity-25 translate-x-2'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-baseline justify-between mb-0.5">
                       <span className="caption-tracked text-xs text-[var(--color-text)]">
@@ -298,11 +368,10 @@ export default function Home() {
 
                   {/* 04: PALLU & ZARI GLINT (60% - 85%) */}
                   <div
-                    className={`transition-all duration-700 ${
-                      isReducedMotion || unfurlProgress >= 0.65
+                    className={`transition-all duration-700 ${isReducedMotion || unfurlProgress >= 0.65
                         ? 'opacity-100 translate-x-0'
                         : 'opacity-25 translate-x-2'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-baseline justify-between mb-0.5">
                       <span className="caption-tracked text-xs text-[var(--color-text)]">
@@ -319,11 +388,10 @@ export default function Home() {
 
                   {/* 05: FULL SETTLED CONTINUUM (85% - 100%) */}
                   <div
-                    className={`transition-all duration-700 ${
-                      isReducedMotion || unfurlProgress >= 0.85
+                    className={`transition-all duration-700 ${isReducedMotion || unfurlProgress >= 0.85
                         ? 'opacity-100 translate-x-0'
                         : 'opacity-25 translate-x-2'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-baseline justify-between mb-0.5">
                       <span className="caption-tracked text-xs text-[var(--color-text)]">
@@ -380,6 +448,7 @@ export default function Home() {
           SECTION 03: COLLECTION INTRODUCTION
           After the WebGL hero settles, introduce the collection gallery
           ==================================================================== */}
+      <OrganicBoundaryDivider variant="dip" />
       <CollectionIntro />
 
       {/* ====================================================================
@@ -413,12 +482,14 @@ export default function Home() {
           SECTION 09: THE COLLECTION WALL
           Side-by-side desktop / stacked mobile comparison proving dual spectrum
           ==================================================================== */}
+      <OrganicBoundaryDivider variant="crest" />
       <CollectionWall />
 
       {/* ====================================================================
           SECTION 10: THE ATELIER (The Hidden Nocturnal Chamber)
           The five approved cinematic plates revealing anonymous human mastery
           ==================================================================== */}
+      <OrganicBoundaryDivider variant="subtle" />
       <AtelierChamber />
 
       {/* ====================================================================

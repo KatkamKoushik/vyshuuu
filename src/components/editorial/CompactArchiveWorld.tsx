@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { SareeConcept, SareeAssetMeta } from '@/lib/collection/collectionData';
 import { getAtmosphere } from '@/lib/atmosphere/collectionAtmospheres';
 import { useExperienceStore } from '@/stores/experienceStore';
+import { getOptimizedCloudinaryUrl, getCloudinarySrcSet } from '@/lib/assets/cloudinaryAssets';
 
 interface CompactArchiveWorldProps {
   saree: SareeConcept;
@@ -488,9 +489,12 @@ export const CompactArchiveWorld: React.FC<CompactArchiveWorldProps> = ({
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={item.asset.src}
+                      src={getOptimizedCloudinaryUrl(item.asset.src, { width: 800 })}
+                      srcSet={getCloudinarySrcSet(item.asset.src)}
+                      sizes="(max-width: 768px) 80vw, 35vw"
                       alt={`${saree.name} — ${item.asset.caption}`}
                       loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover filter brightness-[0.92] contrast-[1.05] transition-all duration-1000 group-hover:scale-[1.03] group-hover:brightness-[1.0]"
                     />
 

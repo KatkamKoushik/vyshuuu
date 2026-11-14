@@ -16,6 +16,16 @@ export const unfurlingVertexShader = /* glsl */ `
   uniform float uSettlingEnergy;
   uniform vec2 uPointer;
 
+  // Living Cloth Touch Physics Uniforms
+  uniform vec2 uTouchPos;
+  uniform vec2 uTouchVelocity;
+  uniform float uTouchIntensity;
+  uniform float uTouchWaveTime;
+  uniform vec4 uTouchImpulse0;
+  uniform vec4 uTouchImpulse1;
+  uniform vec4 uTouchImpulse2;
+  uniform vec4 uTouchImpulse3;
+
   // Analytical Sculptural 3D Drape & Plinth Contact Manifold for the 6-Yard Continuous Saree (PASS 1B)
   vec3 evaluateClothPosition(vec2 uvCoord, float p) {
     float u = uvCoord.x;
@@ -190,6 +200,39 @@ export const unfurlingVertexShader = /* glsl */ `
     float distToPointer = length(uvCoord - (uPointer * 0.5 + 0.5));
     float pointerDisplacement = exp(-distToPointer * 6.5) * 0.026 * (1.0 - settledFactor * 0.6);
     pos.z += pointerDisplacement;
+
+    // -------------------------------------------------------------------------
+    // 6. Living Cloth Fabric Fluidity & Real-Time Touch Transverse Ripples
+    // -------------------------------------------------------------------------
+    // Direct brush depression and surrounding viscous wake
+    float touchDist = length(uvCoord - uTouchPos);
+    float directWake = exp(-touchDist * 10.0) * uTouchIntensity * 0.042;
+    float flankRing = sin(touchDist * 28.0 - uTime * 6.0) * exp(-touchDist * 7.5) * uTouchIntensity * 0.026;
+    pos.z += (flankRing - directWake) * activeDrape;
+
+    // Decaying transverse ripples from multi-touch / drag impulses simulating hand brushing over silk
+    float netRipple = 0.0;
+    vec4 impulses[4];
+    impulses[0] = uTouchImpulse0;
+    impulses[1] = uTouchImpulse1;
+    impulses[2] = uTouchImpulse2;
+    impulses[3] = uTouchImpulse3;
+
+    for (int i = 0; i < 4; i++) {
+      vec4 imp = impulses[i];
+      if (imp.w > 0.002) {
+        float d = length(uvCoord - imp.xy);
+        float age = uTime - imp.z;
+        if (age >= 0.0 && age < 2.5) {
+          float phase = d * 32.0 - age * 15.0;
+          float spatialEnv = exp(-d * 5.8);
+          float temporalDecay = exp(-age * 2.2);
+          netRipple += sin(phase) * spatialEnv * temporalDecay * imp.w * 0.052;
+        }
+      }
+    }
+    pos.z += netRipple * activeDrape;
+    pos.y += netRipple * 0.25 * activeDrape;
 
     return pos;
   }

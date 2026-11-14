@@ -1,0 +1,148 @@
+name: CI Hardening & Stress Matrix
+
+on:
+  push:
+    branches:
+      - 'feat/**'
+      - main
+  pull_request:
+    branches:
+      - main
+      - 'feat/**'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20.x'
+  PNPM_VERSION: '12.18.0'
+
+jobs:
+  lint-and-typecheck:
+    name: Code Standards, Lint & Strict TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run ESLint
+        run: pnpm lint
+
+      - name: Run TypeScript Verification
+        run: pnpm typecheck
+
+  build-production:
+    name: Production Build & Vercel Verification
+    needs: [lint-and-typecheck]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Next.js Production Build
+        run: pnpm build
+
+      - name: Verify Vercel CLI Binary
+        run: pnpm exec vercel --version
+
+  playwright-hardening:
+    name: Playwright E2E Hardening Suite (Desktop & Mobile)
+    needs: [build-production]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium with System Dependencies
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run Full Playwright Hardening Suite
+        run: pnpm test:e2e
+
+      - name: Upload Playwright Test Report Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-e2e-report
+          path: playwright-report/
+          retention-days: 14
+
+  stress-ci-job:
+    name: High-Velocity Stress Matrix & Resilience Hardening
+    needs: [build-production]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium with System Dependencies
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Execute High-Velocity Stress Matrix
+        run: pnpm test:e2e:stress
+
+      - name: Upload Stress Test Traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-stress-traces
+          path: test-results/
+          retention-days: 7

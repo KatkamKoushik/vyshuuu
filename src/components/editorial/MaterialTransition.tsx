@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { getAtmosphere, getAtmosphereTransition } from '@/lib/atmosphere/collectionAtmospheres';
+import { InlineMediaHeadline } from './InlineMediaHeadline';
 
 export interface MaterialTransitionProps {
   fromId?: string;
@@ -37,9 +38,18 @@ export const MaterialTransition: React.FC<MaterialTransitionProps> = ({
           [ CHROMATIC INVERSION &mdash; CONTINUUM SHIFT ]
         </span>
 
-        <h2 className="display-lg text-[#ede5d8] font-normal tracking-[0.04em]">
-          FROM NIGHT INTO LIGHT
-        </h2>
+        <div className="flex justify-center">
+          <InlineMediaHeadline
+            prefix="FROM NIGHT"
+            mediaSrc="/api/collection/vysh-arc-01/macro"
+            mediaAlt="Gold Zari Thread Chromatic Shift"
+            suffix="INTO LIGHT"
+            tag="h2"
+            badgeLabel="LUMEN // SHIFT"
+            pillText="lumen"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-[#ede5d8] font-normal justify-center tracking-[0.04em]"
+          />
+        </div>
 
         <p className="body-editorial text-sm md:text-base text-[#b8ab96] tracking-[0.04em] max-w-xl mx-auto leading-relaxed">
           &ldquo;The continuum breathes between mass and air. {fromAtmo.name} dissolves into {toAtmo.name}&mdash;where density yields to translucency.&rdquo;

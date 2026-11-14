@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "validate:textures": "node scripts/validate-textures.mjs"
+    "validate:textures": "node scripts/validate-textures.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:stress": "playwright test tests/e2e/07-stress-hardening.spec.ts --repeat-each 3",
+    "test:e2e:ui": "playwright test --ui",
+    "test:all": "pnpm lint && pnpm typecheck && pnpm test:e2e"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",
@@ -26,6 +30,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.65.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -33,7 +38,9 @@
     "@types/three": "^0.186.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.27",
+    "playwright": "^1.65.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vercel": "^65.15.0"
   }
 }

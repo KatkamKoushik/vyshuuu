@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
+import { audioEngine } from '@/lib/audio/webAudioEngine';
 
 export interface SecretSelvedgeGestureProps {
   /**
@@ -19,13 +20,13 @@ export interface SecretSelvedgeGestureProps {
 }
 
 /**
- * SecretSelvedgeGesture (Pillar 3 — Secret Textile Gesture)
+ * SecretSelvedgeGesture (Phase 5 — Tactile Spring Tension & Secret Textile Gesture)
  * 
  * An intimate, discoverable interaction anchored to the gold/zari selvedge edge.
  * A slow, deliberate horizontal drag gently separates the selvedge thread from the cloth,
- * revealing the underlying digital warp/weft lattice and an intimate authored inscription.
+ * building tactile spring tension with elastic resistance and emitting delicate metallic zari chimes.
+ * Upon release, an authentic damped spring oscillator snaps the thread back with resonant zari acoustic partials.
  * 
- * Zero game mechanics, zero badges, zero tutorial popups.
  * Fully supports touch, desktop, reduced motion, and WCAG keyboard accessibility.
  */
 export const SecretSelvedgeGesture: React.FC<SecretSelvedgeGestureProps> = ({
@@ -45,6 +46,8 @@ export const SecretSelvedgeGesture: React.FC<SecretSelvedgeGestureProps> = ({
 
   const pointerIntentRef = useRef<'idle' | 'undecided' | 'dragging'>('idle');
   const startPosRef = useRef({ x: 0, y: 0 });
+  const lastTensionTierRef = useRef<number>(0);
+  const springAnimRef = useRef<number | null>(null);
 
   // Measure dimensions of the parent frame
   useEffect(() => {
@@ -63,47 +66,81 @@ export const SecretSelvedgeGesture: React.FC<SecretSelvedgeGestureProps> = ({
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  // Viscous settling animation when drag finishes and not locked open
-  const settleAnimRef = useRef<number | null>(null);
-  const settleTo = useCallback(
-    (targetVal: number) => {
+  // Physical Spring Oscillation when released (or overdamped settling when revealed)
+  const snapBackSpring = useCallback(
+    (initialValue: number, targetValue: number = 0) => {
       if (isReducedMotion) {
-        setSeparation(targetVal);
+        setSeparation(targetValue);
         return;
       }
 
-      if (settleAnimRef.current) {
-        cancelAnimationFrame(settleAnimRef.current);
+      if (springAnimRef.current) {
+        cancelAnimationFrame(springAnimRef.current);
       }
 
-      const startTime = performance.now();
-      const initialSep = separation;
-      const duration = 600; // ms
+      // If snapping back to rest (0), use an underdamped harmonic oscillator for elastic spring rebound
+      if (targetValue === 0 && Math.abs(initialValue) > 6) {
+        // Trigger resonant metallic zari chime on spring snap
+        audioEngine.triggerSpringSnap();
 
-      const step = (now: number) => {
-        const elapsed = now - startTime;
-        const progress = Math.min(1, elapsed / duration);
-        // Overdamped cubic-bezier easing: 1 - (1 - p)^3
-        const ease = 1 - Math.pow(1 - progress, 3);
-        const currentVal = initialSep + (targetVal - initialSep) * ease;
-        setSeparation(currentVal);
-
-        if (progress < 1) {
-          settleAnimRef.current = requestAnimationFrame(step);
-        } else {
-          settleAnimRef.current = null;
+        // Optional haptic tap if supported
+        if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+          try { navigator.vibrate?.([10, 25, 8]); } catch { }
         }
-      };
 
-      settleAnimRef.current = requestAnimationFrame(step);
+        const startTime = performance.now();
+        const amplitude = initialValue;
+        const damping = 0.0075; // decay factor
+        const frequency = 0.024; // oscillation frequency in rad/ms
+
+        const springStep = (now: number) => {
+          const t = now - startTime;
+          // Underdamped harmonic decay: A * e^(-damping * t) * cos(omega * t)
+          const envelope = Math.exp(-damping * t);
+          const currentAmp = Math.abs(amplitude * envelope);
+          const pos = amplitude * envelope * Math.cos(frequency * t);
+
+          // Once amplitude envelope is imperceptible (<0.35px) or elapsed > 550ms, stop at equilibrium (0)
+          if (t > 550 || currentAmp < 0.35) {
+            setSeparation(0);
+            springAnimRef.current = null;
+          } else {
+            setSeparation(pos);
+            springAnimRef.current = requestAnimationFrame(springStep);
+          }
+        };
+
+        springAnimRef.current = requestAnimationFrame(springStep);
+      } else {
+        // Smooth overdamped settling when unfolding into revealed state
+        const startTime = performance.now();
+        const duration = 520;
+
+        const settleStep = (now: number) => {
+          const elapsed = now - startTime;
+          const progress = Math.min(1, elapsed / duration);
+          const ease = 1 - Math.pow(1 - progress, 3);
+          const cur = initialValue + (targetValue - initialValue) * ease;
+          setSeparation(cur);
+
+          if (progress < 1) {
+            springAnimRef.current = requestAnimationFrame(settleStep);
+          } else {
+            setSeparation(targetValue);
+            springAnimRef.current = null;
+          }
+        };
+
+        springAnimRef.current = requestAnimationFrame(settleStep);
+      }
     },
-    [separation, isReducedMotion]
+    [isReducedMotion]
   );
 
   useEffect(() => {
     return () => {
-      if (settleAnimRef.current) {
-        cancelAnimationFrame(settleAnimRef.current);
+      if (springAnimRef.current) {
+        cancelAnimationFrame(springAnimRef.current);
       }
     };
   }, []);
@@ -112,34 +149,52 @@ export const SecretSelvedgeGesture: React.FC<SecretSelvedgeGestureProps> = ({
   const handleToggleAccessibleReveal = useCallback(() => {
     setIsRevealed((prev) => {
       const next = !prev;
-      settleTo(next ? maxSeparation * 0.92 : 0);
+      if (next) {
+        audioEngine.triggerZariChime(1.2, 0.4);
+      } else {
+        audioEngine.triggerSpringSnap();
+      }
+      snapBackSpring(separation, next ? maxSeparation * 0.92 : 0);
       return next;
     });
-  }, [maxSeparation, settleTo]);
+  }, [maxSeparation, separation, snapBackSpring]);
 
   // Handle ESC key to refold if revealed
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isRevealed) {
         setIsRevealed(false);
-        settleTo(0);
+        snapBackSpring(separation, 0);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isRevealed, settleTo]);
+  }, [isRevealed, separation, snapBackSpring]);
 
   // Pointer event handlers with strict non-interference for vertical scrolling
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.button !== 0 && e.pointerType === 'mouse') return;
 
-    if (settleAnimRef.current) {
-      cancelAnimationFrame(settleAnimRef.current);
+    // If already revealed, interacting with the edge snaps thread back to conceal
+    if (isRevealed) {
+      setIsRevealed(false);
+      audioEngine.triggerSpringSnap();
+      snapBackSpring(separation, 0);
+      return;
     }
+
+    if (springAnimRef.current) {
+      cancelAnimationFrame(springAnimRef.current);
+    }
+
+    try {
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+    } catch { }
 
     startPosRef.current = { x: e.clientX, y: e.clientY };
     pointerIntentRef.current = 'undecided';
+    lastTensionTierRef.current = 0;
 
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
@@ -166,9 +221,10 @@ export const SecretSelvedgeGesture: React.FC<SecretSelvedgeGestureProps> = ({
         setIsDragging(true);
 
         const rawInward = Math.max(0, dx);
+        // Non-linear spring tension elasticity
         const viscousSeparation = Math.min(
           maxSeparation,
-          Math.pow(rawInward, 0.84) * 2.1
+          Math.pow(rawInward, 0.82) * 2.05
         );
         setSeparation(viscousSeparation);
       }
@@ -188,18 +244,37 @@ export const SecretSelvedgeGesture: React.FC<SecretSelvedgeGestureProps> = ({
       }
 
       const rawInward = Math.max(0, dx);
+      // Non-linear elastic tension curve: resistance increases as pulled further
       const viscousSeparation = Math.min(
         maxSeparation,
-        Math.pow(rawInward, 0.84) * 2.1
+        Math.pow(rawInward, 0.82) * 2.05
       );
       setSeparation(viscousSeparation);
+
+      // Tactile spring tension acoustic feedback at progressive thresholds
+      const currentRatio = viscousSeparation / maxSeparation;
+      const tier = Math.floor(currentRatio * 4); // 0, 1, 2, 3
+      if (tier > lastTensionTierRef.current && tier > 0) {
+        audioEngine.triggerSpringTension(currentRatio);
+        lastTensionTierRef.current = tier;
+      } else if (tier < lastTensionTierRef.current) {
+        lastTensionTierRef.current = tier;
+      }
     };
 
     const handleGlobalUp = () => {
       setIsDragging(false);
       pointerIntentRef.current = 'idle';
-      if (!isRevealed) {
-        settleTo(0);
+
+      // If pulled past threshold (>= 80%), latch into revealed state to inspect inscription
+      const currentRatio = separation / maxSeparation;
+      if (currentRatio >= 0.8) {
+        setIsRevealed(true);
+        audioEngine.triggerZariChime(1.25, 0.45);
+        snapBackSpring(separation, maxSeparation * 0.92);
+      } else {
+        setIsRevealed(false);
+        snapBackSpring(separation, 0);
       }
     };
 
@@ -212,20 +287,22 @@ export const SecretSelvedgeGesture: React.FC<SecretSelvedgeGestureProps> = ({
       window.removeEventListener('pointerup', handleGlobalUp);
       window.removeEventListener('pointercancel', handleGlobalUp);
     };
-  }, [isDragging, edge, maxSeparation, isRevealed, settleTo]);
+  }, [isDragging, edge, maxSeparation, isRevealed, separation, snapBackSpring]);
 
   // Normalized revelation progress (0.00 to 1.00)
   const normProgress = Math.max(0, Math.min(1, separation / maxSeparation));
-  const isSeparated = separation > 3;
+  const isSeparated = Math.abs(separation) > 1.5;
 
   // Compute curved catenary path for the separating gold selvedge thread
   const w = dimensions.width;
   const h = dimensions.height;
   const isRight = edge === 'right';
 
-  // Thread apex coordinates
+  // Thread apex coordinates with high-tension micro-vibration under heavy pull
+  const tensionVibration = isDragging && normProgress > 0.65 ? Math.sin(Date.now() * 0.08) * 0.75 : 0;
   const anchorX = isRight ? w : 0;
-  const apexX = isRight ? w - separation : separation;
+  const clampedSep = Math.max(-12, Math.min(maxSeparation, separation));
+  const apexX = isRight ? w - clampedSep + tensionVibration : clampedSep + tensionVibration;
 
   const threadCurvePath = isRight
     ? `M ${w} 0 Q ${apexX} ${dragY} ${w} ${h}`
@@ -245,7 +322,7 @@ export const SecretSelvedgeGesture: React.FC<SecretSelvedgeGestureProps> = ({
       y1: filY,
       x2: filX,
       y2: filY,
-      opacity: Math.min(0.65, normProgress * 0.75),
+      opacity: Math.min(0.68, normProgress * 0.78),
     };
   });
 
@@ -324,6 +401,13 @@ export const SecretSelvedgeGesture: React.FC<SecretSelvedgeGestureProps> = ({
               </span>
               <span className="w-1 h-1 rounded-full bg-[#c5a869]/80" />
             </div>
+
+            {/* Tension indicator stamp */}
+            {isDragging && (
+              <span className="mt-2 mono-spec text-[7px] text-[#c5a869]/70 tracking-[0.2em] uppercase">
+                SPRING TENSION: {(normProgress * 100).toFixed(0)}%
+              </span>
+            )}
           </div>
 
           {/* Bottom Selvedge Terminus Tag */}
@@ -331,7 +415,7 @@ export const SecretSelvedgeGesture: React.FC<SecretSelvedgeGestureProps> = ({
             className="absolute bottom-3 left-3 mono-spec text-[7px] text-[#8a7f6e] tracking-[0.2em] uppercase transition-opacity duration-300"
             style={{ opacity: normProgress > 0.4 ? 0.8 : 0 }}
           >
-            SELVEDGE WIRE &middot; 0.035 GRAZING
+            SELVEDGE WIRE &middot; TAUT ELASTICITY
           </div>
         </div>
       </div>
@@ -349,7 +433,7 @@ export const SecretSelvedgeGesture: React.FC<SecretSelvedgeGestureProps> = ({
           <linearGradient id="selvedgeGoldThread" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#8c7443" />
             <stop offset="20%" stopColor="#d4b872" />
-            <stop offset="50%" stopColor="#f7ecd0" />
+            <stop offset="50%" stopColor="#fff2cc" />
             <stop offset="80%" stopColor="#d4b872" />
             <stop offset="100%" stopColor="#8c7443" />
           </linearGradient>
@@ -371,7 +455,7 @@ export const SecretSelvedgeGesture: React.FC<SecretSelvedgeGestureProps> = ({
               x2={fil.x2}
               y2={fil.y2}
               stroke="var(--color-accent-zari, #c5a869)"
-              strokeWidth="0.75"
+              strokeWidth="0.85"
               strokeDasharray="1.5 2"
               opacity={fil.opacity}
             />
@@ -382,7 +466,7 @@ export const SecretSelvedgeGesture: React.FC<SecretSelvedgeGestureProps> = ({
           d={isSeparated ? threadCurvePath : `M ${anchorX} 0 L ${anchorX} ${h}`}
           fill="none"
           stroke="url(#selvedgeGoldThread)"
-          strokeWidth={isSeparated ? 1.75 : 1.25}
+          strokeWidth={isSeparated ? (1.75 + normProgress * 0.4) : 1.25}
           filter="url(#threadGlow)"
           className="transition-opacity duration-300"
           style={{
@@ -423,6 +507,9 @@ export const SecretSelvedgeGesture: React.FC<SecretSelvedgeGestureProps> = ({
         onPointerLeave={() => {
           if (!isDragging) setIsHovered(false);
         }}
+        data-magnetic
+        data-magnetic-label="SELVEDGE THREAD"
+        data-selvedge-interactive="true"
         className={`absolute top-0 bottom-0 pointer-events-auto cursor-ew-resize touch-pan-y z-30 transition-colors ${
           isRight ? 'right-0 w-8 sm:w-10' : 'left-0 w-8 sm:w-10'
         }`}
@@ -437,7 +524,7 @@ export const SecretSelvedgeGesture: React.FC<SecretSelvedgeGestureProps> = ({
             isRight ? 'right-0' : 'left-0'
           } ${
             isHovered || isSeparated
-              ? 'bg-[#c5a869] shadow-[0_0_8px_rgba(197,168,105,0.8)]'
+              ? 'bg-[#c5a869] shadow-[0_0_8px_rgba(197,168,105,0.85)]'
               : 'bg-[#c5a869]/70'
           }`}
         />

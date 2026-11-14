@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { useExperienceStore } from '@/stores/experienceStore';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import { getLenis } from '@/lib/lenis';
+import { TactileGlowButton } from '@/components/ui/TactileGlowButton';
+import { audioEngine } from '@/lib/audio/webAudioEngine';
 
 /**
  * CustomIntroLoader (Part A — Private Exhibition Opening)
@@ -328,16 +330,19 @@ export const CustomIntroLoader: React.FC = () => {
         {/* Subtle Status Line / Action Prompt */}
         <div className="flex items-center justify-center min-h-[32px]">
           {isReady ? (
-            <button
-              type="button"
+            <TactileGlowButton
+              variant="zari"
+              size="sm"
+              soundTone="yaman"
               onClick={() => {
                 setHasInteracted(true);
+                audioEngine.triggerHeirloomResonance(0.5);
                 handleDismiss();
               }}
-              className="mono-spec text-[9.5px] sm:text-[10px] text-[#FAF7F0] hover:text-[#c5a869] tracking-[0.28em] uppercase transition-all duration-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#c5a869] px-4 py-1.5 border border-[#c5a869]/40 hover:border-[#c5a869] bg-white/[0.03] backdrop-blur-sm shadow-[0_4px_20px_rgba(197,168,105,0.08)]"
+              className="px-5 shadow-[0_4px_24px_rgba(197,168,105,0.3)]"
             >
-              [ ENTER EXHIBITION &rarr; ]
-            </button>
+              ENTER EXHIBITION &rarr;
+            </TactileGlowButton>
           ) : (
             <span className="mono-spec text-[8.5px] sm:text-[9px] text-[#8a7f6e] tracking-[0.24em] uppercase">
               [ CALIBRATING SILK CONTINUUM &middot; {percentInt}% ]
